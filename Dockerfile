@@ -1,4 +1,4 @@
-FROM vantaa-exercise-reservations-backend:latest
+FROM vantaa-culture-reservations-backend:latest
 ADD ./frontend /frontend
 WORKDIR /frontend
 RUN npm install
