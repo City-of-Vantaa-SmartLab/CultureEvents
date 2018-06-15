@@ -1,38 +1,39 @@
-# culture-events
+# Vantaa Culture Reservations
 
-## Description
+## Architecture
 
-PWA app to make reservations for culture events for Vantaa city
+This project is simple client-server application built with
 
-## Installation
+- Frontend: React.js & MobX
+- Backend: TypeScript & Nestjs
+- Database: PostgreSQL
 
-```bash
-$ npm install
+It integrates to Grynos to get the information about current courses available in Vantaa.
+
+## Running locally
+
+The local development is set up using docker. Docker is a containerization that help shipping application easy, and without the hassle of installing many many things. We highly recommend you install docker.
+
+### With Docker
+
+Run
+
+```
+. ./run-locally.sh
 ```
 
-## Running the app
+This local development includes hot reloading on the front-end and the back-end.
 
-```bash
-# development
-$ npm run start
+## Deployment
 
-# watch mode
-$ npm run start:dev
+### Development
 
-# production mode
-npm run start:prod
+To deploy, Heroku CLI needs to be set-up along with Docker.
+
+```
+. ./deploy-to-dev.sh
 ```
 
-## Test
+### Production
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
+TBD
