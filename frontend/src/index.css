@@ -1,5 +1,138 @@
-body {
+body,
+html {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  width: 100%;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: all 0.5s ease;
+  display: flex;
+}
+
+body {
+  font-size: 14px;
+  height: 100%;
+  margin: auto;
+  position: relative;
+  background-color: rgb(60, 143, 222);
+  transform: translate3d(0, 0, 0);
+}
+
+#root {
+  overflow: scroll;
+  background-color: rgba(200, 200, 200, 1);
+  height: 100%;
+  width: 100%;
+  will-change: filter;
+}
+
+/* */
+@font-face {
+  font-family: GT-Walsheim;
+  src: url('./assets/GT-Walsheim-Thin.otf');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: GT-Walsheim;
+  src: url('./assets/GT-Walsheim-Light.otf');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: GT-Walsheim;
+  src: url('./assets/GT-Walsheim-Regular.otf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GT-Walsheim;
+  src: url('./assets/GT-Walsheim-Medium.otf');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GT-Walsheim;
+  src: url('./assets/GT-Walsheim-Bold-Oblique.otf');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: GT-Walsheim;
+  src: url('./assets/GT-Walsheim-Bold.otf');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GT-Walsheim;
+  src: url('./assets/GT-Walsheim-Ultra-Bold.otf');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GT-Walsheim;
+  src: url('./assets/GT-Walsheim-Black.otf');
+  font-weight: 900;
+  font-style: normal;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* responsive designs */
+/* Extra small devices (phones, 600px and down) */
+
+@media only screen and (max-width: 600px) {
+  body {
+    max-height: 100%;
+    max-width: 100%;
+  }
+  html {
+    min-height: 480px;
+  }
+
+  /* for small devices */
+  @media (max-width: 320px) {
+    html {
+      font-size: 6px;
+    }
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  body {
+    max-height: 812px;
+    max-width: 480px;
+    padding: 0;
+    box-shadow: 12px 24px 100px rgba(0, 0, 0, 0.5);
+    border-radius: 2rem;
+  }
+  html {
+    font-size: 7.5px;
+    min-height: 580px;
+  }
+  #root {
+    border-radius: 2rem;
+  }
 }
