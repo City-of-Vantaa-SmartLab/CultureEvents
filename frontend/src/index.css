@@ -6,21 +6,19 @@ html {
   height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: all 0.5s ease;
-  display: flex;
 }
 
 body {
   font-size: 14px;
   height: 100%;
-  margin: auto;
+  width: 100%;
+  margin: 0;
   position: relative;
   background-color: rgb(60, 143, 222);
-  transform: translate3d(0, 0, 0);
+  font-family: GT-Walsheim, sans-serif;
 }
 
 #root {
-  overflow: scroll;
   background-color: rgba(200, 200, 200, 1);
   height: 100%;
   width: 100%;
@@ -122,17 +120,9 @@ input::-webkit-inner-spin-button {
 
 @media only screen and (min-width: 600px) {
   body {
-    max-height: 812px;
-    max-width: 480px;
     padding: 0;
-    box-shadow: 12px 24px 100px rgba(0, 0, 0, 0.5);
-    border-radius: 2rem;
   }
   html {
-    font-size: 7.5px;
     min-height: 580px;
-  }
-  #root {
-    border-radius: 2rem;
   }
 }
