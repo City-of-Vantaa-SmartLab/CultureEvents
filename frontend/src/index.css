@@ -6,10 +6,10 @@ html {
   height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
 }
 
 body {
-  font-size: 14px;
   height: 100%;
   width: 100%;
   margin: 0;
@@ -96,6 +96,7 @@ input::-webkit-inner-spin-button {
 
 * {
   box-sizing: border-box;
+  font-family: 'GT-Walsheim', sans-serif;
 }
 
 /* responsive designs */
@@ -124,5 +125,6 @@ input::-webkit-inner-spin-button {
   }
   html {
     min-height: 580px;
+    font-size: 16px;
   }
 }
