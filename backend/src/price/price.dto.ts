@@ -1,6 +1,6 @@
 import { IsString, IsNumber } from 'class-validator';
 export class PriceDto {
-  @IsString() readonly price: number;
+  @IsNumber() readonly price: number;
 
   @IsString() readonly;
   type: string;

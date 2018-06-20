@@ -1,10 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Price } from '../price/price.entity';
 import { PriceDto } from 'price/price.dto';
+import { Reservations } from 'reservations/reservations.entity';
 
 @Entity()
 export class Events {
-  @PrimaryGeneratedColumn() id: number;
+  @OneToMany(type => Reservations, reservations => reservations.event_id)
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ length: 100 })
   name: string;
