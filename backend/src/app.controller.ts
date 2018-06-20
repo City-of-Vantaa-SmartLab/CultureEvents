@@ -1,6 +1,6 @@
 import { Get, Controller, Res } from '@nestjs/common';
 import { AppService } from './app.service';
-export const ROUTE_PREFIX = 'api';
+export const ROUTE_PREFIX = 'test';
 
 @Controller()
 export class AppController {

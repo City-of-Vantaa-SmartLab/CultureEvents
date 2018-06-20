@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { Res } from '@nestjs/common';
+import {} from 'jest';
 
 describe('AppController', () => {
   let app: TestingModule;
@@ -14,9 +16,10 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
+    it('should return "Welcome to Culture Events!"', () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.root()).toBe('Welcome to Culture Events!..');
+      const response = Res();
+      expect(appController.root(response)).toBe('Welcome to Culture Events!..');
     });
   });
 });

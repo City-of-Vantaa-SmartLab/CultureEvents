@@ -1,0 +1,10 @@
+{
+  "type": "postgres",
+  "host": "postgres-dev-db",
+  "port": 5432,
+  "username": "postgres",
+  "password": "password",
+  "database": "vantaa_pwa_culture_events",
+  "entities": ["src/**/**.entity{.ts,.js}"],
+  "synchronize": true
+}
