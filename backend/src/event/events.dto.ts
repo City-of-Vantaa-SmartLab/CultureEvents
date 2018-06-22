@@ -1,4 +1,5 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsArray, IsBoolean } from 'class-validator';
+import { PriceDto } from '../price/price.dto';
 export class EventsDto {
   @IsString() readonly name: string;
   @IsString() readonly type: string;
@@ -6,8 +7,10 @@ export class EventsDto {
   @IsString() readonly desciption: string;
   @IsString() readonly event_date: string;
   @IsString() readonly location: string;
-  @IsNumber() readonly child_price: number;
-  @IsNumber() readonly adult_price: number;
+  @IsArray() readonly pricing: PriceDto[];
   @IsNumber() readonly tickets_available: number;
-  @IsString() readonly contact_number: string;
+  @IsString() readonly contact_info: string;
+  @IsString() readonly performer: string;
+  @IsBoolean() readonly bilingual: boolean;
+  @IsBoolean() readonly wordless: boolean;
 }

@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, Double } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Price } from '../price/price.entity';
+import { PriceDto } from 'price/price.dto';
 
 @Entity()
 export class Events {
@@ -22,12 +24,20 @@ export class Events {
   @Column({ length: 15 })
   location: string;
 
-  @Column('double precision') child_price: number;
-
-  @Column('double precision') adult_price: number;
+  @OneToMany(type => Price, price => price.events, {
+    cascade: true,
+  })
+  pricing: PriceDto[];
 
   @Column('int') tickets_available: number;
 
-  @Column({ length: 15 })
-  contact_number: string;
+  @Column({ length: 30 })
+  contact_info: string;
+
+  @Column({ length: 30 })
+  performer: string;
+
+  @Column() bilingual: boolean;
+
+  @Column() wordless: boolean;
 }

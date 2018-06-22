@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Events } from './events.entity';
 import { EventsDto } from './events.dto';
+import { Price } from 'price/price.entity';
 
 @Injectable()
 export class EventsService {
@@ -27,10 +28,10 @@ export class EventsService {
   }
 
   async findAll(): Promise<Events[]> {
-    return await this.eventRepository.find();
+    return await this.eventRepository.find({ relations: ['pricing'] });
   }
 
   async findOneById(id: number) {
-    return await this.eventRepository.findOne(id);
+    return await this.eventRepository.findOne(id, { relations: ['pricing'] });
   }
 }
