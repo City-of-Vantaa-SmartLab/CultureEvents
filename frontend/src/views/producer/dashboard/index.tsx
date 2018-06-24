@@ -2,6 +2,7 @@ import * as React from 'react';
 import Appbar from './Appbar';
 import EventExplorer from './event-explore';
 import EditionForm from './edition-form';
+import EventFinancialPanel from './event-financial-panel';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -10,6 +11,7 @@ const Wrapper = styled.div`
   background-color: #becdd9;
   position: relative;
   display: flex;
+  justify-content: space-between;
 `;
 
 export default class index extends React.Component {
@@ -19,6 +21,7 @@ export default class index extends React.Component {
         <Appbar />
         <EventExplorer />
         <EditionForm />
+        <EventFinancialPanel />
       </Wrapper>
     );
   }

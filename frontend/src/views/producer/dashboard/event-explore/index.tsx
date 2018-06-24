@@ -16,6 +16,7 @@ const WrapperFlat = styled(Wrapper)`
   position: relative;
   background-color: transparent;
   box-shadow: none;
+  margin-right: 2rem;
 `;
 
 export default class EventExplorer extends React.Component {
