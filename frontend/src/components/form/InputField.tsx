@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
-import Input from './Input';
+import Input, { InputProps } from './Input';
 
 interface LabelProps {
   children: JSX.Element | string;
@@ -21,12 +21,14 @@ const Wrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-interface InputFieldType {
+interface InputFieldType extends InputProps {
   label: LabelProps['children'];
   mandatory?: LabelProps['mandatory'];
   style?: any;
   className?: any;
+  type?: string;
 }
+
 export default class InputField extends React.Component<InputFieldType> {
   public render() {
     const { label, mandatory, className, style, ...inputProps } = this.props;

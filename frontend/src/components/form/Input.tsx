@@ -13,7 +13,7 @@ const TextInput = styled(AntInput)<{ backgroundColor?: Color }>`
   }
 `;
 
-interface InputProps {
+export interface InputProps {
   type?: string;
   value?: string | number;
   placeHolder?: string;

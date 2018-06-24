@@ -1,0 +1,8 @@
+{
+  "name": "components",
+  "version": "1.0.0",
+  "description": "Common components for the whole application",
+  "author": "Thanh Nguyen",
+  "license": "MIT",
+  "private": true
+}

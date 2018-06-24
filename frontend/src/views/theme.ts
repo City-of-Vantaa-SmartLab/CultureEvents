@@ -8,6 +8,7 @@ const theme = {
     lightGreen: '#78BA6B',
     orange: '#EC9D5C',
     deepGreen: '#08866B',
+    primaryDeep: '#0B5BA5',
   },
   currentActivePrimary: '#498DC7',
 };
