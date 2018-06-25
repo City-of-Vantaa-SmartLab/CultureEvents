@@ -6,7 +6,7 @@ import SignInForm from './SignInForm';
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  background-color: #0b5ba5;
+  background-color: ${props => props.theme.palette.primaryDeep};
   display: flex;
 `;
 const ContentBox = styled.div`

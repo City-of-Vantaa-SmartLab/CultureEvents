@@ -26,6 +26,6 @@ const MyButton = styled(AntButton)<any>`
 
 export default class Button extends React.Component<MyButtonType> {
   public render() {
-    return <MyButton {...this.props} />;
+    return <MyButton type="primary" {...this.props} />;
   }
 }

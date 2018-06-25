@@ -4,11 +4,14 @@ import Form, { InputField } from '../../../components/form';
 import Button from '../../../components/button';
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   margin: auto;
   align-items: center;
   width: 25rem;
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 const SignInButton = styled(Button)<any>`
   &&& {
@@ -26,8 +29,8 @@ export default class SignInForm extends React.Component {
         <Form>
           <InputField label="Nimi" />
           <InputField label="Password" type="password" />
+          <SignInButton>Kirjaudu</SignInButton>
         </Form>
-        <SignInButton>Kirjaudu</SignInButton>
       </Wrapper>
     );
   }
