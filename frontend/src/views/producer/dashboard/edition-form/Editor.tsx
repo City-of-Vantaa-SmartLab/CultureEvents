@@ -169,6 +169,9 @@ class Editor extends React.Component<{ theme: any }> {
           <Checkbox>Wordless</Checkbox>
           <Checkbox style={{ marginRight: '1rem' }}>Bilingual</Checkbox>
         </Row>
+        <Row style={{ justifyContent: 'center' }}>
+          <GreenButton icon="check">Submit</GreenButton>
+        </Row>
       </Form>
     );
   }

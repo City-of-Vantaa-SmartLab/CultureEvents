@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-basis: 30rem;
+  overflow: scroll;
 `;
 
 export default class EditionForm extends React.Component {
