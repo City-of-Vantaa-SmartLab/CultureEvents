@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled, { css, withTheme, injectGlobal } from 'styled-components';
 import Form, { InputField } from '../../../../components/form';
 import Button from '../../../../components/button';
@@ -9,9 +9,9 @@ import 'antd/lib/icon/style';
 import Icon from 'antd/lib/icon';
 import * as chroma from 'chroma-js';
 
-const toRgba = (rgbaArray: Array<number>) => `rgba(${rgbaArray.join(',')})`;
+const toRgba = rgbaArray => `rgba(${rgbaArray.join(',')})`;
 
-const Row = styled.div<any>`
+const Row = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
@@ -33,13 +33,13 @@ const Checkbox = styled(AntCheckbox)`
   }
 `;
 
-const GreenButton = styled(Button)<any>`
+const GreenButton = styled(Button)`
   &&& {
     background-color: ${props => props.theme.palette.deepGreen};
   }
 `;
 
-class Editor extends React.Component<{ theme: any }> {
+class Editor extends React.Component {
   componentDidMount() {
     const { palette } = this.props.theme;
     // override specific class name from ant-design
@@ -54,7 +54,7 @@ class Editor extends React.Component<{ theme: any }> {
     }
 `;
   }
-  public render() {
+  render() {
     const { palette } = this.props.theme;
     const inputBackgroundColor = toRgba(
       chroma('#498DC7')

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Editor from './Editor';
 
@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 `;
 
 export default class EditionForm extends React.Component {
-  public render() {
+  render() {
     return (
       <Wrapper>
         <Editor />

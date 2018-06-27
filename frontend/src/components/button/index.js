@@ -1,14 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import AntButton, { ButtonProps } from 'antd/lib/button';
+import AntButton from 'antd/lib/button';
 import 'antd/lib/button/style/css';
 
-interface MyButtonProps {
-  rounded?: boolean;
-}
-type MyButtonType = MyButtonProps & ButtonProps;
-
-const MyButton = styled(AntButton)<any>`
+const MyButton = styled(AntButton)`
   && {
     border-radius: 2rem;
     font-size: 0.72rem;
@@ -24,8 +19,8 @@ const MyButton = styled(AntButton)<any>`
   }
 `;
 
-export default class Button extends React.Component<MyButtonType> {
-  public render() {
+export default class Button extends React.Component {
+  render() {
     return <MyButton type="primary" {...this.props} />;
   }
 }

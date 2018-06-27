@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 
-const SvgComponent = (props: any) => (
+const SvgComponent = props => (
   <svg viewBox="0 0 108.92 110.66" {...props}>
     <defs />
     <title>VantaaLogo</title>

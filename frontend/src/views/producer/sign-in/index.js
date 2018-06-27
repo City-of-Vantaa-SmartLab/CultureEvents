@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import LogoBox from './LogoBox';
 import SignInForm from './SignInForm';
@@ -14,7 +14,7 @@ const ContentBox = styled.div`
   margin: auto;
 `;
 export default class SignInView extends React.Component {
-  public render() {
+  render() {
     return (
       <Wrapper>
         <ContentBox>
