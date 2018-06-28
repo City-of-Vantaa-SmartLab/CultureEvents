@@ -6,19 +6,20 @@ import TagPillGroup from '../../../../components/tag-pill';
 import AntCheckbox from 'antd/lib/checkbox';
 import 'antd/lib/icon/style';
 import 'antd/lib/checkbox/style/css';
+import CoverImage from './CoverImage';
+import ThemeColorChooser from './ThemeColorChooser';
 import Icon from 'antd/lib/icon';
 import * as chroma from 'chroma-js';
-
+import { toRgba, genRandomKey } from '../../../../utils';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import EventModel, { TicketCatalog } from '../../../../models/event';
-
-const toRgba = rgbaArray => `rgba(${rgbaArray.join(',')})`;
 
 const Row = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
+  padding: 0 4rem;
   & > div {
     margin-bottom: 0;
     margin-right: 2rem;
@@ -47,26 +48,6 @@ const RedButton = styled(Button)`
     background-color: ${props => props.theme.palette.red};
   }
 `;
-
-const genRandomKey = () => {
-  let S4 = () => {
-    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-  };
-  return (
-    S4() +
-    S4() +
-    '-' +
-    S4() +
-    '-' +
-    S4() +
-    '-' +
-    S4() +
-    '-' +
-    S4() +
-    S4() +
-    S4()
-  );
-};
 
 const defaulTicketTypeValue = { ...TicketCatalog.create().toJSON() };
 
@@ -122,12 +103,12 @@ const Editor = observer(
     render() {
       const { palette } = this.props.theme;
       const inputBackgroundColor = toRgba(
-        chroma('#498DC7')
+        chroma(this.eventDraft.themeColor)
           .alpha(0.3)
           .rgba(),
       );
       return (
-        <Form style={{ padding: '1rem' }}>
+        <Form style={{ padding: '4rem 0' }}>
           <Row fullsize>
             <InputField
               backgroundColor={inputBackgroundColor}
@@ -144,6 +125,19 @@ const Editor = observer(
               horizontal
               onChange={this.onChange('location')}
               value={this.eventDraft.location}
+            />
+          </Row>
+          <Row
+            fullsize
+            style={{
+              backgroundColor: 'rgba(0,0,0, .1)',
+              padding: '2rem 4rem',
+            }}
+          >
+            <CoverImage
+              value={this.eventDraft.coverImage}
+              backgroundColor={inputBackgroundColor}
+              onChange={this.onChange('coverImage')}
             />
           </Row>
           <Row fullsize>
@@ -271,6 +265,12 @@ const Editor = observer(
                 ]}
               />
             </InputField>
+          </Row>
+          <Row fullsize>
+            <ThemeColorChooser
+              value={this.eventDraft.themeColor}
+              onChange={color => (this.eventDraft.themeColor = color)}
+            />
           </Row>
           <Row>
             <Checkbox
