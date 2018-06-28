@@ -1,28 +1,22 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
-import Input, { InputProps, TextArea } from './Input';
+import Input, { TextArea } from './Input';
 
-interface LabelProps {
-  children: JSX.Element | string;
-  mandatory?: boolean;
-  horizontal?: boolean;
-  lightMode?: boolean;
-}
-const LabelText = styled(Typography)<any>`
+const LabelText = styled(Typography)`
   && {
     margin-bottom: 4px;
     font-size: ${props => (props.horizontal ? '0.86rem' : '1rem')};
     white-space: nowrap;
   }
 `;
-const Label = (props: LabelProps) => (
+const Label = props => (
   <LabelText type="secondarybody" color={props.lightMode ? 'black' : 'white'}>
     {props.children}
   </LabelText>
 );
 
-export const Wrapper = styled.div<any>`
+export const Wrapper = styled.div`
   margin-bottom: 1rem;
   ${props =>
     props.horizontal &&
@@ -36,18 +30,8 @@ export const Wrapper = styled.div<any>`
   `};
 `;
 
-interface InputFieldType extends InputProps {
-  label: LabelProps['children'];
-  mandatory?: LabelProps['mandatory'];
-  horizontal?: LabelProps['horizontal'];
-  lightMode?: LabelProps['lightMode'];
-  style?: any;
-  className?: any;
-  type?: string;
-}
-
-export default class InputField extends React.Component<InputFieldType> {
-  public render() {
+export default class InputField extends React.Component {
+  render() {
     const {
       label,
       mandatory,

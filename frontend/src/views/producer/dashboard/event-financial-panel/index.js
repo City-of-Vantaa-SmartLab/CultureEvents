@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 `;
 
 export default class EventFinancialPanel extends React.Component {
-  public render() {
+  render() {
     return <Wrapper />;
   }
 }

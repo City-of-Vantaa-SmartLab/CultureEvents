@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Appbar from './Appbar';
 import EventExplorer from './event-explore';
 import EditionForm from './edition-form';

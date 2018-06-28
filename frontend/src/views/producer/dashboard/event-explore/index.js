@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { render } from 'react-dom';
 
@@ -20,7 +20,7 @@ const WrapperFlat = styled(Wrapper)`
 `;
 
 export default class EventExplorer extends React.Component {
-  public render() {
+  render() {
     return (
       <React.Fragment>
         <Wrapper />

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled, { withTheme } from 'styled-components';
 import Logo from '../../../components/logo';
 import Typography from '../../../components/typography';
@@ -33,8 +33,8 @@ const LogoSection = styled.div`
   }
 `;
 
-class Appbar extends React.Component<{ theme: any }> {
-  public render() {
+class Appbar extends React.Component {
+  render() {
     const { theme } = this.props;
     return (
       <React.Fragment>

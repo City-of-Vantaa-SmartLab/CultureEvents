@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import SignInView from './sign-in';
 import DashboardView from './dashboard';
 
 export default class ProducerUI extends React.Component {
-  public render() {
+  render() {
     return (
       <Switch>
         <Route path="/producer/login" component={SignInView} />

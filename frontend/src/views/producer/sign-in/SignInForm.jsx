@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Form, { InputField } from '../../../components/form';
 import Button from '../../../components/button';
@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     flex-direction: column;
   }
 `;
-const SignInButton = styled(Button)<any>`
+const SignInButton = styled(Button)`
   &&& {
     margin: 2rem 0;
     align-self: flex-end;
@@ -23,7 +23,7 @@ const SignInButton = styled(Button)<any>`
 `;
 
 export default class SignInForm extends React.Component {
-  public render() {
+  render() {
     return (
       <Wrapper>
         <Form>

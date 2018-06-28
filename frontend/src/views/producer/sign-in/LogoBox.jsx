@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Logo from '../../../components/logo';
 import Text from '../../../components/typography';
@@ -24,7 +24,7 @@ const FlavorText = styled(Text)`
 `;
 
 export default class LogoBox extends React.Component {
-  public render() {
+  render() {
     return (
       <Wrapper>
         <Logo noText />

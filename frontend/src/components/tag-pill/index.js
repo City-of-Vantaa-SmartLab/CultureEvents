@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
 
-const TagPillText = styled(Typography)<{ selected?: boolean }>`
+const TagPillText = styled(Typography)`
   display: inline;
   padding: 0.4rem 0.8rem;
   background-color: rgba(0, 0, 0, 0.15);
@@ -35,33 +35,28 @@ const TagPillGroupWrapper = styled.div`
   }
 `;
 
-export class TagPill extends React.Component<{
-  selected?: boolean;
-  onClick?: (e: Event) => void;
-  onTouchEnd?: (e: Event) => void;
-  className?: string;
-}> {
-  public render() {
+export class TagPill extends React.Component {
+  render() {
     return <TagPillText type="secondarybody" {...this.props} />;
   }
 }
 
-export default class TagPillGroup extends React.Component<any> {
+export default class TagPillGroup extends React.Component {
   state = {
     selected: null,
   };
-  public constructor(props: any) {
+  constructor(props) {
     super(props);
     this.state.selected = props.active;
   }
-  onChildClick = (identifier: string | number) => (e: Event) => {
+  onChildClick = identifier => () => {
     this.setState({ selected: identifier });
   };
-  public render() {
+  render() {
     const { tags, className, pillClassName } = this.props;
     return (
       <TagPillGroupWrapper className={className}>
-        {tags.map((tag: any, index: number) => (
+        {tags.map((tag, index) => (
           <TagPill
             className={pillClassName}
             selected={
