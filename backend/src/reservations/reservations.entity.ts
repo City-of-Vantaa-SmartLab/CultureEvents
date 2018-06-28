@@ -17,6 +17,9 @@ export class Reservations {
   @ManyToOne(type => Events, event => event.id)
   event_id: number;
 
+  @Column({ length: 30 })
+  user: string;
+
   @Column({ length: 15 })
   type: string;
 
