@@ -8,12 +8,15 @@ import {
   Body,
   UsePipes,
   Res,
+  UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { EventsDto } from './events.dto';
 import { EventsService } from './events.service';
 import { ValidationPipe } from 'validations/validation.pipe';
 import { Events } from './events.entity';
 import { ValidationService } from '../utils/validations/validations.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('events')
 export class EventsController {
@@ -40,6 +43,7 @@ export class EventsController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
   async create(@Res() response, @Body() event: EventsDto) {
     try {
@@ -73,6 +77,7 @@ export class EventsController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
   async update(
     @Res() response,
@@ -94,6 +99,28 @@ export class EventsController {
       }
     } catch (error) {
       return response.status(500).send(`Failed to update event with id: ${id}`);
+    }
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(new ValidationPipe())
+  async delete(@Res() response, @Param('id') id: number) {
+    try {
+      if (this.validationService.validateId(+id)) {
+        return response.status(400).send(`Invalid event Id: ${id}`);
+      } else {
+        const deleted = await this.eventsService.deleteEvent(id);
+        if (deleted) {
+          return response.status(200).send(deleted);
+        } else {
+          return response
+            .status(404)
+            .send(`Could not find any event with id: ${id}`);
+        }
+      }
+    } catch (error) {
+      return response.status(500).send(`Failed to delete event with id: ${id}`);
     }
   }
 }
