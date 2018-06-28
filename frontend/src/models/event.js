@@ -45,7 +45,7 @@ const Event = types.model({
     types.string,
     'https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350',
   ),
-  themeColor: types.optional(types.string, 'blue'),
+  themeColor: types.optional(types.string, '#498DC7'),
 });
 
 export default Event;

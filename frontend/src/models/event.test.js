@@ -17,7 +17,7 @@ test('event model has correct default', () => {
     contactInformation: '',
     coverImage:
       'https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350',
-    themeColor: 'blue',
+    themeColor: '#498DC7',
   };
   expect(defaultEventCreated).toEqual(expectation);
 });
@@ -49,7 +49,7 @@ test('eventModel instantiated from backup correctly', () => {
     contactInformation: '',
     coverImage:
       'https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350',
-    themeColor: 'blue',
+    themeColor: '#498DC7',
   };
   const model = EventModel.create(expectation);
   expect(model.toJSON()).toEqual(expectation);

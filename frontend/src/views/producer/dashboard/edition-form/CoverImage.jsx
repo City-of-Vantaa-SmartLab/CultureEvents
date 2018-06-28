@@ -42,7 +42,8 @@ class CoverImage extends React.Component {
           />
           <Button
             onClick={this.onConfirm}
-            style={{ backgroundColor: this.props.theme.palette.lightGreen }}
+            style={{ backgroundColor: this.props.theme.palette.deepGreen }}
+            icon="check"
           >
             Confirm
           </Button>

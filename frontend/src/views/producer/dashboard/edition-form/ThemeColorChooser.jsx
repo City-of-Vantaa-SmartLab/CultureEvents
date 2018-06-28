@@ -10,6 +10,8 @@ const Box = styled.div`
   opacity: ${props => (props.active ? 1 : 0.3)};
   margin-left: 1rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: ${props => props.active && '3px 3px 12px rgba(0,0,0, .3)'};
 `;
 const FlexBox = styled.div`
   display: flex;

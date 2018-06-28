@@ -242,6 +242,7 @@ const Editor = observer(
           <Row>
             <InputField label="Event type" lightMode horizontal>
               <TagPillGroup
+                highlightColor={this.eventDraft.themeColor}
                 value={this.eventDraft.eventType}
                 tags={[
                   { id: 'Kurssit Ja Työpajat', text: 'Kurssit ja työpajat' },
@@ -255,6 +256,7 @@ const Editor = observer(
           <Row>
             <InputField label="Age group limit" lightMode horizontal>
               <TagPillGroup
+                highlightColor={this.eventDraft.themeColor}
                 onChange={this.onPillChange('ageGroupLimit')}
                 value={this.eventDraft.ageGroupLimit}
                 tags={[
