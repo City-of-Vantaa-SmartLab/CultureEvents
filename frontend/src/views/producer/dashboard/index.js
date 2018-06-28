@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
-export default class index extends React.Component {
+export default class DashBoard extends React.Component {
   render() {
     return (
       <Wrapper>

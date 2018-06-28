@@ -9,7 +9,7 @@ export default class ProducerUI extends React.Component {
       <Switch>
         <Route path="/producer/login" component={SignInView} />
         <Route path="/producer/dashboard" component={DashboardView} />
-        <Route render={props => <Redirect to="./login" />} />
+        <Route render={() => <Redirect to="./login" />} />
       </Switch>
     );
   }

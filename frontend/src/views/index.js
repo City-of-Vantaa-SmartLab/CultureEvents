@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import ProducerUI from './index';
+import ProducerUI from './producer';
 import { ThemeProvider } from 'styled-components';
 import theme from './theme';
 

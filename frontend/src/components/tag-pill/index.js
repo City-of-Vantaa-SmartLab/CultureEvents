@@ -47,10 +47,14 @@ export default class TagPillGroup extends React.Component {
   };
   constructor(props) {
     super(props);
-    this.state.selected = props.active;
+    this.state.selected = props.value;
   }
   onChildClick = identifier => () => {
-    this.setState({ selected: identifier });
+    if (this.props.onChange) {
+      this.props.onChange(identifier);
+    } else {
+      this.setState({ selected: identifier });
+    }
   };
   render() {
     const { tags, className, pillClassName } = this.props;
@@ -60,7 +64,10 @@ export default class TagPillGroup extends React.Component {
           <TagPill
             className={pillClassName}
             selected={
-              this.state.selected === tag.id || this.state.selected === index
+              this.props.onChange
+                ? tag.id === this.props.value || index === this.props.value
+                : this.state.selected === tag.id ||
+                  this.state.selected === index
             }
             onClick={this.onChildClick(tag.id || index)}
             onTouchEnd={this.onChildClick(tag.id || index)}
