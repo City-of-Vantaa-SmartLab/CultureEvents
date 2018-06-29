@@ -15,7 +15,6 @@ import { ValidationPipe } from 'validations/validation.pipe';
 import { Reservations } from './reservations.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { SMSService } from 'notifications/sms/sms.service';
-import { EventsService } from 'event/events.service';
 
 @Controller('reservations')
 export class ReservationsController {
@@ -23,7 +22,6 @@ export class ReservationsController {
     private readonly reservationsService: ReservationService,
     private readonly validationService: ValidationService,
     private readonly smsService: SMSService,
-    private readonly eventService: EventsService,
   ) {}
   @Get()
   async findAll(@Res() response): Promise<Reservations[]> {
@@ -50,15 +48,7 @@ export class ReservationsController {
       const reservationDto = await this.reservationsService.createReservation(
         reservation,
       );
-      const event = await this.eventService.findOneById(reservation.event_id);
-      const reservationMessage = await this.reservationsService.buildReservationMessage(
-        event,
-      );
-      await this.smsService.sendMessageToUser(
-        reservation.phone_number,
-        reservation.user,
-        reservationMessage,
-      );
+
       return response.status(201).send(reservation);
     } catch (error) {
       return response

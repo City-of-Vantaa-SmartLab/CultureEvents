@@ -18,7 +18,7 @@ export class Reservations {
   event_id: number;
 
   @Column({ length: 30 })
-  user: string;
+  username: string;
 
   @Column({ length: 15 })
   type: string;
