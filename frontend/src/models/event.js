@@ -20,9 +20,11 @@ const TicketCatalog = types.model({
 });
 
 const Event = types.model({
+  id: types.identifier(types.string),
   name: types.optional(types.string, ''),
   location: types.optional(types.string, ''),
   description: types.optional(types.string, ''),
+  performer: types.maybe(types.string),
   date: types.maybe(types.string),
   time: types.maybe(types.string),
   ticketCatalog: types.maybe(types.array(TicketCatalog)),
@@ -41,10 +43,7 @@ const Event = types.model({
   ),
   isWordless: types.optional(types.boolean, false),
   isBilingual: types.optional(types.boolean, false),
-  coverImage: types.optional(
-    types.string,
-    'https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350',
-  ),
+  coverImage: types.optional(types.string, ''),
   themeColor: types.optional(types.string, '#498DC7'),
 });
 

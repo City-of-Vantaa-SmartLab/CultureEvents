@@ -2,12 +2,19 @@ import React from 'react';
 import styled, { withTheme } from 'styled-components';
 import { InputField } from '../../../../components/form';
 import Button from '../../../../components/button';
+import Typography from '../../../../components/typography';
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 const Image = styled.img`
   width: 100%;
   height: auto;
   margin-bottom: 2rem;
   border-radius: 8px;
+  max-width: 35rem;
+  align-self: center;
 `;
 const FlexBox = styled.div`
   display: flex;
@@ -22,13 +29,22 @@ class CoverImage extends React.Component {
       confirmedSrc: props.value,
     };
   }
+  componentWillReceiveProps = props => {
+    this.setState({ confirmedSrc: props.value });
+  };
+  getDerivedStateFromProps = props => {
+    this.setState({ confirmedSrc: props.value });
+  };
   onConfirm = () => {
     this.setState({ confirmedSrc: this.props.value });
   };
   render() {
     const { inputBackgroundColor, value, onChange } = this.props;
     return (
-      <div>
+      <Wrapper>
+        <Typography style={{ transform: 'translateY(-1rem)' }} type="largebody">
+          Cover image
+        </Typography>
         <Image src={this.state.confirmedSrc} />
         <FlexBox>
           <InputField
@@ -37,8 +53,8 @@ class CoverImage extends React.Component {
             lightMode
             backgroundColor={inputBackgroundColor}
             type="text"
-            onChange={this.props.onChange}
-            value={this.props.value}
+            onChange={onChange}
+            value={value}
           />
           <Button
             onClick={this.onConfirm}
@@ -48,7 +64,7 @@ class CoverImage extends React.Component {
             Confirm
           </Button>
         </FlexBox>
-      </div>
+      </Wrapper>
     );
   }
 }

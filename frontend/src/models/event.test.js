@@ -1,9 +1,10 @@
 import EventModel, { TicketCatalog } from './event';
 
 test('event model has correct default', () => {
-  const defaultEventCreated = EventModel.create().toJSON();
+  const defaultEventCreated = EventModel.create({ id: '1' }).toJSON();
 
   const expectation = {
+    id: '1',
     name: '',
     location: '',
     description: '',
@@ -15,6 +16,7 @@ test('event model has correct default', () => {
     isWordless: false,
     isBilingual: false,
     contactInformation: '',
+    performer: null,
     coverImage:
       'https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350',
     themeColor: '#498DC7',
@@ -36,6 +38,7 @@ test('eventModel instantiated from backup correctly', () => {
     availableSeatForThisType: 43,
   };
   const expectation = {
+    id: '1',
     name: '',
     location: '',
     description: '',
@@ -47,6 +50,7 @@ test('eventModel instantiated from backup correctly', () => {
     isWordless: false,
     isBilingual: false,
     contactInformation: '',
+    performer: null,
     coverImage:
       'https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350',
     themeColor: '#498DC7',
