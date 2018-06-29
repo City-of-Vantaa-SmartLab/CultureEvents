@@ -13,6 +13,8 @@ export class SMSService {
       const response = await axios.post(teliaEndPoint, request);
       if (response && response.data.accepted[0].to === phoneNumber.slice(1)) {
         return response;
+      } else {
+        return null;
       }
     } catch (error) {
       console.log(`Failed to send sms to the user: ${error.message}`);
