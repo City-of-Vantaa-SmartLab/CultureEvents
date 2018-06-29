@@ -3,9 +3,9 @@ export class PriceDto {
   @IsNumber() readonly price: number;
 
   @IsString() readonly;
-  type: string;
+  ticket_type: string;
 
-  @IsString() readonly description: string;
+  @IsString() readonly ticket_description: string;
 
-  @IsString() readonly seats: number;
+  @IsString() readonly available_seat_for_this_type: number;
 }

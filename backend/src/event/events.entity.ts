@@ -12,35 +12,42 @@ export class Events {
   @Column({ length: 100 })
   name: string;
 
-  @Column({ length: 15 })
-  type: string;
-
-  @Column({ length: 15 })
-  age_group: string;
+  @Column({ length: 100 })
+  location: string;
 
   @Column({ length: 500 })
   desciption: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ length: 500 })
   event_date: string;
 
-  @Column({ length: 15 })
-  location: string;
+  @Column({ length: 500 })
+  event_time: string;
 
   @OneToMany(type => Price, price => price.events, {
     cascade: true,
   })
-  pricing: PriceDto[];
-
-  @Column('int') tickets_available: number;
+  ticketCatalog: PriceDto[];
 
   @Column({ length: 30 })
-  contact_info: string;
+  contact_information: string;
 
   @Column({ length: 30 })
+  event_type: string;
+
+  @Column({ length: 15 })
+  age_group_limit: string;
+
+  @Column() is_wordless: boolean;
+
+  @Column() is_bilingual: boolean;
+
+  @Column({ length: 100 })
+  cover_image: string;
+
+  @Column({ length: 30 })
+  theme_color: string;
+
+  @Column({ length: 50 })
   performer: string;
-
-  @Column() bilingual: boolean;
-
-  @Column() wordless: boolean;
 }
