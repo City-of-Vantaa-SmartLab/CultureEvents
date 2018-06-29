@@ -27,7 +27,7 @@ export class Events {
   @OneToMany(type => Price, price => price.events, {
     cascade: true,
   })
-  ticketCatalog: PriceDto[];
+  ticket_catalog: PriceDto[];
 
   @Column({ length: 30 })
   contact_information: string;

@@ -6,7 +6,7 @@ export class EventsDto {
   @IsString() readonly desciption: string;
   @IsString() readonly event_date: string;
   @IsString() readonly event_time: string;
-  @IsArray() readonly ticketCatalog: PriceDto[];
+  @IsArray() readonly ticket_catalog: PriceDto[];
   @IsString() readonly contact_information: string;
   @IsString() readonly event_type: string;
   @IsString() readonly age_group_limit: string;
