@@ -1,0 +1,8 @@
+{
+  "finnish": {
+    "reservations": {
+      "dateFormat": "DD.MM.YYYY",
+      "timeFormat": "HH:mm"
+    }
+  }
+}

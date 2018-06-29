@@ -31,6 +31,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: vantaa_pwa_culture_events
+      TELIA_USERNAME: vantaa
+      TELIA_PASSWORD:
+      TELIA_USER: Vantaa
 
   admin:
     image: adminer
