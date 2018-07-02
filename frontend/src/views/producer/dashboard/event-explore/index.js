@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { render } from 'react-dom';
 import EventCard from '../../../../components/event-card';
+import Button from '../../../../components/button';
+import Typography from '../../../../components/typography';
 import { connect } from '../../../../utils';
 
 const Wrapper = styled.div`
@@ -22,34 +24,53 @@ const WrapperFlat = styled(Wrapper)`
   pointer-events: none;
   background-color: transparent;
   box-shadow: none;
-  margin-right: 2rem;
+  flex-shrink: 0;
+  flex-grow: 0;
+`;
+
+const EmptyStateContainer = styled.div`
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 class EventExplorer extends React.Component {
   render() {
     const { events } = this.props.store;
+    console.log(this.props.store.events.toJSON(), this.props.store.isEmpty);
     return (
       <React.Fragment>
-        <Wrapper>
-          {this.props.store.events
-            ? Object.values(this.props.store.events.toJSON()).map(event => (
-                <EventCard
-                  style={{ marginBottom: '0.5rem' }}
-                  key={event.id}
-                  themeColor={event.themeColor}
-                  name={event.name}
-                  location={event.location}
-                  date={event.date}
-                  time={event.time}
-                  performer={event.performer}
-                  coverImage={event.coverImage}
-                  ageGroupLimit={event.ageGroupLimit}
-                  onSelect={() => this.props.store.selectEvent(event.id)}
-                />
-              ))
-            : 'There is nothing here'}
-        </Wrapper>
         <WrapperFlat />
+        <Wrapper>
+          {!this.props.store.isEmpty ? (
+            Object.values(this.props.store.events.toJSON()).map(event => (
+              <EventCard
+                style={{ marginBottom: '0.5rem' }}
+                key={event.id}
+                themeColor={event.themeColor}
+                name={event.name}
+                location={event.location}
+                date={event.date}
+                time={event.time}
+                performer={event.performer}
+                coverImage={event.coverImage}
+                ageGroupLimit={event.ageGroupLimit}
+                onSelect={() => this.props.store.selectEvent(event.id)}
+              />
+            ))
+          ) : (
+            <EmptyStateContainer>
+              <Typography type="subheader" backgroundColor="transparent">
+                There is no event found
+              </Typography>
+              <Typography type="body">
+                Adjust your filter, or add new event
+              </Typography>
+            </EmptyStateContainer>
+          )}
+        </Wrapper>
       </React.Fragment>
     );
   }

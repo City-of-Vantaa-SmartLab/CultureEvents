@@ -66,7 +66,6 @@ class Editor extends React.Component {
   });
   constructor(props) {
     super(props);
-    console.log(EventModel.create({ id: '12345' }).toJSON());
     this.internalData.eventDraft = props.selectedEvent
       ? { ...props.selectedEvent.toJSON() }
       : {
@@ -88,11 +87,11 @@ class Editor extends React.Component {
     // THIS IS A HACK
     injectGlobal`
     .ant-checkbox-checked .ant-checkbox-inner, .ant-checkbox-indeterminate .ant-checkbox-inner {
-      background-color: ${palette.deepGreen} !important;
-      border-color: ${palette.deepGreen} !important;
+      background-color: ${palette.primaryDeep} !important;
+      border-color: ${palette.primaryDeep} !important;
     }
     .ant-checkbox-wrapper:hover .ant-checkbox-inner, .ant-checkbox:hover .ant-checkbox-inner, .ant-checkbox-input:focus + .ant-checkbox-inner {
-      border-color: ${palette.deepGreen} !important;
+      border-color: ${palette.primaryDeep} !important;
     }
 `;
   }
@@ -236,6 +235,16 @@ class Editor extends React.Component {
               type="time"
               onChange={this.onChange('time')}
               value={this.internalData.eventDraft.time}
+            />
+            <InputField
+              style={{ width: '100%' }}
+              backgroundColor={inputBackgroundColor}
+              label="Performer"
+              lightMode
+              horizontal
+              type="text"
+              onChange={this.onChange('performer')}
+              value={this.internalData.eventDraft.performer}
             />
           </Row>
           {this.internalData.eventDraft.ticketCatalog

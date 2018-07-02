@@ -11,7 +11,14 @@ const Wrapper = styled.div`
   background-color: #becdd9;
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+`;
+
+const InnerWrapper = styled(Wrapper)`
+  max-width: 1600px;
+  width: 100%;
+  justify-content: flex-start;
+  align-self: center;
 `;
 
 export default class DashBoard extends React.Component {
@@ -20,8 +27,10 @@ export default class DashBoard extends React.Component {
       <Wrapper>
         <Appbar />
         <EventExplorer />
-        <EditionForm />
-        <EventFinancialPanel />
+        <InnerWrapper>
+          <EditionForm />
+          <EventFinancialPanel />
+        </InnerWrapper>
       </Wrapper>
     );
   }
