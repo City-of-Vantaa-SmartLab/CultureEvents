@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   background-color: white;
   flex-grow: 1;
   border-radius: 8px;
-  height: 30%;
+  height: 30rem;
 `;
 
 export default class EventFinancialPanel extends React.Component {

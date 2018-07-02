@@ -20,7 +20,8 @@ const TagPillText = styled(Typography)`
   ${props =>
     props.selected &&
     `
-    background-color: ${props.theme.palette.primaryDeep};
+    background-color: ${props.highlightColor ||
+      props.theme.palette.primaryDeep};
     color: white;
     text-shadow: 0 2px 6px rgba(0,0,0, .23);
     transform: translateY(-2px);
@@ -47,20 +48,28 @@ export default class TagPillGroup extends React.Component {
   };
   constructor(props) {
     super(props);
-    this.state.selected = props.active;
+    this.state.selected = props.value;
   }
   onChildClick = identifier => () => {
-    this.setState({ selected: identifier });
+    if (this.props.onChange) {
+      this.props.onChange(identifier);
+    } else {
+      this.setState({ selected: identifier });
+    }
   };
   render() {
-    const { tags, className, pillClassName } = this.props;
+    const { tags, className, pillClassName, highlightColor } = this.props;
     return (
       <TagPillGroupWrapper className={className}>
         {tags.map((tag, index) => (
           <TagPill
             className={pillClassName}
+            highlightColor={highlightColor}
             selected={
-              this.state.selected === tag.id || this.state.selected === index
+              this.props.onChange
+                ? tag.id === this.props.value || index === this.props.value
+                : this.state.selected === tag.id ||
+                  this.state.selected === index
             }
             onClick={this.onChildClick(tag.id || index)}
             onTouchEnd={this.onChildClick(tag.id || index)}
