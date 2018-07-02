@@ -24,3 +24,5 @@ export default class Button extends React.Component {
     return <MyButton type="primary" {...this.props} />;
   }
 }
+
+export const ButtonGroup = AntButton.Group;

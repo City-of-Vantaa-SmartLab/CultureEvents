@@ -1,6 +1,7 @@
 import React from 'react';
-import styled, { withTheme, injectGlobal } from 'styled-components';
-import Form, { InputField } from '../../../../components/form';
+import styled, { withTheme, injectGlobal, css } from 'styled-components';
+import RawForm, { InputField } from '../../../../components/form';
+import Typography from '../../../../components/typography';
 import Button from '../../../../components/button';
 import TagPillGroup from '../../../../components/tag-pill';
 import AntCheckbox from 'antd/lib/checkbox';
@@ -8,13 +9,23 @@ import 'antd/lib/icon/style';
 import 'antd/lib/checkbox/style/css';
 import CoverImage from './CoverImage';
 import ThemeColorChooser from './ThemeColorChooser';
+import ButtonBar from './ButtonBar';
 import Icon from 'antd/lib/icon';
 import * as chroma from 'chroma-js';
 import { toRgba, genRandomKey } from '../../../../utils';
-import { observable } from 'mobx';
+import { observable, transaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import EventModel, { TicketCatalog } from '../../../../models/event';
+import isEqual from 'lodash.isequal';
 
+const Form = styled(RawForm)`
+  & {
+    padding: 2rem 0;
+    background-color: white;
+    border-radius: 8px;
+    overflow-y: auto;
+  }
+`;
 const Row = styled.div`
   display: flex;
   align-items: center;
@@ -49,23 +60,27 @@ const RedButton = styled(Button)`
   }
 `;
 
-const defaulTicketTypeValue = { ...TicketCatalog.create().toJSON() };
-
 class Editor extends React.Component {
+  internalData = observable({
+    creationMode: true,
+  });
   constructor(props) {
     super(props);
-    this.eventDraft = props.selectedEvent
-      ? observable(props.selectedEvent)
-      : observable({
+    console.log(EventModel.create({ id: '12345' }).toJSON());
+    this.internalData.eventDraft = props.selectedEvent
+      ? { ...props.selectedEvent.toJSON() }
+      : {
           ...EventModel.create({
-            id: '__draft',
-            ticketCatalog: [defaulTicketTypeValue],
+            id: genRandomKey(),
           }).toJSON(),
-        });
+        };
   }
   componentWillReceiveProps(props) {
     if (props.selectedEvent)
-      this.eventDraft = observable({ ...props.selectedEvent.toJSON() });
+      transaction(() => {
+        this.internalData.eventDraft = { ...props.selectedEvent.toJSON() };
+        this.internalData.creationMode = false;
+      });
   }
   componentDidMount() {
     const { palette } = this.props.theme;
@@ -82,232 +97,275 @@ class Editor extends React.Component {
 `;
   }
   onChange = fieldName => e => {
-    this.eventDraft[fieldName] = e.target.value;
+    this.internalData.eventDraft[fieldName] = e.target.value;
   };
   onPillChange = fieldName => value => {
-    this.eventDraft[fieldName] = value;
+    this.internalData.eventDraft[fieldName] = value;
   };
   addTicketType = e => {
-    this.eventDraft.ticketCatalog.push({
+    this.internalData.eventDraft.ticketCatalog.push({
       ...TicketCatalog.create({ id: genRandomKey() }),
     });
   };
   removeTicketType = id => e => {
-    const indexOfType = this.eventDraft.ticketCatalog.findIndex(
+    const indexOfType = this.internalData.eventDraft.ticketCatalog.findIndex(
       ticketType => ticketType.id === id,
     );
-    this.eventDraft.ticketCatalog.splice(indexOfType, 1);
+    this.internalData.eventDraft.ticketCatalog.splice(indexOfType, 1);
   };
   updateTicketCatalogField = (id, fieldName) => e => {
-    const entity = this.eventDraft.ticketCatalog;
+    const entity = this.internalData.eventDraft.ticketCatalog;
     const index = entity.findIndex(type => type.id === id);
 
     let value = e.target.value;
     if (fieldName != 'ticketDescription') value = Number(e.target.value);
     entity[index][fieldName] = value;
   };
+  switchToCreationMode = () => {
+    transaction(() => {
+      this.internalData.eventDraft = {
+        ...EventModel.create({ id: genRandomKey() }).toJSON(),
+      };
+      this.internalData.creationMode = true;
+    });
+  };
+  discardDraft = () => {
+    this.internalData.eventDraft = {
+      ...this.props.selectedEvent.toJSON(),
+    };
+  };
   submitForm = () => {
-    const event = EventModel.create(this.eventDraft);
+    const event = EventModel.create(this.internalData.eventDraft);
     this.props.onSubmit(event);
   };
   render() {
     const { palette } = this.props.theme;
     const inputBackgroundColor = toRgba(
-      chroma(this.eventDraft.themeColor)
+      chroma(this.internalData.eventDraft.themeColor)
         .alpha(0.3)
         .rgba(),
     );
+
+    const serializedDraft = toJS(this.internalData.eventDraft);
+    const canConfirm = this.internalData.creationMode
+      ? !isEqual(
+          serializedDraft,
+          EventModel.create({
+            id: this.internalData.eventDraft.id,
+          }).toJSON(),
+        )
+      : !isEqual(serializedDraft, this.props.selectedEvent.toJSON());
     return (
-      <Form style={{ padding: '4rem 0' }}>
-        <Row fullsize>
-          <InputField
-            backgroundColor={inputBackgroundColor}
-            label="Name"
-            lightMode
-            horizontal
-            onChange={this.onChange('name')}
-            value={this.eventDraft.name}
-          />
-          <InputField
-            backgroundColor={inputBackgroundColor}
-            label="Place"
-            lightMode
-            horizontal
-            onChange={this.onChange('location')}
-            value={this.eventDraft.location}
-          />
-        </Row>
-        <Row
-          fullsize
-          style={{
-            backgroundColor: 'rgba(0,0,0, .1)',
-            padding: '2rem 4rem',
-          }}
-        >
-          <CoverImage
-            value={this.eventDraft.coverImage}
-            backgroundColor={inputBackgroundColor}
-            onChange={this.onChange('coverImage')}
-          />
-        </Row>
-        <Row fullsize>
-          <InputField
-            backgroundColor={inputBackgroundColor}
-            label="Description"
-            type="textarea"
-            lightMode
-            rows={10}
-            onChange={this.onChange('description')}
-            value={this.eventDraft.description}
-          />
-        </Row>
-        <Row>
-          <InputField
-            backgroundColor={inputBackgroundColor}
-            label="Date"
-            lightMode
-            horizontal
-            type="date"
-            onChange={this.onChange('date')}
-            value={this.eventDraft.date}
-          />
-          <InputField
-            backgroundColor={inputBackgroundColor}
-            label="Time"
-            lightMode
-            horizontal
-            type="time"
-            onChange={this.onChange('time')}
-            value={this.eventDraft.time}
-          />
-        </Row>
-        {(this.eventDraft.ticketCatalog || [defaulTicketTypeValue])
-          .map(ticketType => (
-            <Row key={ticketType.id}>
-              <InputField
-                backgroundColor={inputBackgroundColor}
-                label="Price"
-                lightMode
-                horizontal
-                type="number"
-                onChange={this.updateTicketCatalogField(ticketType.id, 'price')}
-                value={Number(ticketType.price)}
-              />
-              <InputField
-                backgroundColor={inputBackgroundColor}
-                style={{
-                  width: '100%',
-                }}
-                label="Price Type"
-                lightMode
-                horizontal
-                type="text"
-                onChange={this.updateTicketCatalogField(
-                  ticketType.id,
-                  'ticketDescription',
-                )}
-                value={ticketType.ticketDescription}
-              />
-              <InputField
-                backgroundColor={inputBackgroundColor}
-                label="Seat"
-                lightMode
-                horizontal
-                type="number"
-                onChange={this.updateTicketCatalogField(
-                  ticketType.id,
-                  'availableSeatForThisType',
-                )}
-                value={Number(ticketType.availableSeatForThisType)}
-              />
-              {ticketType.id === 'defaultTicket' ? (
-                <GreenButton
-                  onClick={this.addTicketType}
-                  onTouchEnd={this.addTicketType}
-                >
-                  <Icon type="plus" />
-                </GreenButton>
-              ) : (
-                <RedButton onClick={this.removeTicketType(ticketType.id)}>
-                  <Icon type="minus" />
-                </RedButton>
-              )}
+      <React.Fragment>
+        <ButtonBar
+          addNewEventCB={this.switchToCreationMode}
+          confirmChangeCB={this.submitForm}
+          discardChangeCB={this.discardDraft}
+          canConfirm={canConfirm}
+          canDiscard={canConfirm}
+          canAddNew={!this.internalData.creationMode}
+        />
+        <Form>
+          {this.internalData.creationMode && (
+            <Row>
+              <Typography
+                type="title"
+                color={this.internalData.eventDraft.themeColor}
+              >
+                Create new event
+              </Typography>
             </Row>
-          ))
-          .reverse()}
-        <Row fullsize>
-          <InputField
-            backgroundColor={inputBackgroundColor}
-            label="Contact Information"
-            lightMode
-            horizontal
-            type="text"
-            value={this.eventDraft.contactInformation}
-            onChange={this.onChange('contactInformation')}
-          />
-        </Row>
-        <Row>
-          <InputField label="Event type" lightMode horizontal>
-            <TagPillGroup
-              highlightColor={this.eventDraft.themeColor}
-              value={this.eventDraft.eventType}
-              tags={[
-                { id: 'Kurssit Ja Työpajat', text: 'Kurssit ja työpajat' },
-                { id: 'Näyttelyt', text: 'Näyttelyt' },
-                { id: 'Esitykset', text: 'Esitykset' },
-              ]}
-              onChange={this.onPillChange('eventType')}
+          )}
+          <Row fullsize>
+            <InputField
+              backgroundColor={inputBackgroundColor}
+              label="Name"
+              lightMode
+              horizontal
+              onChange={this.onChange('name')}
+              value={this.internalData.eventDraft.name}
             />
-          </InputField>
-        </Row>
-        <Row>
-          <InputField label="Age group limit" lightMode horizontal>
-            <TagPillGroup
-              highlightColor={this.eventDraft.themeColor}
-              onChange={this.onPillChange('ageGroupLimit')}
-              value={this.eventDraft.ageGroupLimit}
-              tags={[
-                { id: '0-3', text: '0-3' },
-                { id: '3-6', text: '3-6' },
-                { id: '7-12', text: '7-12' },
-                { id: '13+', text: '13+' },
-              ]}
+            <InputField
+              backgroundColor={inputBackgroundColor}
+              label="Place"
+              lightMode
+              horizontal
+              onChange={this.onChange('location')}
+              value={this.internalData.eventDraft.location}
             />
-          </InputField>
-        </Row>
-        <Row fullsize>
-          <ThemeColorChooser
-            value={this.eventDraft.themeColor}
-            onChange={color => (this.eventDraft.themeColor = color)}
-          />
-        </Row>
-        <Row>
-          <Checkbox
-            checked={this.eventDraft.isWordless}
-            onChange={() =>
-              (this.eventDraft.isWordless = !this.eventDraft.isWordless)
-            }
+          </Row>
+          <Row
+            fullsize
+            style={{
+              backgroundColor: 'rgba(0,0,0, .1)',
+              padding: '2rem 4rem',
+            }}
           >
-            Wordless
-          </Checkbox>
-          <Checkbox
-            style={{ marginRight: '1rem' }}
-            checked={this.eventDraft.isBilingual}
-            onChange={() =>
-              (this.eventDraft.isBilingual = !this.eventDraft.isBilingual)
-            }
-          >
-            Bilingual
-          </Checkbox>
-        </Row>
-        <Row
-          style={{ justifyContent: 'center' }}
-          onClick={this.submitForm}
-          onTouchEnd={this.submitForm}
-        >
-          <GreenButton icon="check">Submit</GreenButton>
-        </Row>
-      </Form>
+            <CoverImage
+              value={this.internalData.eventDraft.coverImage}
+              backgroundColor={inputBackgroundColor}
+              onChange={this.onChange('coverImage')}
+            />
+          </Row>
+          <Row fullsize>
+            <InputField
+              backgroundColor={inputBackgroundColor}
+              label="Description"
+              type="textarea"
+              lightMode
+              rows={10}
+              onChange={this.onChange('description')}
+              value={this.internalData.eventDraft.description}
+            />
+          </Row>
+          <Row>
+            <InputField
+              backgroundColor={inputBackgroundColor}
+              label="Date"
+              lightMode
+              horizontal
+              type="date"
+              onChange={this.onChange('date')}
+              value={this.internalData.eventDraft.date}
+            />
+            <InputField
+              backgroundColor={inputBackgroundColor}
+              label="Time"
+              lightMode
+              horizontal
+              type="time"
+              onChange={this.onChange('time')}
+              value={this.internalData.eventDraft.time}
+            />
+          </Row>
+          {this.internalData.eventDraft.ticketCatalog
+            .map(ticketType => (
+              <Row key={ticketType.id}>
+                <InputField
+                  backgroundColor={inputBackgroundColor}
+                  label="Price"
+                  lightMode
+                  horizontal
+                  type="number"
+                  onChange={this.updateTicketCatalogField(
+                    ticketType.id,
+                    'price',
+                  )}
+                  value={Number(ticketType.price)}
+                />
+                <InputField
+                  backgroundColor={inputBackgroundColor}
+                  style={{
+                    width: '100%',
+                  }}
+                  label="Price Type"
+                  lightMode
+                  horizontal
+                  type="text"
+                  onChange={this.updateTicketCatalogField(
+                    ticketType.id,
+                    'ticketDescription',
+                  )}
+                  value={ticketType.ticketDescription}
+                />
+                <InputField
+                  backgroundColor={inputBackgroundColor}
+                  label="Seat"
+                  lightMode
+                  horizontal
+                  type="number"
+                  onChange={this.updateTicketCatalogField(
+                    ticketType.id,
+                    'availableSeatForThisType',
+                  )}
+                  value={Number(ticketType.availableSeatForThisType)}
+                />
+                {ticketType.id === 'defaultTicket' ? (
+                  <GreenButton
+                    onClick={this.addTicketType}
+                    onTouchEnd={this.addTicketType}
+                  >
+                    <Icon type="plus" />
+                  </GreenButton>
+                ) : (
+                  <RedButton onClick={this.removeTicketType(ticketType.id)}>
+                    <Icon type="minus" />
+                  </RedButton>
+                )}
+              </Row>
+            ))
+            .reverse()}
+          <Row fullsize>
+            <InputField
+              backgroundColor={inputBackgroundColor}
+              label="Contact Information"
+              lightMode
+              horizontal
+              type="text"
+              value={this.internalData.eventDraft.contactInformation}
+              onChange={this.onChange('contactInformation')}
+            />
+          </Row>
+          <Row>
+            <InputField label="Event type" lightMode horizontal>
+              <TagPillGroup
+                highlightColor={this.internalData.eventDraft.themeColor}
+                value={this.internalData.eventDraft.eventType}
+                tags={[
+                  { id: 'Kurssit Ja Työpajat', text: 'Kurssit ja työpajat' },
+                  { id: 'Näyttelyt', text: 'Näyttelyt' },
+                  { id: 'Esitykset', text: 'Esitykset' },
+                ]}
+                onChange={this.onPillChange('eventType')}
+              />
+            </InputField>
+          </Row>
+          <Row>
+            <InputField label="Age group limit" lightMode horizontal>
+              <TagPillGroup
+                highlightColor={this.internalData.eventDraft.themeColor}
+                onChange={this.onPillChange('ageGroupLimit')}
+                value={this.internalData.eventDraft.ageGroupLimit}
+                tags={[
+                  { id: '0-3', text: '0-3' },
+                  { id: '3-6', text: '3-6' },
+                  { id: '7-12', text: '7-12' },
+                  { id: '13+', text: '13+' },
+                ]}
+              />
+            </InputField>
+          </Row>
+          <Row fullsize>
+            <ThemeColorChooser
+              value={this.internalData.eventDraft.themeColor}
+              onChange={color =>
+                (this.internalData.eventDraft.themeColor = color)
+              }
+            />
+          </Row>
+          <Row>
+            <Checkbox
+              checked={this.internalData.eventDraft.isWordless}
+              onChange={() =>
+                (this.internalData.eventDraft.isWordless = !this.internalData
+                  .eventDraft.isWordless)
+              }
+            >
+              Wordless
+            </Checkbox>
+            <Checkbox
+              style={{ marginRight: '1rem' }}
+              checked={this.internalData.eventDraft.isBilingual}
+              onChange={() =>
+                (this.internalData.eventDraft.isBilingual = !this.internalData
+                  .eventDraft.isBilingual)
+              }
+            >
+              Bilingual
+            </Checkbox>
+          </Row>
+        </Form>
+      </React.Fragment>
     );
   }
 }

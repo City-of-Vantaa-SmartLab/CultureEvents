@@ -27,7 +27,9 @@ const Event = types.model({
   performer: types.maybe(types.string),
   date: types.maybe(types.string),
   time: types.maybe(types.string),
-  ticketCatalog: types.maybe(types.array(TicketCatalog)),
+  ticketCatalog: types.optional(types.array(TicketCatalog), [
+    TicketCatalog.create().toJSON(),
+  ]),
   contactInformation: types.optional(types.string, ''),
   eventType: types.optional(
     types.enumeration('EventType', [

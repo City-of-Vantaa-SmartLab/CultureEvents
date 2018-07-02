@@ -38,7 +38,7 @@ const TagPillGroupWrapper = styled.div`
 
 export class TagPill extends React.Component {
   render() {
-    return <TagPillText type="secondarybody" {...this.props} />;
+    return <TagPillText type="body" {...this.props} />;
   }
 }
 

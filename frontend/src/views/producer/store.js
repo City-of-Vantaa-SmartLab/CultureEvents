@@ -11,7 +11,14 @@ const mockEvent = {
     time: '16:32',
     performer: 'SpongeBob',
     contactInformation: '+3589473843',
-    ticketCatalog: null,
+    ticketCatalog: [
+      {
+        id: 'ticket-catalog-1',
+        ticketDescription: 'For children',
+        price: 10,
+        availableSeatForThisType: 300,
+      },
+    ],
     coverImage:
       'https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350',
     themeColor: '#EC9D5C',
@@ -26,7 +33,14 @@ const mockEvent = {
     time: '16:32',
     performer: 'Chris Hemsworth',
     contactInformation: '+3589473843',
-    ticketCatalog: null,
+    ticketCatalog: [
+      {
+        id: 'ticket-catalog-1',
+        ticketDescription: 'For children',
+        price: 10,
+        availableSeatForThisType: 300,
+      },
+    ],
     coverImage: 'https://media.giphy.com/media/9vVCPK87Aw6v6/giphy.gif',
     themeColor: '#09B0B8',
     ageGroupLimit: '13+',
@@ -42,8 +56,7 @@ export const RootProducerModel = types
   .actions(self => ({
     addEvent: event => self.events.set(event.id, EventModel.create(event)),
     selectEvent: id => (self.selectedEvent = id),
-    alterEvent: event => {
-      console.log('AlterEvent called');
+    patchEvent: event => {
       self.events.set(event.id, event);
     },
   }));
