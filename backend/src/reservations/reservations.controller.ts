@@ -14,12 +14,14 @@ import { ReservationService } from './reservations.service';
 import { ValidationPipe } from 'validations/validation.pipe';
 import { Reservations } from './reservations.entity';
 import { ValidationService } from '../utils/validations/validations.service';
+import { SMSService } from 'notifications/sms/sms.service';
 
 @Controller('reservations')
 export class ReservationsController {
   constructor(
     private readonly reservationsService: ReservationService,
     private readonly validationService: ValidationService,
+    private readonly smsService: SMSService,
   ) {}
   @Get()
   async findAll(@Res() response): Promise<Reservations[]> {
@@ -46,6 +48,7 @@ export class ReservationsController {
       const reservationDto = await this.reservationsService.createReservation(
         reservation,
       );
+
       return response.status(201).send(reservation);
     } catch (error) {
       return response

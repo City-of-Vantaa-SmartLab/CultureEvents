@@ -8,13 +8,13 @@ export class Price {
   @Column('double precision') price: number;
 
   @Column({ length: 30 })
-  type: string;
+  ticket_type: string;
 
   @Column({ length: 200 })
-  description: string;
+  ticket_description: string;
 
-  @Column('int') seats: number;
+  @Column('int') available_seat_for_this_type: number;
 
-  @ManyToOne(type => Events, event => event.pricing)
+  @ManyToOne(type => Events, event => event.ticket_catalog)
   events: Events;
 }
