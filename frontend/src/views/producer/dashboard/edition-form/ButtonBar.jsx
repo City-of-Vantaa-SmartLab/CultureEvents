@@ -62,14 +62,6 @@ class ButtonBar extends React.Component {
           >
             Discard change
           </Button>
-          <Button
-            bgColor={palette.red}
-            icon="close-circle"
-            onClick={discardChangeCB}
-            onTouchEnd={discardChangeCB}
-          >
-            Mark as cancelled
-          </Button>
         </AntButton.Group>
       </Wrapper>
     );
