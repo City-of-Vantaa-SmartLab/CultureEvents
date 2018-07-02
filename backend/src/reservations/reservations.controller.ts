@@ -15,7 +15,9 @@ import { ValidationPipe } from 'validations/validation.pipe';
 import { Reservations } from './reservations.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { SMSService } from 'notifications/sms/sms.service';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('reservations')
 @Controller('reservations')
 export class ReservationsController {
   constructor(

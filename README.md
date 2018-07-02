@@ -34,6 +34,14 @@ To deploy, Heroku CLI needs to be set-up along with Docker.
 . ./deploy-to-dev.sh
 ```
 
+### Swagger
+
+Swagger has been configured to get the api details.
+
+Navigate to the below url to get the api details.
+
+http://localhost:5000/api
+
 ### Production
 
 TBD

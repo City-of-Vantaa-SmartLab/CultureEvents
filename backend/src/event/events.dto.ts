@@ -1,18 +1,47 @@
 import { IsString, IsNumber, IsArray, IsBoolean } from 'class-validator';
 import { PriceDto } from '../price/price.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
 export class EventsDto {
-  @IsString() readonly name: string;
-  @IsString() readonly location: string;
-  @IsString() readonly desciption: string;
-  @IsString() readonly event_date: string;
-  @IsString() readonly event_time: string;
-  @IsArray() readonly ticket_catalog: PriceDto[];
-  @IsString() readonly contact_information: string;
-  @IsString() readonly event_type: string;
-  @IsString() readonly age_group_limit: string;
-  @IsBoolean() readonly is_wordless: boolean;
-  @IsBoolean() readonly is_bilingual: boolean;
-  @IsString() readonly cover_image: string;
-  @IsString() readonly theme_color: string;
-  @IsString() readonly performer: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly name: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly location: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly desciption: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly event_date: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly event_time: string;
+  @IsArray()
+  @ApiModelProperty({ type: PriceDto, isArray: true })
+  readonly ticket_catalog: PriceDto[];
+  @IsString()
+  @ApiModelProperty()
+  readonly contact_information: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly event_type: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly age_group_limit: string;
+  @IsBoolean()
+  @ApiModelProperty()
+  readonly is_wordless: boolean;
+  @IsBoolean()
+  @ApiModelProperty()
+  readonly is_bilingual: boolean;
+  @IsString()
+  @ApiModelProperty()
+  readonly cover_image: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly theme_color: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly performer: string;
 }

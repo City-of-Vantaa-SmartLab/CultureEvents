@@ -12,7 +12,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserService } from 'user/user.service';
 import { User } from 'user/user.entity';
 import { ValidationPipe } from 'validations/validation.pipe';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -46,7 +48,7 @@ export class AuthController {
   @Post('/logout')
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
-  async logout(@Res() response, @Body() user: User) {
+  async logout(@Res() response, @Body() user: UserDto) {
     try {
       const dbUser = await this.userService.findUserByUsernameAndPassword(user);
       if (dbUser) {
