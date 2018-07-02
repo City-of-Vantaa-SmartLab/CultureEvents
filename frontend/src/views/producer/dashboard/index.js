@@ -7,14 +7,13 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
   background-color: #becdd9;
   position: relative;
   display: flex;
   justify-content: space-between;
 `;
 
-export default class index extends React.Component {
+export default class DashBoard extends React.Component {
   render() {
     return (
       <Wrapper>
