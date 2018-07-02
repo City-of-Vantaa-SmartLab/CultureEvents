@@ -28,10 +28,12 @@ export class EventsService {
   }
 
   async findAll(): Promise<Events[]> {
-    return await this.eventRepository.find({ relations: ['pricing'] });
+    return await this.eventRepository.find({ relations: ['ticket_catalog'] });
   }
 
   async findOneById(id: number) {
-    return await this.eventRepository.findOne(id, { relations: ['pricing'] });
+    return await this.eventRepository.findOne(id, {
+      relations: ['ticket_catalog'],
+    });
   }
 }
