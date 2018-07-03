@@ -8,6 +8,7 @@ import { ReservationsModule } from 'reservations/reservations.module';
 import { UserModule } from 'user/user.module';
 import { AuthModule } from 'auth/auth.module';
 import { PaymentModule } from 'payments/payment.module';
+import { SeedModule } from 'seed-db/seed.module';
 
 @Module({
   imports: [
@@ -17,12 +18,11 @@ import { PaymentModule } from 'payments/payment.module';
     UserModule,
     AuthModule,
     PaymentModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private readonly connection: Connection) {
-    connection.synchronize(true);
-  }
+  constructor(private readonly connection: Connection) {}
 }
