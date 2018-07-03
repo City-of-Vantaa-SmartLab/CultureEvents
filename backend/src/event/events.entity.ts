@@ -16,7 +16,7 @@ export class Events {
   location: string;
 
   @Column({ length: 500 })
-  desciption: string;
+  description: string;
 
   @Column({ length: 500 })
   event_date: string;
