@@ -17,7 +17,9 @@ import { ValidationPipe } from 'validations/validation.pipe';
 import { Events } from './events.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('events')
 @Controller('events')
 export class EventsController {
   constructor(

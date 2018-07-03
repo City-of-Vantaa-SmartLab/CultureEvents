@@ -1,10 +1,25 @@
 import { IsString, IsNumber } from 'class-validator';
+import { ApiModelProperty } from '@nestjs/swagger';
 export class ReservationsDto {
-  @IsNumber() readonly event_id: number;
-  @IsString() readonly type: string;
-  @IsString() readonly username: string;
-  @IsString() readonly address: string;
-  @IsString() readonly phone_number: string;
-  @IsString() readonly email: string;
-  @IsNumber() readonly total_amount: number;
+  @IsNumber()
+  @ApiModelProperty()
+  readonly event_id: number;
+  @IsString()
+  @ApiModelProperty()
+  readonly type: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly username: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly address: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly phone_number: string;
+  @IsString()
+  @ApiModelProperty()
+  readonly email: string;
+  @IsNumber()
+  @ApiModelProperty()
+  readonly total_amount: number;
 }

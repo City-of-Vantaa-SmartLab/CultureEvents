@@ -15,6 +15,9 @@ import { UserDto } from './user.dto';
 import { User } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'auth/auth.service';
+import { ApiUseTags } from '@nestjs/swagger';
+
+@ApiUseTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -44,7 +47,11 @@ export class UserController {
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
-  async update(@Res() response, @Param('id') id: number, @Body() user: User) {
+  async update(
+    @Res() response,
+    @Param('id') id: number,
+    @Body() user: UserDto,
+  ) {
     try {
       const updateResponse = await this.userService.updateUser(id, user);
       if (updateResponse) {
