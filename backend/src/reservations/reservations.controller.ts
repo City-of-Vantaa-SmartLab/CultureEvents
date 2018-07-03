@@ -15,7 +15,7 @@ import { ValidationPipe } from 'validations/validation.pipe';
 import { Reservations } from './reservations.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { SMSService } from 'notifications/sms/sms.service';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
 
 @ApiUseTags('reservations')
 @Controller('reservations')
@@ -60,6 +60,13 @@ export class ReservationsController {
   }
 
   @Get(':id')
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description:
+      'Reservation Id, of the reservations which needs to be fetched',
+    type: String,
+  })
   @UsePipes(new ValidationPipe())
   async findOne(@Res() response, @Param('id') id: number) {
     try {
@@ -83,6 +90,13 @@ export class ReservationsController {
   }
 
   @Put(':id')
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description:
+      'Reservation Id, of the reservations which needs to be updated',
+    type: String,
+  })
   @UsePipes(new ValidationPipe())
   async update(
     @Res() response,
