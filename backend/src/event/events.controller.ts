@@ -17,12 +17,16 @@ import { ValidationPipe } from 'validations/validation.pipe';
 import { Events } from './events.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
+import { ReservationService } from 'reservations/reservations.service';
 
+@ApiUseTags('events')
 @Controller('events')
 export class EventsController {
   constructor(
     private readonly eventsService: EventsService,
     private readonly validationService: ValidationService,
+    private readonly reservationsService: ReservationService,
   ) {}
   @Get()
   async findAll(@Res() response): Promise<Events[]> {
@@ -121,6 +125,36 @@ export class EventsController {
       }
     } catch (error) {
       return response.status(500).send(`Failed to delete event with id: ${id}`);
+    }
+  }
+
+  @Get('/:id/reservations')
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description: 'Event Id, for which reservations needs to be fetched',
+    type: String,
+  })
+  async getEventReservations(@Res() response, @Param('id') id: number) {
+    try {
+      if (this.validationService.validateId(+id)) {
+        return response.status(400).send(`Invalid event Id: ${id}`);
+      } else {
+        const reservations = await this.reservationsService.findReservationsForEvent(
+          id,
+        );
+        if (reservations) {
+          return response.status(200).send(reservations);
+        } else {
+          return response
+            .status(404)
+            .send(`Could not find any reservations for event with id: ${id}`);
+        }
+      }
+    } catch (error) {
+      return response
+        .status(500)
+        .send(`Failed to get any reservations for event with id: ${id}`);
     }
   }
 }
