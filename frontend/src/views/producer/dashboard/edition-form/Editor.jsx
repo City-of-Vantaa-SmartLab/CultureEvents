@@ -1,8 +1,8 @@
 import React from 'react';
-import styled, { withTheme, injectGlobal, css } from 'styled-components';
+import styled, { withTheme, injectGlobal } from 'styled-components';
 import RawForm, { InputField } from '../../../../components/form';
 import Typography from '../../../../components/typography';
-import Button from '../../../../components/button';
+import Button, { ButtonGroup } from '../../../../components/button';
 import TagPillGroup from '../../../../components/tag-pill';
 import AntCheckbox from 'antd/lib/checkbox';
 import 'antd/lib/icon/style';
@@ -51,14 +51,104 @@ const Checkbox = styled(AntCheckbox)`
 
 const GreenButton = styled(Button)`
   &&& {
-    background-color: ${props => props.theme.palette.deepGreen};
+    border-radius: 8px;
+    border-color: ${props => props.theme.palette.deepGreen};
+    color: ${props => props.theme.palette.deepGreen};
+    background-color: transparent;
+
+    &: hover {
+      background-color: ${props => props.theme.palette.deepGreen};
+      color: white;
+    }
   }
 `;
-const RedButton = styled(Button)`
+const RedButton = styled(GreenButton)`
   &&& {
-    background-color: ${props => props.theme.palette.red};
+    border-color: ${props => props.theme.palette.red};
+    color: ${props => props.theme.palette.red};
+    &: hover {
+      background-color: ${props => props.theme.palette.red};
+    }
   }
 `;
+
+const HighlightedArea = styled.div`
+  border-left: 3px ${props => props.themeColor} solid;
+  width: 100%;
+`;
+
+const TicketCatalogInputGroup = props => {
+  if (props.ticketCatalog.length == 0) {
+    return;
+    <Row>
+      <GreenButton
+        onClick={props.addTicketType}
+        onTouchEnd={props.addTicketType}
+        icon="plus"
+      >
+        Add ticket type
+      </GreenButton>
+    </Row>;
+  }
+  return (
+    <HighlightedArea themeColor={props.themeColor}>
+      {props.ticketCatalog.map((ticketType, index, arr) => (
+        <Row key={ticketType.id}>
+          <InputField
+            backgroundColor={props.inputBackgroundColor}
+            label="Price"
+            lightMode
+            horizontal
+            type="number"
+            onChange={props.updateTicketCatalogField(ticketType.id, 'price')}
+            value={Number(ticketType.price)}
+          />
+          <InputField
+            backgroundColor={props.inputBackgroundColor}
+            style={{
+              width: '100%',
+            }}
+            label="Price Type"
+            lightMode
+            horizontal
+            type="text"
+            onChange={props.updateTicketCatalogField(
+              ticketType.id,
+              'ticketDescription',
+            )}
+            value={ticketType.ticketDescription}
+          />
+          <InputField
+            backgroundColor={props.inputBackgroundColor}
+            label="Seat"
+            lightMode
+            horizontal
+            type="number"
+            onChange={props.updateTicketCatalogField(
+              ticketType.id,
+              'availableSeatForThisType',
+            )}
+            value={Number(ticketType.availableSeatForThisType)}
+          />
+          <ButtonGroup style={{ flexShrink: 0 }}>
+            <RedButton onClick={props.removeTicketType(ticketType.id)}>
+              <Icon type="close" />
+            </RedButton>
+            {index === arr.length - 1 && (
+              <GreenButton
+                onClick={props.addTicketType}
+                onTouchEnd={props.addTicketType}
+                icon="plus"
+              >
+                Add ticket type
+              </GreenButton>
+            )}
+          </ButtonGroup>
+        </Row>
+      ))}
+    </HighlightedArea>
+  );
+};
 
 class Editor extends React.Component {
   internalData = observable({
@@ -73,6 +163,7 @@ class Editor extends React.Component {
             id: genRandomKey(),
           }).toJSON(),
         };
+    this.internalData.creationMode = !props.selectedEvent;
   }
   componentWillReceiveProps(props) {
     if (props.selectedEvent)
@@ -80,6 +171,12 @@ class Editor extends React.Component {
         this.internalData.eventDraft = { ...props.selectedEvent.toJSON() };
         this.internalData.creationMode = false;
       });
+    else {
+      this.internalData.eventDraft = {
+        ...EventModel.create({ id: genRandomKey() }).toJSON(),
+      };
+      this.internalData.creationMode = true;
+    }
   }
   componentDidMount() {
     const { palette } = this.props.theme;
@@ -113,12 +210,13 @@ class Editor extends React.Component {
     this.internalData.eventDraft.ticketCatalog.splice(indexOfType, 1);
   };
   updateTicketCatalogField = (id, fieldName) => e => {
-    const entity = this.internalData.eventDraft.ticketCatalog;
-    const index = entity.findIndex(type => type.id === id);
-
+    const catalog = this.internalData.eventDraft.ticketCatalog;
+    const index = this.internalData.eventDraft.ticketCatalog.findIndex(
+      elem => elem.id === id,
+    );
     let value = e.target.value;
     if (fieldName != 'ticketDescription') value = Number(e.target.value);
-    entity[index][fieldName] = value;
+    catalog[index][fieldName] = value;
   };
   switchToCreationMode = () => {
     transaction(() => {
@@ -129,13 +227,18 @@ class Editor extends React.Component {
     });
   };
   discardDraft = () => {
-    this.internalData.eventDraft = {
-      ...this.props.selectedEvent.toJSON(),
-    };
+    if (this.internalData.creationMode) {
+      this.internalData.eventDraft = {
+        ...EventModel.create({ id: genRandomKey() }).toJSON(),
+      };
+    } else {
+      this.internalData.eventDraft = {
+        ...this.props.selectedEvent.toJSON(),
+      };
+    }
   };
   submitForm = () => {
-    const event = EventModel.create(this.internalData.eventDraft);
-    this.props.onSubmit(event);
+    this.props.onSubmit(this.internalData.eventDraft);
   };
   render() {
     const { palette } = this.props.theme;
@@ -161,7 +264,7 @@ class Editor extends React.Component {
           confirmChangeCB={this.submitForm}
           discardChangeCB={this.discardDraft}
           canConfirm={canConfirm}
-          canDiscard={canConfirm}
+          canDiscard={canConfirm && !this.internalData.creationMode}
           canAddNew={!this.internalData.creationMode}
         />
         <Form>
@@ -224,8 +327,8 @@ class Editor extends React.Component {
               lightMode
               horizontal
               type="date"
-              onChange={this.onChange('date')}
-              value={this.internalData.eventDraft.date}
+              onChange={this.onChange('eventDate')}
+              value={this.internalData.eventDraft.eventDate}
             />
             <InputField
               backgroundColor={inputBackgroundColor}
@@ -233,8 +336,8 @@ class Editor extends React.Component {
               lightMode
               horizontal
               type="time"
-              onChange={this.onChange('time')}
-              value={this.internalData.eventDraft.time}
+              onChange={this.onChange('eventTime')}
+              value={this.internalData.eventDraft.eventTime}
             />
             <InputField
               style={{ width: '100%' }}
@@ -247,63 +350,14 @@ class Editor extends React.Component {
               value={this.internalData.eventDraft.performer}
             />
           </Row>
-          {this.internalData.eventDraft.ticketCatalog
-            .map(ticketType => (
-              <Row key={ticketType.id}>
-                <InputField
-                  backgroundColor={inputBackgroundColor}
-                  label="Price"
-                  lightMode
-                  horizontal
-                  type="number"
-                  onChange={this.updateTicketCatalogField(
-                    ticketType.id,
-                    'price',
-                  )}
-                  value={Number(ticketType.price)}
-                />
-                <InputField
-                  backgroundColor={inputBackgroundColor}
-                  style={{
-                    width: '100%',
-                  }}
-                  label="Price Type"
-                  lightMode
-                  horizontal
-                  type="text"
-                  onChange={this.updateTicketCatalogField(
-                    ticketType.id,
-                    'ticketDescription',
-                  )}
-                  value={ticketType.ticketDescription}
-                />
-                <InputField
-                  backgroundColor={inputBackgroundColor}
-                  label="Seat"
-                  lightMode
-                  horizontal
-                  type="number"
-                  onChange={this.updateTicketCatalogField(
-                    ticketType.id,
-                    'availableSeatForThisType',
-                  )}
-                  value={Number(ticketType.availableSeatForThisType)}
-                />
-                {ticketType.id === 'defaultTicket' ? (
-                  <GreenButton
-                    onClick={this.addTicketType}
-                    onTouchEnd={this.addTicketType}
-                  >
-                    <Icon type="plus" />
-                  </GreenButton>
-                ) : (
-                  <RedButton onClick={this.removeTicketType(ticketType.id)}>
-                    <Icon type="minus" />
-                  </RedButton>
-                )}
-              </Row>
-            ))
-            .reverse()}
+          <TicketCatalogInputGroup
+            ticketCatalog={this.internalData.eventDraft.ticketCatalog}
+            addTicketType={this.addTicketType}
+            removeTicketType={this.removeTicketType}
+            inputBackgroundColor={inputBackgroundColor}
+            updateTicketCatalogField={this.updateTicketCatalogField}
+            themeColor={this.internalData.eventDraft.themeColor}
+          />
           <Row fullsize>
             <InputField
               backgroundColor={inputBackgroundColor}

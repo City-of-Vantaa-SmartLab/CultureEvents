@@ -1,7 +1,7 @@
 import { types } from 'mobx-state-tree';
 
 const TicketCatalog = types.model({
-  id: types.optional(types.identifier(types.string), 'defaultTicket'),
+  id: types.optional(types.identifier(types.number), 989898),
   ticketDescription: types.optional(types.string, ''),
   price: types.optional(
     types.refinement(
@@ -20,13 +20,13 @@ const TicketCatalog = types.model({
 });
 
 const Event = types.model({
-  id: types.identifier(types.string),
+  id: types.identifier(types.union(types.string, types.number)),
   name: types.optional(types.string, ''),
   location: types.optional(types.string, ''),
   description: types.optional(types.string, ''),
   performer: types.maybe(types.string),
-  date: types.maybe(types.string),
-  time: types.maybe(types.string),
+  eventDate: types.maybe(types.string),
+  eventTime: types.maybe(types.string),
   ticketCatalog: types.optional(types.array(TicketCatalog), [
     TicketCatalog.create().toJSON(),
   ]),

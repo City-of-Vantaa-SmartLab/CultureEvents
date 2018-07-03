@@ -3,7 +3,7 @@ import { PriceDto } from '../price/price.dto';
 export class EventsDto {
   @IsString() readonly name: string;
   @IsString() readonly location: string;
-  @IsString() readonly desciption: string;
+  @IsString() readonly description: string;
   @IsString() readonly event_date: string;
   @IsString() readonly event_time: string;
   @IsArray() readonly ticket_catalog: PriceDto[];

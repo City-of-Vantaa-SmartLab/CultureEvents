@@ -7,9 +7,6 @@ export class Price {
 
   @Column('double precision') price: number;
 
-  @Column({ length: 30 })
-  ticket_type: string;
-
   @Column({ length: 200 })
   ticket_description: string;
 

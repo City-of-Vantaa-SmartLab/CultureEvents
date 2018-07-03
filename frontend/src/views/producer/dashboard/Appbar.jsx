@@ -2,6 +2,8 @@ import React from 'react';
 import styled, { withTheme } from 'styled-components';
 import Logo from '../../../components/logo';
 import Typography from '../../../components/typography';
+import Button from '../../../components/button';
+import { connect } from '../../../utils';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -14,6 +16,8 @@ const Wrapper = styled.div`
   left: 0;
   background-color: ${props => props.theme.palette.primaryDeep};
   z-index: 100;
+  align-items: center;
+  justify-content: space-between;
 `;
 const LogoSection = styled.div`
   display: flex;
@@ -32,6 +36,13 @@ const LogoSection = styled.div`
     font-size: 2rem;
   }
 `;
+const LogoutButton = styled(Button)`
+  && {
+    background-color: ${props => props.theme.palette.secondary};
+    color: black;
+    border-color: transparent;
+  }
+`;
 
 class Appbar extends React.Component {
   render() {
@@ -48,10 +59,13 @@ class Appbar extends React.Component {
               KULTTUURIA
             </Typography>
           </LogoSection>
+          <LogoutButton icon="logout" onClick={this.props.store.logout}>
+            Logout
+          </LogoutButton>
         </Wrapper>
       </React.Fragment>
     );
   }
 }
 
-export default withTheme(Appbar);
+export default withTheme(connect('store')(Appbar));
