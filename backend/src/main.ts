@@ -20,8 +20,7 @@ async function bootstrap() {
     .addTag('payments')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
-
+  SwaggerModule.setup('swagger', app, document);
   await app.listen(PORT);
 }
 bootstrap();
