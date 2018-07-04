@@ -9,7 +9,6 @@ const MyButton = styled(AntButton)`
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    border: none;
 
     &:hover {
       transform: translate(0, -3px);
@@ -21,6 +20,8 @@ const MyButton = styled(AntButton)`
 
 export default class Button extends React.Component {
   render() {
-    return <MyButton type="primary" {...this.props} />;
+    return <MyButton type={this.props.type || 'primary'} {...this.props} />;
   }
 }
+
+export const ButtonGroup = AntButton.Group;
