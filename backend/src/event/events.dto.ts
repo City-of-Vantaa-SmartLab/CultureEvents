@@ -10,7 +10,7 @@ export class EventsDto {
   readonly location: string;
   @IsString()
   @ApiModelProperty()
-  readonly desciption: string;
+  readonly description: string;
   @IsString()
   @ApiModelProperty()
   readonly event_date: string;

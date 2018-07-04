@@ -40,7 +40,7 @@ Swagger has been configured to get the api details.
 
 Navigate to the below url to get the api details.
 
-http://localhost:5000/api
+http://localhost:5000/swagger
 
 ### Production
 

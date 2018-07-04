@@ -33,6 +33,7 @@ services:
       TELIA_USER: Vantaa
       BAMBORA_PRODUCT_ID:
       BAMBORA_PRODUCT_TITLE: Saldovaraus Jumppaliput-sovellukseen
+      SEED_DB: 1
 
   postgres-dev-db:
     image: postgres:10.3
