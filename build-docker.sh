@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 cd backend/
-docker build . -t vantaa-culture-reservations-backend:latest
+docker build --no-cache . -t vantaa-culture-reservations-backend:latest
 cd ..
-docker build . -t vantaa-culture-reservations:latest
+docker build --no-cache . -t vantaa-culture-reservations:latest
