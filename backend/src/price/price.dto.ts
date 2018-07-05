@@ -1,8 +1,16 @@
 import { IsString, IsNumber } from 'class-validator';
+import { ApiModelProperty } from '@nestjs/swagger';
 export class PriceDto {
-  @IsNumber() readonly price: number;
+  @IsNumber()
+  @ApiModelProperty()
+  readonly price: number;
 
-  @IsString() readonly ticket_description: string;
 
-  @IsString() readonly available_seat_for_this_type: number;
+  @IsString()
+  @ApiModelProperty()
+  readonly ticket_description: string;
+
+  @IsString()
+  @ApiModelProperty()
+  readonly available_seat_for_this_type: number;
 }

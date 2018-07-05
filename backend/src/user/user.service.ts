@@ -26,7 +26,7 @@ export class UserService {
     return response;
   }
 
-  async updateUser(id: number, user: User) {
+  async updateUser(id: number, user: UserDto) {
     const hashedPassword = await this.hashPassword(user.password);
     user.password = hashedPassword;
     const response = await this.userRepository.update(id, user);
@@ -45,9 +45,10 @@ export class UserService {
     return await this.userRepository.findOne({ where: { username } });
   }
 
-  async logoutUser(user: User) {
-    user.logged_in = false;
-    await this.userRepository.update({ username: user.username }, user);
+  async logoutUser(user: UserDto) {
+    const dbUser = await this.getUserByUsername(user.username);
+    dbUser.logged_in = false;
+    await this.userRepository.update({ username: user.username }, dbUser);
     return 'User logged out!';
   }
 

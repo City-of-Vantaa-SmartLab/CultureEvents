@@ -56,6 +56,13 @@ export class ReservationService {
     });
   }
 
+  async findReservationsForEvent(id: number) {
+    return await this.reservationsRepository.find({
+      where: { event_id: id },
+      relations: ['tickets'],
+    });
+  }
+
   async sendSmsToUser(reservation: ReservationsDto) {
     const event = await this.eventService.findOneById(reservation.event_id);
     const reservationMessage = await this.buildReservationMessage(event);

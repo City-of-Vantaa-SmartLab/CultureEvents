@@ -12,7 +12,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserService } from 'user/user.service';
 import { User } from 'user/user.entity';
 import { ValidationPipe } from 'validations/validation.pipe';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -26,11 +28,14 @@ export class AuthController {
     try {
       const dbUser = await this.userService.findUserByUsernameAndPassword(user);
       if (dbUser) {
-        const token = await this.authService.createToken(user);
-        const decodedToken = await this.authService.decodeToken(token);
-        dbUser.token = token;
-        dbUser.token_issued = decodedToken.iat;
-        dbUser.token_expiry = decodedToken.exp;
+        let token = dbUser.token;
+        if (token == null || dbUser.token_expiry < Date.now() / 1000) {
+          const newToken = await this.authService.createToken(user);
+          const decodedToken = await this.authService.decodeToken(newToken);
+          dbUser.token = newToken;
+          dbUser.token_issued = decodedToken.iat;
+          dbUser.token_expiry = decodedToken.exp;
+        }
         await this.userService.loginUser(dbUser);
         return response.status(200).send(dbUser);
       } else {
@@ -46,7 +51,7 @@ export class AuthController {
   @Post('/logout')
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
-  async logout(@Res() response, @Body() user: User) {
+  async logout(@Res() response, @Body() user: UserDto) {
     try {
       const dbUser = await this.userService.findUserByUsernameAndPassword(user);
       if (dbUser) {
