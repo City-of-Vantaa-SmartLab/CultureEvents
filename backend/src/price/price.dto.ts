@@ -5,7 +5,6 @@ export class PriceDto {
   @ApiModelProperty()
   readonly price: number;
 
-
   @IsString()
   @ApiModelProperty()
   readonly ticket_description: string;
