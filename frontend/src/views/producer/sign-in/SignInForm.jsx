@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Form, { InputField } from '../../../components/form';
 import Button from '../../../components/button';
+import { connect } from '../../../utils';
+import { Redirect } from 'react-router-dom';
 
 const Wrapper = styled.div`
   margin: auto;
@@ -22,16 +24,43 @@ const SignInButton = styled(Button)`
   }
 `;
 
-export default class SignInForm extends React.Component {
+class SignInForm extends React.Component {
+  state = {
+    username: '',
+    password: '',
+  };
+  onChangeName = e => {
+    this.setState({ username: e.target.value });
+  };
+  onChangePassword = e => {
+    this.setState({ password: e.target.value });
+  };
+  login = e => {
+    this.props.store.login(this.state.username, this.state.password);
+  };
+
   render() {
+    if (this.props.store.user.isAuthenticated)
+      return <Redirect to="./dashboard" />;
     return (
       <Wrapper>
         <Form>
-          <InputField label="Nimi" />
-          <InputField label="Password" type="password" />
-          <SignInButton>Kirjaudu</SignInButton>
+          <InputField
+            label="Nimi"
+            value={this.state.username}
+            onChange={this.onChangeName}
+          />
+          <InputField
+            label="Password"
+            type="password"
+            value={this.state.password}
+            onChange={this.onChangePassword}
+          />
+          <SignInButton onClick={this.login}>Kirjaudu</SignInButton>
         </Form>
       </Wrapper>
     );
   }
 }
+
+export default connect('store')(SignInForm);

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  margin: 2rem;
+  margin: 1rem;
   margin-top: calc(3rem + 5rem);
   background-color: white;
   flex-grow: 1;

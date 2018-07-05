@@ -39,7 +39,6 @@ const EmptyStateContainer = styled.div`
 class EventExplorer extends React.Component {
   render() {
     const { events } = this.props.store;
-    console.log(this.props.store.events.toJSON(), this.props.store.isEmpty);
     return (
       <React.Fragment>
         <WrapperFlat />
@@ -52,8 +51,8 @@ class EventExplorer extends React.Component {
                 themeColor={event.themeColor}
                 name={event.name}
                 location={event.location}
-                date={event.date}
-                time={event.time}
+                date={event.eventDate}
+                time={event.eventTime}
                 performer={event.performer}
                 coverImage={event.coverImage}
                 ageGroupLimit={event.ageGroupLimit}

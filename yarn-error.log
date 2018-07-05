@@ -1,0 +1,36 @@
+Arguments: 
+  /Users/thanh.nguyen/.npm-global/lib/node_modules/node/bin/node /Users/thanh.nguyen/.npm-global/bin/yarn add @type/react-router-dom
+
+PATH: 
+  /Users/thanh.nguyen/.npm-global/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/thanh.nguyen/.npm-global/bin
+
+Yarn version: 
+  1.7.0
+
+Node version: 
+  10.1.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@type%2freact-router-dom: Not found
+      at Request.params.callback [as _callback] (/Users/thanh.nguyen/.config/yarn/global/node_modules/yarn/lib/cli.js:65656:18)
+      at Request.self.callback (/Users/thanh.nguyen/.config/yarn/global/node_modules/yarn/lib/cli.js:134675:22)
+      at Request.emit (events.js:182:13)
+      at Request.<anonymous> (/Users/thanh.nguyen/.config/yarn/global/node_modules/yarn/lib/cli.js:135658:10)
+      at Request.emit (events.js:182:13)
+      at IncomingMessage.<anonymous> (/Users/thanh.nguyen/.config/yarn/global/node_modules/yarn/lib/cli.js:135578:12)
+      at Object.onceWrapper (events.js:273:13)
+      at IncomingMessage.emit (events.js:187:15)
+      at endReadableNT (_stream_readable.js:1086:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

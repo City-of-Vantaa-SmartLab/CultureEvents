@@ -7,10 +7,6 @@ export class PriceDto {
 
   @IsString()
   @ApiModelProperty()
-  readonly ticket_type: string;
-
-  @IsString()
-  @ApiModelProperty()
   readonly ticket_description: string;
 
   @IsString()
