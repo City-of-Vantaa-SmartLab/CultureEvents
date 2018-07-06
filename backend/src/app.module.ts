@@ -9,6 +9,7 @@ import { UserModule } from 'user/user.module';
 import { AuthModule } from 'auth/auth.module';
 import { PaymentModule } from 'payments/payment.module';
 import { SeedModule } from 'seed-db/seed.module';
+import { FileUploadModule } from 'fileupload/fileupload.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SeedModule } from 'seed-db/seed.module';
     AuthModule,
     PaymentModule,
     SeedModule,
+    FileUploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

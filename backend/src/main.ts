@@ -18,6 +18,7 @@ async function bootstrap() {
     .addTag('auth')
     .addTag('user')
     .addTag('payments')
+    .addTag('fileupload')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
