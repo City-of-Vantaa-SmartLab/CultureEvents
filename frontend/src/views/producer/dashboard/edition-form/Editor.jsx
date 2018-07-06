@@ -1,3 +1,5 @@
+// @TODO: Reafactor to make this component less gigantic
+
 import React from 'react';
 import styled, { withTheme, injectGlobal } from 'styled-components';
 import RawForm, { InputField } from '../../../../components/form';
@@ -15,7 +17,8 @@ import * as chroma from 'chroma-js';
 import { toRgba, genRandomKey } from '../../../../utils';
 import { observable, transaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
-import EventModel, { TicketCatalog } from '../../../../models/event';
+import EventModel from '../../../../models/event';
+import TicketCatalog from '../../../../models/ticketCatalog';
 import isEqual from 'lodash.isequal';
 
 const Form = styled(RawForm)`
@@ -78,17 +81,18 @@ const HighlightedArea = styled.div`
 `;
 
 const TicketCatalogInputGroup = props => {
-  if (props.ticketCatalog.length == 0) {
-    return;
-    <Row>
-      <GreenButton
-        onClick={props.addTicketType}
-        onTouchEnd={props.addTicketType}
-        icon="plus"
-      >
-        Add ticket type
-      </GreenButton>
-    </Row>;
+  if (props.ticketCatalog.length === 0) {
+    return (
+      <Row>
+        <GreenButton
+          onClick={props.addTicketType}
+          onTouchEnd={props.addTicketType}
+          icon="plus"
+        >
+          Add ticket type
+        </GreenButton>
+      </Row>
+    );
   }
   return (
     <HighlightedArea themeColor={props.themeColor}>
@@ -166,16 +170,18 @@ class Editor extends React.Component {
     this.internalData.creationMode = !props.selectedEvent;
   }
   componentWillReceiveProps(props) {
-    if (props.selectedEvent)
+    if (props.selectedEvent) {
       transaction(() => {
         this.internalData.eventDraft = { ...props.selectedEvent.toJSON() };
         this.internalData.creationMode = false;
       });
-    else {
-      this.internalData.eventDraft = {
-        ...EventModel.create({ id: genRandomKey() }).toJSON(),
-      };
-      this.internalData.creationMode = true;
+    } else {
+      transaction(() => {
+        this.internalData.eventDraft = {
+          ...EventModel.create({ id: genRandomKey() }).toJSON(),
+        };
+        this.internalData.creationMode = true;
+      });
     }
   }
   componentDidMount() {
@@ -241,13 +247,11 @@ class Editor extends React.Component {
     this.props.onSubmit(this.internalData.eventDraft);
   };
   render() {
-    const { palette } = this.props.theme;
     const inputBackgroundColor = toRgba(
       chroma(this.internalData.eventDraft.themeColor)
         .alpha(0.3)
         .rgba(),
     );
-
     const serializedDraft = toJS(this.internalData.eventDraft);
     const canConfirm = this.internalData.creationMode
       ? !isEqual(
@@ -257,6 +261,7 @@ class Editor extends React.Component {
           }).toJSON(),
         )
       : !isEqual(serializedDraft, this.props.selectedEvent.toJSON());
+
     return (
       <React.Fragment>
         <ButtonBar

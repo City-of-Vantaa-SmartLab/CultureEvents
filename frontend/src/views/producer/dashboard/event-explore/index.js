@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { render } from 'react-dom';
 import EventCard from '../../../../components/event-card';
-import Button from '../../../../components/button';
 import Typography from '../../../../components/typography';
 import { connect } from '../../../../utils';
 
@@ -44,18 +42,11 @@ class EventExplorer extends React.Component {
         <WrapperFlat />
         <Wrapper>
           {!this.props.store.isEmpty ? (
-            Object.values(this.props.store.events.toJSON()).map(event => (
+            Object.values(events.toJSON()).map(event => (
               <EventCard
                 style={{ marginBottom: '0.5rem' }}
                 key={event.id}
-                themeColor={event.themeColor}
-                name={event.name}
-                location={event.location}
-                date={event.eventDate}
-                time={event.eventTime}
-                performer={event.performer}
-                coverImage={event.coverImage}
-                ageGroupLimit={event.ageGroupLimit}
+                event={event}
                 onSelect={() => this.props.store.selectEvent(event.id)}
               />
             ))

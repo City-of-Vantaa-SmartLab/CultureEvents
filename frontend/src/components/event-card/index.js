@@ -74,18 +74,18 @@ const Decorator = styled(Shim)`
 
 export default class EventCard extends React.Component {
   render() {
+    const { className, style } = this.props;
     const {
       name,
       coverImage,
       themeColor,
       location,
       date,
-      time,
+      eventTime,
+      eventDate,
       performer,
       ageGroupLimit,
-      className,
-      style,
-    } = this.props;
+    } = this.props.event;
     return (
       <Wrapper
         style={style}
@@ -116,14 +116,14 @@ export default class EventCard extends React.Component {
         </Content>
         <BottomSection themeColor={themeColor}>
           <Typography type="body" color="white">
-            {location} •{' '}
+            {location} •
           </Typography>
           <Typography type="body" color="white">
-            {date} |{' '}
+            {eventDate} |{' '}
           </Typography>
           <Typography type="body" color="white">
-            {time}{' '}
-          </Typography>{' '}
+            {eventTime}
+          </Typography>
           <br />
           {ageGroupLimit && (
             <Typography type="body" color="white">
