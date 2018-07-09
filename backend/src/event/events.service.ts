@@ -23,8 +23,13 @@ export class EventsService {
   }
 
   async updateEvent(id: number, event: EventsDto) {
-    const response = await this.eventRepository.update(id, event);
-    return response;
+    const dbEvent = await this.eventRepository.findOne(id);
+    if (dbEvent) {
+      await this.eventRepository.update(id, event);
+      return await this.eventRepository.findOne(id);
+    } else {
+      return null;
+    }
   }
 
   async findAll(): Promise<Events[]> {
