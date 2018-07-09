@@ -42,7 +42,7 @@ export class Events {
 
   @Column() is_bilingual: boolean;
 
-  @Column({ length: 100 })
+  @Column({ length: 500 })
   cover_image: string;
 
   @Column({ length: 30 })
