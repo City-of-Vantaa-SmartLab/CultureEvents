@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
 import Button from '../button';
+import EventDetail from './EventDetail';
 import { toRgba } from '../../utils';
 import chroma from 'chroma-js';
 import posed from 'react-pose';
@@ -226,14 +227,17 @@ export default class EventCard extends React.Component {
           )}
         </BottomSection>
         {this.props.active && (
-          <BackButton
-            backgroundColor="transparent"
-            icon="arrow-left"
-            onClick={this.props.onDeselect}
-            onTouchEnd={this.props.onDeselect}
-          >
-            Back
-          </BackButton>
+          <React.Fragment>
+            <BackButton
+              backgroundColor="transparent"
+              icon="arrow-left"
+              onClick={this.props.onDeselect}
+              onTouchEnd={this.props.onDeselect}
+            >
+              Back
+            </BackButton>
+            <EventDetail event={this.props.event} />
+          </React.Fragment>
         )}
       </Wrapper>
     );
