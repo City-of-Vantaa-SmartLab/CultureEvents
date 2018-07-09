@@ -26,7 +26,9 @@ export class EventsService {
     const dbEvent = await this.eventRepository.findOne(id);
     if (dbEvent) {
       await this.eventRepository.update(id, event);
-      return await this.eventRepository.findOne(id);
+      return await this.eventRepository.findOne(id, {
+        relations: ['ticket_catalog'],
+      });
     } else {
       return null;
     }
