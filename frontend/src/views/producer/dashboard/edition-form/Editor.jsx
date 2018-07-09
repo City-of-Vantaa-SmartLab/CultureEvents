@@ -306,6 +306,7 @@ class Editor extends React.Component {
             style={{
               backgroundColor: 'rgba(0,0,0, .1)',
               padding: '2rem 4rem',
+              marginBottom: 0,
             }}
           >
             <CoverImage
@@ -314,9 +315,14 @@ class Editor extends React.Component {
               onChange={this.onChange('coverImage')}
             />
           </Row>
-          <Row fullsize>
+          <Row
+            fullsize
+            style={{
+              backgroundColor: inputBackgroundColor,
+              padding: '2rem 4rem',
+            }}
+          >
             <InputField
-              backgroundColor={inputBackgroundColor}
               label="Description"
               type="textarea"
               lightMode
