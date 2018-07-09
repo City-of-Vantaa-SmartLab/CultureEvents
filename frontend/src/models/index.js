@@ -1,6 +1,5 @@
 import EventModel from './event';
 import User from './user';
-import { toJS } from 'mobx';
 import { types, flow, applySnapshot, resolveIdentifier } from 'mobx-state-tree';
 import { fetchEvents, postEvent, putEvent, login as loginAPI } from '../apis';
 
@@ -43,11 +42,14 @@ export const RootModel = types
     afterCreate() {
       if (window.localStorage.getItem('store'))
         applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
-      if (self.events[self.selectedEvent]) self.selectedEvent = null;
+      self.selectedEvent = null;
       self.fetchEvents();
     },
     // event actions
     selectEvent: id => (self.selectedEvent = id),
+    deselectEvent: () => {
+      if (self.selectedEvent) self.selectedEvent = null;
+    },
     fetchEvents: flow(function*() {
       try {
         self.ui.eventList.fetching = true;
@@ -57,7 +59,6 @@ export const RootModel = types
 
         self.ui.eventList.fetching = false;
         applySnapshot(self.events, processedResult);
-        self.selectedEvent = null;
       } catch (error) {
         console.error(error);
         self.ui.eventList.fetching = false;

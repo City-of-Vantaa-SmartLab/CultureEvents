@@ -18,6 +18,7 @@ const Wrapper = styled.div`
   z-index: 100;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
 `;
 const LogoSection = styled.div`
   display: flex;

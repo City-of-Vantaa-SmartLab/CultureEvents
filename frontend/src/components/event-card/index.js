@@ -1,63 +1,100 @@
 import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
+import Button from '../button';
 import { toRgba } from '../../utils';
 import chroma from 'chroma-js';
-import theme from '../../views/theme';
+import posed from 'react-pose';
+import { tween } from 'popmotion';
 
-const Wrapper = styled.div`
-  width: 100%;
-  height: 20rem;
-  background: url('${props => props.coverImage}');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  position: relative;
+const WrapperBase = posed.div({
+  normal: {
+    height: '20rem',
+    width: '100%',
+    flip: true,
+    transition: tween,
+    borderRadius: 14,
+  },
+  expanded: {
+    height: '100vh',
+    width: '100vw',
+    left: 0,
+    top: 0,
+    borderRadius: 0,
+    flip: true,
+  },
+});
+
+const MorphableText = posed.div({
+  normal: {
+    top: 0,
+    flip: true,
+    delay: 300,
+    transition: tween,
+  },
+  expanded: {
+    top: '14rem',
+    flip: true,
+    delay: 200,
+  },
+});
+const Disappearable = posed.div({
+  normal: {
+    opacity: 1,
+  },
+  expanded: {
+    opacity: 0,
+  },
+});
+const BoxImageAnimation = posed.div({
+  normal: {
+    height: '100%',
+    flip: true,
+    delay: 10,
+  },
+  expanded: {
+    height: '20rem',
+    flip: true,
+  },
+});
+
+const Wrapper = styled(WrapperBase)`
+  position: ${props => (props.expanded ? 'fixed' : 'relative')};
+  z-index: ${props => (props.expanded ? 100 : 1)};
   overflow: hidden;
-  border-radius: 1rem;
   cursor: pointer;
-  transition: all 0.5s;
+  background-color: white;
 
   &:hover {
-      box-shadow: 3px 6px 12px rgba(0,0,0, .3);
+    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
   }
 `;
 
 const Shim = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
-`;
-
-const BottomSection = styled.div`
-  z-index: 10;
-  position: absolute;
-  bottom: 0;
   left: 0;
-  width: 100%;
-  padding: 0.5rem 1rem;
-  background-color: ${props => props.themeColor};
+  top: 0;
   transition: all 0.5s ease;
+  height: 100%;
+
+  ${props => props.hide && 'opacity: 0'};
 `;
 
-const Content = styled(Shim)`
-  z-index: 10;
-  background-color: transparent;
-  padding: 1rem;
-`;
-
-const Decorator = styled(Shim)`
+const Decorator = styled.div`
   z-index: 5;
   background-image: url('${props => props.coverImage}');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
+  max-height: 20rem;
   filter: blur(7px);
-  clip-path: polygon(0 0, 59% 0, 40% 41%, 0 32%);
+  height: 100%;
+  transition: clip-path 0.4s cubic-bezier(.94,.02,.33,1);
+  clip-path: ${props =>
+    !props.expanded
+      ? 'polygon(0 0, 59% 0, 40% 41%, 0 32%)'
+      : 'polygon(0 72%, 45% 61%, 55% 100%, 0% 100%)'};
 
   &:after {
     content: '';
@@ -68,35 +105,92 @@ const Decorator = styled(Shim)`
     left: 0;
     top: 0;
     opacity: 0.5;
-    z-index: 6;    
+    z-index: 6; 
+    transform: scale(1.3);
+  }
+`;
+
+const BackgroundImg = styled.div`
+  background: url('${props => props.coverImage}');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  left: 0;
+  top: 0;
+  height: 100%;
+`;
+
+const BackgroundImageGroup = styled(BoxImageAnimation)`
+  width: 100%;
+  position: relative;
+
+  & > * {
+    width: 100%;
+    position: absolute;
+  }
+`;
+
+const BottomSection = styled(Disappearable)`
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: ${props => props.themeColor};
+`;
+
+const Content = styled(MorphableText)`
+  left: 0;
+  z-index: 10;
+  background-color: transparent;
+  padding: 1rem;
+  height: auto;
+`;
+const BackButton = styled(Button)`
+  && {
+    border: none;
+    position: absolute;
+    z-index: 100;
+    top: 1rem;
+    left: 1rem;
   }
 `;
 
 export default class EventCard extends React.Component {
   render() {
-    const { className, style } = this.props;
+    const { className, style, active, expandable } = this.props;
     const {
       name,
       coverImage,
       themeColor,
       location,
-      date,
       eventTime,
       eventDate,
       performer,
       ageGroupLimit,
     } = this.props.event;
+
     return (
       <Wrapper
         style={style}
         className={className}
-        coverImage={coverImage}
-        onClick={this.props.onSelect}
+        expanded={active && expandable}
+        onClick={e => {
+          this.props.onSelect(e);
+        }}
+        pose={active && expandable ? 'expanded' : 'normal'}
       >
-        <Shim />
-        <Decorator coverImage={coverImage} themeColor={themeColor} />
-        <Content>
-          {performer && (
+        <BackgroundImageGroup>
+          <BackgroundImg coverImage={coverImage} />
+          <Shim />
+          <Decorator
+            coverImage={coverImage}
+            themeColor={themeColor}
+            expanded={active && expandable}
+          />
+          <Content>
             <Typography
               type="largebody"
               style={{ fontWeight: 700 }}
@@ -109,11 +203,11 @@ export default class EventCard extends React.Component {
             >
               {performer}
             </Typography>
-          )}
-          <Typography style={{ margin: 0 }} type="title" color="white">
-            {name}
-          </Typography>
-        </Content>
+            <Typography style={{ margin: 0 }} type="title" color="white">
+              {name}
+            </Typography>
+          </Content>
+        </BackgroundImageGroup>
         <BottomSection themeColor={themeColor}>
           <Typography type="body" color="white">
             {location} •
@@ -131,6 +225,16 @@ export default class EventCard extends React.Component {
             </Typography>
           )}
         </BottomSection>
+        {this.props.active && (
+          <BackButton
+            backgroundColor="transparent"
+            icon="arrow-left"
+            onClick={this.props.onDeselect}
+            onTouchEnd={this.props.onDeselect}
+          >
+            Back
+          </BackButton>
+        )}
       </Wrapper>
     );
   }
