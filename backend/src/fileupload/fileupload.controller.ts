@@ -39,7 +39,7 @@ export class FileUploadController {
     } catch (error) {
       return response
         .status(500)
-        .send(`Failed to upload image file: ${error.message}`);
+        .json(`Failed to upload image file: ${error.message}`);
     }
   }
 }
