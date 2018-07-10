@@ -1,32 +1,17 @@
 import { types } from 'mobx-state-tree';
-
-const TicketCatalog = types.model({
-  id: types.optional(types.identifier(types.number), 989898),
-  ticketDescription: types.optional(types.string, ''),
-  price: types.optional(
-    types.refinement(
-      types.number,
-      value => !isNaN(Number(value)) && Number(value) >= 0,
-    ),
-    0,
-  ),
-  availableSeatForThisType: types.optional(
-    types.refinement(
-      types.number,
-      value => !isNaN(Number(value)) && Number(value) >= 0,
-    ),
-    0,
-  ),
-});
+import TicketCatalog from './ticketCatalog';
+import { format } from 'date-fns';
 
 const Event = types.model({
   id: types.identifier(types.union(types.string, types.number)),
   name: types.optional(types.string, ''),
   location: types.optional(types.string, ''),
   description: types.optional(types.string, ''),
-  performer: types.maybe(types.string),
-  eventDate: types.maybe(types.string),
-  eventTime: types.maybe(types.string),
+  performer: types.optional(types.string, ''),
+  eventDate: types.optional(types.string, () =>
+    format(new Date(), 'YYYY-MM-DD'),
+  ),
+  eventTime: types.optional(types.string, () => format(new Date(), 'HH:MM')),
   ticketCatalog: types.optional(types.array(TicketCatalog), [
     TicketCatalog.create().toJSON(),
   ]),
@@ -48,6 +33,4 @@ const Event = types.model({
   coverImage: types.optional(types.string, ''),
   themeColor: types.optional(types.string, '#498DC7'),
 });
-
 export default Event;
-export { TicketCatalog };

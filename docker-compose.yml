@@ -5,8 +5,8 @@ services:
     build: ./frontend
     volumes:
       - ./frontend:/app
-      - /app/node_modules
-    command: npm run start
+      - /frontend/node_modules
+    command: yarn run start
     ports:
       - 3000:3000
     depends_on:
