@@ -65,6 +65,7 @@ const Wrapper = styled(WrapperBase)`
   overflow: hidden;
   cursor: pointer;
   background-color: white;
+  will-change: transform;
 
   &:hover {
     box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
@@ -125,6 +126,7 @@ const BackgroundImg = styled.div`
 const BackgroundImageGroup = styled(BoxImageAnimation)`
   width: 100%;
   position: relative;
+  will-change: transform;
 
   & > * {
     width: 100%;
