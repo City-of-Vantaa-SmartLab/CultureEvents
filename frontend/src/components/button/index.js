@@ -2,6 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import AntButton from 'antd/lib/button';
 import 'antd/lib/button/style/css';
+import chroma from 'chroma-js';
+
+const getContrastColor = color => {
+  try {
+    return chroma(color).luminance() > 0.5 ? 'black' : 'white';
+  } catch (error) {
+    return 'white';
+  }
+};
 
 const MyButton = styled(AntButton)`
   && {
@@ -9,13 +18,17 @@ const MyButton = styled(AntButton)`
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    background-color: ${props => props.backgroundColor};
+    background-color: ${props => props.backgroundColor} !important;
+    border-color: ${props => props.backgroundColor};
+    color: ${props => getContrastColor(props.backgroundColor)};
 
     &:hover {
       transform: translate(0, -3px);
-      background-color: ${props => props.backgroundColor};
+      background-color: ${props => props.backgroundColor} !important;
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
       text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+      border-color: ${props => props.backgroundColor};
+      color: ${props => getContrastColor(props.backgroundColor)};
     }
   }
 `;

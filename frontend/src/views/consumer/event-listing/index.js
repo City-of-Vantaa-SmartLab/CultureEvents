@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import EventCard from '../../../components/event-card';
+import EventDetail from './EventDetail';
+import EventBooking from './EventBooking';
 import { connect } from '../../../utils';
 
 const Wrapper = styled.div`
@@ -11,7 +13,7 @@ const Wrapper = styled.div`
   overflow: scroll;
   padding: 2rem 1rem;
 
-  * {
+  & > * {
     flex-shrink: 0;
     flex-grow: 0;
   }
@@ -33,7 +35,10 @@ export default connect('store')(
                 event={event}
                 onSelect={() => this.props.store.selectEvent(event.id)}
                 onDeselect={this.props.store.deselectEvent}
-              />
+              >
+                <EventDetail event={event} />
+                <EventBooking event={event} />
+              </EventCard>
             ))
           ) : (
             <h1>Nothing to see here</h1>

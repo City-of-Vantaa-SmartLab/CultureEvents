@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
-import Input, { TextArea } from './Input';
+import Input, { TextArea, NumericInput, Select } from './Input';
 
 const LabelText = styled(Typography)`
   && {
@@ -31,6 +31,41 @@ export const Wrapper = styled.div`
 `;
 
 export default class InputField extends React.Component {
+  getChildrenFromType = inputType => {
+    const {
+      horizontal,
+      lightMode,
+      inputStyle,
+      inputClassName,
+      type,
+      ...inputProps
+    } = this.props;
+
+    if (inputType === 'textarea')
+      return (
+        <TextArea
+          className={inputClassName}
+          style={inputStyle}
+          {...inputProps}
+        />
+      );
+    if (inputType === 'number')
+      return (
+        <NumericInput
+          className={inputClassName}
+          style={inputStyle}
+          {...inputProps}
+        />
+      );
+    if (inputType === 'select')
+      return (
+        <Select className={inputClassName} style={inputStyle} {...inputProps} />
+      );
+    else
+      return (
+        <Input className={inputClassName} style={inputStyle} {...inputProps} />
+      );
+  };
   render() {
     const {
       label,
@@ -39,10 +74,7 @@ export default class InputField extends React.Component {
       style,
       horizontal,
       lightMode,
-      inputStyle,
-      inputClassName,
       type,
-      ...inputProps
     } = this.props;
     return (
       <Wrapper className={className} style={style} horizontal={horizontal}>
@@ -53,22 +85,9 @@ export default class InputField extends React.Component {
         >
           {label}
         </Label>
-        {this.props.children ? (
-          this.props.children
-        ) : type === 'textarea' ? (
-          <TextArea
-            className={inputClassName}
-            style={inputStyle}
-            {...inputProps}
-          />
-        ) : (
-          <Input
-            className={inputClassName}
-            style={inputStyle}
-            type={type}
-            {...inputProps}
-          />
-        )}
+        {this.props.children
+          ? this.props.children
+          : this.getChildrenFromType(type)}
       </Wrapper>
     );
   }

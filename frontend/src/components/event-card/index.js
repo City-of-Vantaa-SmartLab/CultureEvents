@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
 import Button from '../button';
-import EventDetail from './EventDetail';
 import { toRgba } from '../../utils';
 import chroma from 'chroma-js';
 import posed from 'react-pose';
@@ -29,22 +28,16 @@ const WrapperBase = posed.div({
 const MorphableText = posed.div({
   normal: {
     top: 0,
+    bottom: 'initial',
     flip: true,
     delay: 300,
     transition: tween,
   },
   expanded: {
-    top: '14rem',
+    bottom: 0,
+    top: 'initial',
     flip: true,
     delay: 200,
-  },
-});
-const Disappearable = posed.div({
-  normal: {
-    opacity: 1,
-  },
-  expanded: {
-    opacity: 0,
   },
 });
 const BoxImageAnimation = posed.div({
@@ -62,7 +55,7 @@ const BoxImageAnimation = posed.div({
 const Wrapper = styled(WrapperBase)`
   position: ${props => (props.expanded ? 'fixed' : 'relative')};
   z-index: ${props => (props.expanded ? 100 : 1)};
-  overflow: hidden;
+  overflow: ${props => (props.expanded ? 'auto' : 'hidden')};
   cursor: pointer;
   background-color: white;
   will-change: transform;
@@ -134,7 +127,7 @@ const BackgroundImageGroup = styled(BoxImageAnimation)`
   }
 `;
 
-const BottomSection = styled(Disappearable)`
+const BottomSection = styled.div`
   position: absolute;
   z-index: 10;
   bottom: 0;
@@ -211,23 +204,25 @@ export default class EventCard extends React.Component {
             </Typography>
           </Content>
         </BackgroundImageGroup>
-        <BottomSection themeColor={themeColor}>
-          <Typography type="body" color="white">
-            {location} •
-          </Typography>
-          <Typography type="body" color="white">
-            {eventDate} |{' '}
-          </Typography>
-          <Typography type="body" color="white">
-            {eventTime}
-          </Typography>
-          <br />
-          {ageGroupLimit && (
+        {!this.props.active && (
+          <BottomSection themeColor={themeColor}>
             <Typography type="body" color="white">
-              Ikäsuositus: {ageGroupLimit} v.
+              {location} •
             </Typography>
-          )}
-        </BottomSection>
+            <Typography type="body" color="white">
+              {eventDate} |{' '}
+            </Typography>
+            <Typography type="body" color="white">
+              {eventTime}
+            </Typography>
+            <br />
+            {ageGroupLimit && (
+              <Typography type="body" color="white">
+                Ikäsuositus: {ageGroupLimit} v.
+              </Typography>
+            )}
+          </BottomSection>
+        )}
         {this.props.active && (
           <React.Fragment>
             <BackButton
@@ -238,7 +233,7 @@ export default class EventCard extends React.Component {
             >
               Back
             </BackButton>
-            <EventDetail event={this.props.event} />
+            {this.props.children}
           </React.Fragment>
         )}
       </Wrapper>

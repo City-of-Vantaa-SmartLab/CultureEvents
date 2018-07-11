@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Typography from '../typography';
+import Typography from '../../../components/typography';
 import Icon from 'antd/lib/icon';
 
-const ListStyled = styled.li`
+const ListStyled = styled.div`
   list-style: none;
   margin: 0.5rem 1rem;
 
