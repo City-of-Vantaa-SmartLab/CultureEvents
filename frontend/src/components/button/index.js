@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import AntButton from 'antd/lib/button';
 import 'antd/lib/button/style/css';
 
-const Button = styled(AntButton)`
+const CustomButton = styled(AntButton)`
   && {
     border-radius: 2rem;
     font-size: 0.72rem;
@@ -23,7 +23,7 @@ const Button = styled(AntButton)`
 export default class Button extends React.Component {
   render() {
     return (
-      <Button
+      <CustomButton
         type={this.props.type || 'primary'}
         {...this.props}
         backgroundColor={this.props.backgroundColor}
