@@ -109,6 +109,9 @@ export const RootModel = types
     logout: () => {
       self.user.token = null;
     },
+    getUserToken: () => {
+      return self.user.token;
+    },
   }))
   .views(self => ({
     get isEmpty() {
