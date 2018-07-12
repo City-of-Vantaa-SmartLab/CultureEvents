@@ -17,7 +17,6 @@ const Label = props => (
 );
 
 export const Wrapper = styled.div`
-  margin-bottom: 1rem;
   ${props =>
     props.horizontal &&
     `

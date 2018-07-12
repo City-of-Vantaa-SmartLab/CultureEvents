@@ -42,7 +42,6 @@ export const NumericInput = styled(AntNumericInput)`
 
 const SelectWrapper = styled(AntSelect)`
   && {
-    border-radius: 8px;
     background-color: ${props => props.backgroundColor};
     border: white;
     width: 100%;
@@ -58,8 +57,8 @@ export const Select = ({ data, ...rest }) => (
   <SelectWrapper {...rest}>
     {data &&
       data.map((item, index) => (
-        <AntOption value={item.value} disable={item.disabled}>
-          {item.value}
+        <AntOption key={index} value={item.value + ''} disabled={item.disabled}>
+          {item.label}
         </AntOption>
       ))}
   </SelectWrapper>

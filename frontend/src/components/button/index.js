@@ -22,15 +22,17 @@ const MyButton = styled(AntButton)`
     border-color: ${props => props.backgroundColor};
     color: ${props => getContrastColor(props.backgroundColor)};
 
-    &:hover {
-      transform: translate(0, -3px);
-      background-color: ${props => props.backgroundColor} !important;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-      border-color: ${props => props.backgroundColor};
-      color: ${props => getContrastColor(props.backgroundColor)};
-    }
-  }
+    ${props =>
+      !props.disabled
+        ? `&:hover {
+          transform: translate(0, -3px);
+          background-color: ${props => props.backgroundColor} !important;
+          box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+          text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+          border-color: ${props => props.backgroundColor};
+          color: ${props => getContrastColor(props.backgroundColor)};
+        }`
+        : 'filter: grayscale(100%);'}
 `;
 
 export default class Button extends React.Component {
@@ -38,8 +40,8 @@ export default class Button extends React.Component {
     return (
       <MyButton
         type={this.props.type || 'primary'}
-        {...this.props}
         backgroundColor={this.props.backgroundColor}
+        {...this.props}
       />
     );
   }

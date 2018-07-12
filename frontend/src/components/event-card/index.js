@@ -55,7 +55,8 @@ const BoxImageAnimation = posed.div({
 const Wrapper = styled(WrapperBase)`
   position: ${props => (props.expanded ? 'fixed' : 'relative')};
   z-index: ${props => (props.expanded ? 100 : 1)};
-  overflow: ${props => (props.expanded ? 'auto' : 'hidden')};
+  overflow-y: ${props => (props.expanded ? 'auto' : 'hidden')};
+  overflow-x: hidden;
   cursor: pointer;
   background-color: white;
   will-change: transform;
@@ -66,14 +67,12 @@ const Wrapper = styled(WrapperBase)`
 `;
 
 const Shim = styled.div`
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
   z-index: 1;
   left: 0;
   top: 0;
   transition: all 0.5s ease;
   height: 100%;
-
-  ${props => props.hide && 'opacity: 0'};
 `;
 
 const Decorator = styled.div`
