@@ -139,7 +139,7 @@ export default connect('store')(
       const submittable = isGroupConductorCustomer
         ? internalState.school &&
           internalState.classRoom &&
-          isValidNumber(internalState.phoneNumber)
+          isValidNumber(internalState.phoneNumber, 'FI')
         : internalState.name && isValidNumber(internalState.phoneNumber);
       return (
         <Wrapper bgColor={event.themeColor}>
