@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import styled, { withTheme } from 'styled-components';
+import styled from 'styled-components';
 import Typography from '../../../components/typography';
 import chroma from 'chroma-js';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react';
-import { toRgba, genRandomKey, connect, clamp } from '../../../utils';
+import { toRgba, genRandomKey, connect } from '../../../utils';
 import Button, { ButtonGroup } from '../../../components/button';
 import Icon from '../../../../node_modules/antd/lib/icon';
 import Form, { InputField } from '../../../components/form';
 import TicketInputSet from './TicketInputSet';
 import posed from 'react-pose';
+import { AsYouType, isValidNumber } from 'libphonenumber-js';
+
 // posed components
 const Collapsible = posed.div({
   collapsed: {
@@ -47,6 +48,11 @@ const FormListItemWrapper = styled.div`
     & > * {
       margin: 0.5rem 0;
     }
+    & form {
+      & > * {
+        margin-top: 0.5rem;
+      }
+    }
   }
 `;
 const CustomerGroupButton = styled(Button)`
@@ -58,7 +64,7 @@ const CustomerGroupButton = styled(Button)`
     border-radius: 8px;
   }
 `;
-const FlexBoxHorizontal = styled.div`
+const FlexBoxHorizontal = styled(Collapsible)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,6 +79,7 @@ const TotalAmountCalculated = styled(FlexBoxHorizontal)`
   padding: 0.5rem 1rem;
   border-radius: 8px;
   justify-content: space-between;
+  overflow: hidden;
   * {
     margin-bottom: 0;
   }
@@ -103,16 +110,37 @@ export default connect('store')(
           amount: 0,
         },
       ],
+      phoneNumber: '',
+      name: '',
+      email: '',
+      classRoom: '',
+      school: '',
     });
-
+    getTotalPrice = () => {
+      return this.internalState.tickets.reduce((acc, curr) => {
+        const targetCatalog = this.props.event.ticketCatalog.find(
+          elem => elem.id == curr.value,
+        );
+        if (targetCatalog) {
+          const singlePrice = targetCatalog.price;
+          const totalPriceForThisCatalog = singlePrice * curr.amount;
+          acc += totalPriceForThisCatalog;
+        }
+        return acc;
+      }, 0);
+    };
     render() {
       const { event } = this.props;
       const { internalState } = this;
 
       const isPrivateCustomer = internalState.customerGroup == 'private';
       const isGroupConductorCustomer = internalState.customerGroup == 'group';
-      const totalCost = internalState.tickets.reduce((acc, curr) => {}, 0);
-
+      const totalCost = this.getTotalPrice();
+      const submittable = isGroupConductorCustomer
+        ? internalState.school &&
+          internalState.classRoom &&
+          isValidNumber(internalState.phoneNumber)
+        : internalState.name && isValidNumber(internalState.phoneNumber);
       return (
         <Wrapper bgColor={event.themeColor}>
           <Typography type="title">Varaa/osta lippu</Typography>
@@ -165,7 +193,7 @@ export default connect('store')(
             <TotalAmountCalculated>
               <Typography type="subheader">Yhteissumma</Typography>
               <Typography type="subheader" color={event.themeColor}>
-                313 €
+                {totalCost} €
               </Typography>
             </TotalAmountCalculated>
           </FormListItem>
@@ -173,41 +201,63 @@ export default connect('store')(
             title="3 - Tiedot varausta varten"
             disabled={!internalState.customerGroup}
           >
-            {isPrivateCustomer ? (
-              <Form>
-                <InputField lightMode type="text" label="Nimi" mandatory />
+            <Form>
+              {isPrivateCustomer ? (
                 <InputField
                   lightMode
-                  type="text"
-                  label="Puhelinumero"
+                  label="Nimi"
                   mandatory
-                />
-                <InputField lightMode type="text" label="Sahköposti" />
-              </Form>
-            ) : (
-              <Form>
-                <InputField
-                  lightMode
                   type="text"
-                  label="Päiväkoti / koulu"
-                  mandatory
+                  value={internalState.name}
+                  onChange={e => (internalState.name = e.target.value)}
                 />
-                <InputField
-                  lightMode
-                  type="text"
-                  label="Ryhmä / luokka"
-                  mandatory
-                />
-                <InputField lightMode type="text" label="Puhelinnumero" />
-                <InputField lightMode type="text" label="Sähköposti" />
-              </Form>
-            )}
+              ) : (
+                <React.Fragment>
+                  <InputField
+                    lightMode
+                    type="text"
+                    label="Päiväkoti / koulu"
+                    mandatory
+                    value={internalState.school}
+                    onChange={e => (internalState.school = e.target.value)}
+                  />
+                  <InputField
+                    lightMode
+                    type="text"
+                    label="Ryhmä / luokka"
+                    mandatory
+                    value={internalState.classRoom}
+                    onChange={e => (internalState.classRoom = e.target.value)}
+                  />
+                </React.Fragment>
+              )}
+              <InputField
+                key="tel-input"
+                lightMode
+                type="tel"
+                label="Puhelinnumero"
+                onChange={e =>
+                  (internalState.phoneNumber = new AsYouType('FI').input(
+                    e.target.value,
+                  ))
+                }
+                value={internalState.phoneNumber}
+              />
+              <InputField
+                lightMode
+                type="text"
+                label="Sähköposti"
+                value={internalState.email}
+                onChange={e => (internalState.email = e.target.value)}
+              />
+            </Form>
             <FlexBoxHorizontal>
               {isGroupConductorCustomer && (
                 <Button
                   type="dashed"
                   backgroundColor="white"
                   style={{ alignSelf: 'flex-start' }}
+                  disabled={!submittable}
                 >
                   VARAA LIPUT
                 </Button>
@@ -215,6 +265,7 @@ export default connect('store')(
               <Button
                 style={{ alignSelf: 'flex-end' }}
                 backgroundColor={event.themeColor}
+                disabled={!submittable}
               >
                 OSTA LIPUT
               </Button>
