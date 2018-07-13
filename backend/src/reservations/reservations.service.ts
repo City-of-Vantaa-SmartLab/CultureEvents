@@ -27,10 +27,10 @@ export class ReservationService {
       if (smsResponse) {
         return response;
       } else {
-        return new Error('Sms Funtionality failed!.');
+        throw new Error('Sms Funtionality failed!.');
       }
     } else {
-      return new Error('Failed to create reservation!.');
+      throw new Error('Failed to create reservation!.');
     }
   }
 
@@ -67,8 +67,8 @@ export class ReservationService {
     const event = await this.eventService.findOneById(reservation.event_id);
     const reservationMessage = await this.buildReservationMessage(event);
     await this.smsService.sendMessageToUser(
-      reservation.phone_number,
-      reservation.username,
+      reservation.phone,
+      reservation.name,
       reservationMessage,
     );
   }
@@ -80,6 +80,16 @@ export class ReservationService {
     <br> Time: ${this.getTime(event.event_date)} 
     <br> Name of the Reservation: ${event.name}`;
     return response;
+  }
+
+  getTotalAmount(reservation: ReservationsDto) {
+    // TO-DO
+    return 100;
+  }
+
+  checkSeatAvailability(reservation: ReservationsDto) {
+    // Check for seat availability
+    return true;
   }
 
   getTime(date) {
