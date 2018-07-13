@@ -1,25 +1,33 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 export class ReservationsDto {
+  @IsOptional()
+  @ApiModelProperty()
+  readonly id: number;
   @IsNumber()
   @ApiModelProperty()
   readonly event_id: number;
   @IsString()
   @ApiModelProperty()
-  readonly type: string;
+  readonly customer_type: string;
   @IsString()
+  @IsOptional()
   @ApiModelProperty()
-  readonly username: string;
+  readonly name: string;
   @IsString()
+  @IsOptional()
   @ApiModelProperty()
-  readonly address: string;
+  readonly school_name: string;
   @IsString()
+  @IsOptional()
   @ApiModelProperty()
-  readonly phone_number: string;
+  readonly class: string;
   @IsString()
+  @IsOptional()
+  @ApiModelProperty()
+  readonly phone: string;
+  @IsString()
+  @IsOptional()
   @ApiModelProperty()
   readonly email: string;
-  @IsNumber()
-  @ApiModelProperty()
-  readonly total_amount: number;
 }
