@@ -30,16 +30,16 @@ export class ReservationsController {
     try {
       const reservations = await this.reservationsService.findAll();
       if (reservations) {
-        return response.status(200).send(reservations);
+        return response.status(200).json(reservations);
       } else {
         return response
           .status(404)
-          .send(`Could not find any reservations in the system.`);
+          .json(`Could not find any reservations in the system.`);
       }
     } catch (error) {
       return response
         .status(500)
-        .send(`Failed to get reservations: ${error.message}`);
+        .json(`Failed to get reservations: ${error.message}`);
     }
   }
 
@@ -51,11 +51,11 @@ export class ReservationsController {
         reservation,
       );
 
-      return response.status(201).send(reservation);
+      return response.status(201).json(reservation);
     } catch (error) {
       return response
         .status(500)
-        .send(`Failed to create new reservation: ${error.message}`);
+        .json(`Failed to create new reservation: ${error.message}`);
     }
   }
 
@@ -71,21 +71,21 @@ export class ReservationsController {
   async findOne(@Res() response, @Param('id') id: number) {
     try {
       if (this.validationService.validateId(+id)) {
-        return response.status(400).send(`Invalid reservation Id: ${id}`);
+        return response.status(400).json(`Invalid reservation Id: ${id}`);
       } else {
         const reservation = await this.reservationsService.findOneById(id);
         if (reservation) {
-          return response.status(200).send(reservation);
+          return response.status(200).json(reservation);
         } else {
           return response
             .status(404)
-            .send(`Could not find any reservations with id: ${id}`);
+            .json(`Could not find any reservations with id: ${id}`);
         }
       }
     } catch (error) {
       return response
         .status(500)
-        .send(`Failed to get reservation: ${error.message}`);
+        .json(`Failed to get reservation: ${error.message}`);
     }
   }
 
@@ -105,24 +105,24 @@ export class ReservationsController {
   ) {
     try {
       if (this.validationService.validateId(+id)) {
-        return response.status(400).send(`Invalid reservation Id: ${id}`);
+        return response.status(400).json(`Invalid reservation Id: ${id}`);
       } else {
         const updatedReservation = await this.reservationsService.updateReservation(
           id,
           Reservation,
         );
         if (updatedReservation) {
-          return response.status(200).send(updatedReservation);
+          return response.status(200).json(updatedReservation);
         } else {
           return response
             .status(404)
-            .send(`Could not find any reservations with id: ${id}`);
+            .json(`Could not find any reservations with id: ${id}`);
         }
       }
     } catch (error) {
       return response
         .status(500)
-        .send(`Failed to update reservation: ${error.message}`);
+        .json(`Failed to update reservation: ${error.message}`);
     }
   }
 }

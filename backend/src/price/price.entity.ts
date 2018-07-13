@@ -12,6 +12,8 @@ export class Price {
 
   @Column('int') available_seat_for_this_type: number;
 
-  @ManyToOne(type => Events, event => event.ticket_catalog)
+  @ManyToOne(type => Events, event => event.ticket_catalog, {
+    onDelete: 'CASCADE',
+  })
   events: Events;
 }

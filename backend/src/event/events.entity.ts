@@ -26,6 +26,7 @@ export class Events {
 
   @OneToMany(type => Price, price => price.events, {
     cascade: true,
+    onDelete: 'CASCADE',
   })
   ticket_catalog: PriceDto[];
 

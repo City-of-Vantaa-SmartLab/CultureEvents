@@ -12,7 +12,7 @@ const getContrastColor = color => {
   }
 };
 
-const MyButton = styled(AntButton)`
+const CustomButton = styled(AntButton)`
   && {
     border-radius: 2rem;
     font-size: 0.72rem;
@@ -38,7 +38,7 @@ const MyButton = styled(AntButton)`
 export default class Button extends React.Component {
   render() {
     return (
-      <MyButton
+      <CustomButton
         type={this.props.type || 'primary'}
         backgroundColor={this.props.backgroundColor}
         {...this.props}

@@ -2,7 +2,7 @@ import { parseTo } from '../utils';
 
 const BASE_PATH = 'http://' + window.location.host;
 
-const myFetch = async (url, config = {}, authToken) => {
+const customFetchFn = async (url, config = {}, authToken) => {
   const response = await window.fetch(BASE_PATH + url, {
     headers: {
       'content-type': 'application/json',
@@ -25,11 +25,11 @@ const myFetch = async (url, config = {}, authToken) => {
 };
 
 const fetchEvents = async () => {
-  const result = await myFetch('/events');
+  const result = await customFetchFn('/events');
   return parseTo()(result);
 };
 const postEvent = async (event, authToken) => {
-  const result = await myFetch(
+  const result = await customFetchFn(
     '/events',
     { method: 'POST', body: parseTo('snake')(event) },
     authToken,
@@ -37,7 +37,7 @@ const postEvent = async (event, authToken) => {
   return parseTo()(result);
 };
 const putEvent = async (event, authToken) => {
-  const result = await myFetch(
+  const result = await customFetchFn(
     '/events/' + event.id,
     { method: 'PUT', body: parseTo('snake')(event) },
     authToken,
@@ -46,7 +46,7 @@ const putEvent = async (event, authToken) => {
 };
 
 const login = (username, password) => {
-  return myFetch('/auth/login', {
+  return customFetchFn('/auth/login', {
     method: 'POST',
     body: {
       username,

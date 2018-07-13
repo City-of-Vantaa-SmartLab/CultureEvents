@@ -38,10 +38,15 @@ const ButtonLabel = styled.span`
   font-size: 0.71rem;
   font-weight: 600;
 `;
+const ErrorMessage = styled.span`
+  font-size: 1rem;
+  color: ${props => props.color};
+  display: ${props => (props.show ? 'flex' : 'none')};
+`;
 
 export default class Typography extends React.Component {
   render() {
-    const { color, type, children, ...props } = this.props;
+    const { color, type, children, show, ...props } = this.props;
     switch (type) {
       case 'headline':
         return (
@@ -84,6 +89,12 @@ export default class Typography extends React.Component {
           <ButtonLabel {...props} color={color}>
             {children}
           </ButtonLabel>
+        );
+      case 'errorMessage':
+        return (
+          <ErrorMessage {...props} color={color} show={show}>
+            {children}
+          </ErrorMessage>
         );
       default:
         throw new Error('You provide a wrong type for typography');

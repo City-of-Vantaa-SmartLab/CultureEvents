@@ -246,6 +246,11 @@ class Editor extends React.Component {
       };
     }
   };
+
+  updateCoverImageName = imageurl => {
+    this.internalData.eventDraft.coverImage = imageurl;
+  };
+
   submitForm = () => {
     this.props.onSubmit(this.internalData.eventDraft);
   };
@@ -316,6 +321,7 @@ class Editor extends React.Component {
               value={this.internalData.eventDraft.coverImage}
               backgroundColor={inputBackgroundColor}
               onChange={this.onChange('coverImage')}
+              updateCoverImage={this.updateCoverImageName}
             />
           </Row>
           <Row

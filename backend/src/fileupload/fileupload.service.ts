@@ -16,12 +16,18 @@ export class FileUploadService {
   constructor() {}
 
   async fileupload(@Req() req, @Res() res) {
-    this.upload(req, res, function(error) {
-      if (error) {
-        return res.status(404).send(`Failed to upload image file: ${error}`);
-      }
-      return res.status(201).send(req.files[0].location);
-    });
+    try {
+      this.upload(req, res, function(error) {
+        if (error) {
+          console.log(error);
+          return res.status(404).json(`Failed to upload image file: ${error}`);
+        }
+        return res.status(201).json(req.files[0].location);
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(`Failed to upload image file: ${error}`);
+    }
   }
 
   upload = multer({
