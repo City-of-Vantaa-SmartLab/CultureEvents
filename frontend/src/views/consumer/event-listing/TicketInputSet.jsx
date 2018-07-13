@@ -25,7 +25,7 @@ export default observer(
                 onChange={value => {
                   ticket.value = value + '';
                   ticket.label = ticketCatalog.find(
-                    elem => elem.id == value,
+                    elem => elem.id === value,
                   ).ticketDescription;
                 }}
                 style={{ width: '100%' }}
@@ -34,7 +34,7 @@ export default observer(
                   label: catalog.ticketDescription,
                   value: catalog.id,
                   // option is diabled if it is present in other input
-                  disabled: tickets.find(elem => elem.value == catalog.id),
+                  disabled: tickets.find(elem => elem.value === catalog.id),
                 }))}
                 lightMode
               />

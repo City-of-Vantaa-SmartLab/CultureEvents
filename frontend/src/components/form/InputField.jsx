@@ -8,10 +8,24 @@ const LabelText = styled(Typography)`
     margin-bottom: 4px;
     font-size: ${props => (props.horizontal ? '0.86rem' : '1rem')};
     white-space: nowrap;
+    position: relative;
+
+    &::after {
+      content: ${props => (props.mandatory ? ' "*"' : 'none')};
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: red;
+      transform: translate(0.5rem, -5px);
+    }
   }
 `;
 const Label = props => (
-  <LabelText type="secondarybody" color={props.lightMode ? 'black' : 'white'}>
+  <LabelText
+    type="secondarybody"
+    color={props.lightMode ? 'black' : 'white'}
+    mandatory={props.mandatory}
+  >
     {props.children}
   </LabelText>
 );
@@ -62,7 +76,12 @@ export default class InputField extends React.Component {
       );
     else
       return (
-        <Input className={inputClassName} style={inputStyle} {...inputProps} />
+        <Input
+          className={inputClassName}
+          style={inputStyle}
+          {...inputProps}
+          type={type}
+        />
       );
   };
   render() {

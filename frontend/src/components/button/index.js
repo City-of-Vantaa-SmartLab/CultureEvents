@@ -20,7 +20,7 @@ const MyButton = styled(AntButton)`
     text-transform: uppercase;
     background-color: ${props => props.backgroundColor} !important;
     border-color: ${props => props.backgroundColor};
-    color: ${props => getContrastColor(props.backgroundColor)};
+    color: ${props => getContrastColor(props.backgroundColor)} !important;
 
     ${props =>
       !props.disabled
@@ -30,9 +30,9 @@ const MyButton = styled(AntButton)`
           box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
           text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
           border-color: ${props => props.backgroundColor};
-          color: ${props => getContrastColor(props.backgroundColor)};
+          color: ${props => getContrastColor(props.backgroundColor)} !important;
         }`
-        : 'filter: grayscale(100%);'}
+        : 'filter: grayscale(100%) opacity(30%);'}
 `;
 
 export default class Button extends React.Component {

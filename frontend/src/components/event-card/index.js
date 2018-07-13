@@ -60,9 +60,10 @@ const Wrapper = styled(WrapperBase)`
   cursor: pointer;
   background-color: white;
   will-change: transform;
+  transition: box-shadow 0.5s ease;
 
   &:hover {
-    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.3);
   }
 `;
 

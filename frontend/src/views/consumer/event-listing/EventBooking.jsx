@@ -234,6 +234,7 @@ export default connect('store')(
               <InputField
                 key="tel-input"
                 lightMode
+                mandatory
                 type="tel"
                 label="Puhelinnumero"
                 onChange={e =>
