@@ -14,8 +14,14 @@ import { ValidationPipe } from 'validations/validation.pipe';
 import { ValidationService } from '../utils/validations/validations.service';
 import { ReservationService } from 'reservations/reservations.service';
 import { BamboraService } from 'services/bambora.service';
-import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
-
+import {
+  ApiUseTags,
+  ApiImplicitQuery,
+  ApiImplicitParam,
+} from '@nestjs/swagger';
+import { ReservationsDto } from '../reservations/reservations.dto';
+const APP_REDIRECT_URL =
+  process.env.APP_REDIRECT_URL || '/app/payment-complete';
 @ApiUseTags('payments')
 @Controller('payments')
 export class PaymentController {
@@ -86,9 +92,12 @@ export class PaymentController {
               payment.order_number
             }`,
           );
-          return res.redirect(`/app/payment-complete?status=1`);
+          return res.redirect(`${APP_REDIRECT_URL}?status=1`);
         }
 
+        const reservation_details = await this.reservationService.findOneById(
+          payment.reservation_id,
+        );
         // Checking if the payment has already been done.
         if (payment.payment_status) {
           console.error(
@@ -96,7 +105,9 @@ export class PaymentController {
               payment.order_number
             }`,
           );
-          return res.redirect(`/app/payment-complete?status=2`);
+          return res.redirect(
+            `${APP_REDIRECT_URL}?status=2&event_id=${reservation_details.id}`,
+          );
         } else {
           // Updating payment as completed.
           payment.payment_status = true;
@@ -106,15 +117,15 @@ export class PaymentController {
           );
         }
         res.redirect(
-          `/app/payment-complete?orderNumber=${orderNumber}&amount=${
+          `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
             payment.amount
-          }&status=0`,
+          }&status=0&event_id=${reservation_details.id}`,
         );
       } else {
         console.error(
           `Payment failed with error code: ${response}. Please try again later`,
         );
-        return res.redirect(`/app/payment-complete?status=3`);
+        return res.redirect(`${APP_REDIRECT_URL}?status=3`);
       }
     } catch (err) {
       console.error(
@@ -122,7 +133,7 @@ export class PaymentController {
           err.message
         }. Please try again later`,
       );
-      return res.redirect(`/app/payment-complete?status=4`);
+      return res.redirect(`${APP_REDIRECT_URL}?status=4`);
     }
   }
 
@@ -133,23 +144,12 @@ export class PaymentController {
     required: true,
     type: String,
   })
-  @ApiImplicitQuery({
-    name: 'id',
-    required: true,
-    description:
-      'Reservation Id of the reservation for which this payment is being processed',
-    type: String,
-  })
   @UsePipes(new ValidationPipe())
   async payment_redirect(@Req() req, @Res() res) {
     try {
-      const amount = +req.query.amount;
       const id = +req.query.id;
 
-      const validationErrors = this.validationService.validatePaymentRedirectRequest(
-        id,
-        amount,
-      );
+      const validationErrors = this.validationService.validateId(id);
       if (validationErrors) {
         return res.status(422).json(validationErrors);
       }
@@ -157,9 +157,9 @@ export class PaymentController {
 
       if (reservations) {
         const paymentObj = {
-          amount,
+          amount: await this.reservationService.getTotalAmount(reservations),
           reservation_id: reservations.id,
-          username: reservations.username,
+          username: reservations.name,
         };
         const url = await this.paymentService.getPaymentRedirectUrl(paymentObj);
         res.status(301).redirect(url);
@@ -170,6 +170,57 @@ export class PaymentController {
       res
         .status(500)
         .json(`Failed to get payment redirect url. Error: ${err.message}`);
+    }
+  }
+
+  @Post('make-payment')
+  @ApiImplicitParam({
+    name: 'reservation',
+    required: true,
+    description: 'Reservation Object',
+    type: String,
+  })
+  @UsePipes(new ValidationPipe())
+  async makePayment(@Res() response, @Body() reservation: ReservationsDto) {
+    try {
+      const checkIfSoldOut = await this.reservationService.checkSeatAvailability(
+        reservation,
+      );
+      if (checkIfSoldOut) {
+        return response
+          .status(422)
+          .json(`There are not enough seats available for this event`);
+      }
+      const reservationDto = await this.reservationService.createReservation(
+        reservation,
+        false,
+      );
+
+      if (!reservationDto) {
+        return response
+          .status(422)
+          .json(`Failed to make a reservation for the request`);
+      }
+      const paymentObj = {
+        amount: await this.reservationService.getTotalAmount(reservationDto),
+        reservation_id: reservationDto.id,
+        username: reservationDto.name,
+      };
+      const redirectUrl = await this.paymentService.getPaymentRedirectUrl(
+        paymentObj,
+      );
+      if (!redirectUrl) {
+        return response
+          .status(422)
+          .json(
+            `Failed to make payment for the request: Could not make payment request with Bambora`,
+          );
+      }
+      response.status(301).redirect(redirectUrl);
+    } catch (error) {
+      return response
+        .status(500)
+        .json(`Failed to make payment for the request: ${error.message}`);
     }
   }
 }
