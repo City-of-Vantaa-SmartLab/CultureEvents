@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
 import Button from '../button';
+import EventDetail from './EventDetail';
 import { toRgba } from '../../utils';
 import chroma from 'chroma-js';
 import posed from 'react-pose';
@@ -64,6 +65,7 @@ const Wrapper = styled(WrapperBase)`
   overflow: hidden;
   cursor: pointer;
   background-color: white;
+  will-change: transform;
 
   &:hover {
     box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
@@ -124,6 +126,7 @@ const BackgroundImg = styled.div`
 const BackgroundImageGroup = styled(BoxImageAnimation)`
   width: 100%;
   position: relative;
+  will-change: transform;
 
   & > * {
     width: 100%;
@@ -226,14 +229,17 @@ export default class EventCard extends React.Component {
           )}
         </BottomSection>
         {this.props.active && (
-          <BackButton
-            backgroundColor="transparent"
-            icon="arrow-left"
-            onClick={this.props.onDeselect}
-            onTouchEnd={this.props.onDeselect}
-          >
-            Back
-          </BackButton>
+          <React.Fragment>
+            <BackButton
+              backgroundColor="transparent"
+              icon="arrow-left"
+              onClick={this.props.onDeselect}
+              onTouchEnd={this.props.onDeselect}
+            >
+              Back
+            </BackButton>
+            <EventDetail event={this.props.event} />
+          </React.Fragment>
         )}
       </Wrapper>
     );

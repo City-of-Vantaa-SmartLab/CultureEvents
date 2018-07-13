@@ -5,7 +5,7 @@ const TicketCatalog = types.model({
     types.identifier(types.union(types.number, types.string)),
     989898,
   ),
-  ticketDescription: types.optional(types.string, ''),
+  ticketDescription: types.optional(types.string, 'Single Ticket'),
   price: types.optional(
     types.refinement(
       types.number,
