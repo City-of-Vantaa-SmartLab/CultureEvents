@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Typography from '../typography';
 import Icon from 'antd/lib/icon';
 
-const ListStyled = styled.li`
+const StyledList = styled.li`
   list-style: none;
   margin: 0.5rem 1rem;
 
@@ -14,20 +14,20 @@ const ListStyled = styled.li`
   }
 `;
 
-export const ListItem = props => (
-  <ListStyled style={props.style} color={props.color}>
+export const ListItem = ({ style, color, iconName, title, content }) => (
+  <StyledList style={style} color={color}>
     <div>
-      {props.iconName && <Icon type={props.iconName} />}
-      <Typography type="largebody" color={props.color}>
-        {props.title}
+      {iconName && <Icon type={iconName} />}
+      <Typography type="largebody" color={color}>
+        {title}
       </Typography>
     </div>
-    {React.isValidElement(props.content) ? (
-      <div>{props.content}</div>
+    {React.isValidElement(content) ? (
+      <div>{content}</div>
     ) : (
-      <Typography type="body">{props.content}</Typography>
+      <Typography type="body">{content}</Typography>
     )}
-  </ListStyled>
+  </StyledList>
 );
 const Wrapper = styled.ul`
   padding: 0;
@@ -51,13 +51,13 @@ export default class EventDetails extends Component {
           style={{ marginBottom: '1rem' }}
           iconName="user"
           color={event.themeColor}
-          title={'Ikäsuositus: ' + event.ageGroupLimit + ' v.'}
+          title={`Ikäsuositus: ${event.ageGroupLimit} v.`}
         />
         <ListItem color={event.themeColor} content={event.description} />
         <ListItem
           color={event.themeColor}
           title="Milloin"
-          content={event.eventDate + ' klo ' + event.eventTime}
+          content={`${event.eventDate} klo ${event.eventTime}`}
         />
         <ListItem
           color={event.themeColor}
@@ -70,7 +70,7 @@ export default class EventDetails extends Component {
           content={event.ticketCatalog.map(type => (
             <ListItem
               key={type.id}
-              content={type.ticketDescription + ': ' + type.price + ' €'}
+              content={`${type.ticketDescription}: ${type.price} €`}
             />
           ))}
         />
