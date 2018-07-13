@@ -26,13 +26,17 @@ export class Reservations {
   @Column({ length: 100 })
   address: string;
 
-  @Column({ length: 15 })
+  @Column({ length: 100, nullable: true })
+  classroom: string;
+
+  @Column({ length: 15, nullable: true })
   phone_number: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   email: string;
 
-  @Column('double precision') total_amount: number;
+  @Column({ type: 'double precision', nullable: true })
+  total_amount: number;
 
   @OneToMany(type => Tickets, tickets => tickets.tickets, {
     cascade: true,
