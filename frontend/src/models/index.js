@@ -110,6 +110,8 @@ export const RootModel = types
     getUserToken: () => {
       return self.user.token;
     },
+    // order related actions
+    submitOrder: flow(function*(orderInfo) {}),
   }))
   .views(self => ({
     get isEmpty() {

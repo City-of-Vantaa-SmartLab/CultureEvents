@@ -267,6 +267,8 @@ export default connect('store')(
                 style={{ alignSelf: 'flex-end' }}
                 backgroundColor={event.themeColor}
                 disabled={!submittable}
+                onClick={this.submit}
+                onTouchEnd={this.submit}
               >
                 OSTA LIPUT
               </Button>

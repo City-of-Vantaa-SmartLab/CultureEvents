@@ -200,7 +200,9 @@ export class PaymentController {
             paymentObj,
           );
           if (redirectUrl) {
-            response.status(301).redirect(redirectUrl);
+            response.status(200).json({
+              redirect_url: redirectUrl
+            });
           } else {
             return response
               .status(404)

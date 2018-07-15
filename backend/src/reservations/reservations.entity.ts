@@ -17,26 +17,23 @@ export class Reservations {
   @ManyToOne(type => Events, event => event.id)
   event_id: number;
 
-  @Column({ length: 30 })
-  username: string;
+  @Column({ length: 30, nullable: true })
+  name: string;
 
   @Column({ length: 15 })
-  type: string;
-
-  @Column({ length: 100 })
-  address: string;
+  customer_type: string;
 
   @Column({ length: 100, nullable: true })
-  classroom: string;
+  school_name: string;
+
+  @Column({ length: 100, nullable: true })
+  class: string;
 
   @Column({ length: 15, nullable: true })
-  phone_number: string;
+  phone: string;
 
   @Column({ length: 100, nullable: true })
   email: string;
-
-  @Column({ type: 'double precision', nullable: true })
-  total_amount: number;
 
   @OneToMany(type => Tickets, tickets => tickets.tickets, {
     cascade: true,

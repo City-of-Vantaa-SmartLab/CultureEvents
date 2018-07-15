@@ -9,27 +9,25 @@ export class ReservationsDto {
   readonly event_id: number;
   @IsString()
   @ApiModelProperty()
-  readonly type: string;
-  @IsString()
-  @ApiModelProperty()
-  readonly username: string;
-  @IsString()
-  @ApiModelProperty()
-  readonly address: string;
+  readonly customer_type: string;
   @IsString()
   @IsOptional()
   @ApiModelProperty()
-  readonly classroom: string;
+  readonly name: string;
   @IsString()
   @IsOptional()
   @ApiModelProperty()
-  readonly phone_number: string;
+  readonly school_name: string;
+  @IsString()
+  @IsOptional()
+  @ApiModelProperty()
+  readonly class: string;
+  @IsString()
+  @IsOptional()
+  @ApiModelProperty()
+  readonly phone: string;
   @IsString()
   @IsOptional()
   @ApiModelProperty()
   readonly email: string;
-  @IsNumber()
-  @IsOptional()
-  @ApiModelProperty()
-  readonly total_amount: number;
 }
