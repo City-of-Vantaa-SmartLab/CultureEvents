@@ -67,8 +67,8 @@ export class ReservationService {
     const event = await this.eventService.findOneById(reservation.event_id);
     const reservationMessage = await this.buildReservationMessage(event);
     await this.smsService.sendMessageToUser(
-      reservation.phone_number,
-      reservation.username,
+      reservation.phone,
+      reservation.name,
       reservationMessage,
     );
   }

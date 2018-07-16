@@ -29,7 +29,7 @@ export class Reservations {
   @Column({ length: 100, nullable: true })
   class: string;
 
-  @Column({ length: 15, nullable: true })
+  @Column({ length: 15 })
   phone: string;
 
   @Column({ length: 100, nullable: true })

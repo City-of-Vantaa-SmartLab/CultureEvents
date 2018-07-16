@@ -181,7 +181,7 @@ export const RootModel = types
         const payload = {
           customer_type: orderInfo.customerGroup,
           event_id: orderInfo.eventId,
-          username: orderInfo.name,
+          name: orderInfo.name,
           phone: orderInfo.phoneNumber,
           email: orderInfo.email,
           tickets: orderInfo.tickets.map(ticket => ({

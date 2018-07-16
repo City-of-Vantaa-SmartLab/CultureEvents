@@ -194,14 +194,14 @@ export class PaymentController {
           const paymentObj = {
             amount: this.reservationService.getTotalAmount(reservationDto),
             reservation_id: reservationDto.id,
-            username: reservationDto.username,
+            username: reservationDto.name,
           };
           const redirectUrl = await this.paymentService.getPaymentRedirectUrl(
             paymentObj,
           );
           if (redirectUrl) {
             response.status(200).json({
-              redirect_url: redirectUrl
+              redirect_url: redirectUrl,
             });
           } else {
             return response

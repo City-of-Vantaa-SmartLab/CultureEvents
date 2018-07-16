@@ -116,18 +116,25 @@ export default connect('store')(
       classRoom: '',
       school: '',
     });
-    getTotalPrice = () => {
-      return this.internalState.tickets.reduce((acc, curr) => {
-        const targetCatalog = this.props.event.ticketCatalog.find(
-          elem => elem.id == curr.value,
-        );
-        if (targetCatalog) {
-          const singlePrice = targetCatalog.price;
-          const totalPriceForThisCatalog = singlePrice * curr.amount;
-          acc += totalPriceForThisCatalog;
-        }
-        return acc;
-      }, 0);
+    getPricingAggrevate = () => {
+      return this.internalState.tickets.reduce(
+        (acc, curr) => {
+          const targetCatalog = this.props.event.ticketCatalog.find(
+            elem => elem.id == curr.value,
+          );
+          if (targetCatalog) {
+            const singlePrice = targetCatalog.price;
+            const totalPriceForThisCatalog = singlePrice * curr.amount;
+            acc.totalCost += totalPriceForThisCatalog;
+            acc.totalTicket += curr.amount;
+          }
+          return acc;
+        },
+        {
+          totalCost: 0,
+          totalTicket: 0,
+        },
+      );
     };
     submit = type => e => {
       this.props.store.submitOrder({
@@ -142,12 +149,14 @@ export default connect('store')(
 
       const isPrivateCustomer = internalState.customerGroup == 'private';
       const isGroupConductorCustomer = internalState.customerGroup == 'group';
-      const totalCost = this.getTotalPrice();
-      const submittable = isGroupConductorCustomer
-        ? internalState.school &&
-          internalState.classRoom &&
-          isValidNumber(internalState.phoneNumber, 'FI')
-        : internalState.name && isValidNumber(internalState.phoneNumber, 'FI');
+      const { totalCost, totalTicket } = this.getPricingAggrevate();
+      const submittable =
+        (isGroupConductorCustomer
+          ? internalState.school &&
+            internalState.classRoom &&
+            isValidNumber(internalState.phoneNumber, 'FI')
+          : internalState.name &&
+            isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
       return (
         <Wrapper bgColor={event.themeColor}>
           <Typography type="title">Varaa/osta lippu</Typography>

@@ -64,7 +64,7 @@ export default withTheme(
                 <Typography type="body">
                   Bambora is our payment service.{' '}
                 </Typography>
-                {this.state.countDown > 1 ? (
+                {this.state.countDown > 0 ? (
                   <Typography type="body">
                     Redirecting you in{' '}
                     {

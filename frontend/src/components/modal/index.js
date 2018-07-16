@@ -9,7 +9,8 @@ const ModalAnimatable = posed.div({
   enter: {
     scale: 1,
     opacity: 1,
-    delayChildren: 100,
+    delay: 300,
+    delayChildren: 400,
     staggerChildren: 100,
     y: '0%',
   },
@@ -101,12 +102,7 @@ class Blur extends React.Component {
   target = document.querySelector('#root');
   isFireFox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
   componentDidMount() {
-    if (this.isFireFox) {
-      return;
-    }
-    this.animation = chain(delay(300), tween({ from: 0, to: 8, duration: 100 }))
-      .pipe(v => v + 'px')
-      .start(v => (this.target.style.filter = `blur(${v})`));
+    this.target.style.filter = `blur(8px)`;
   }
   render() {
     return null;
