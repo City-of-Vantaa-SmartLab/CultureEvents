@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Typography from '../../../components/typography';
 import chroma from 'chroma-js';
-import { observable } from 'mobx';
+import { observable, toJS } from 'mobx';
 import { toRgba, genRandomKey, connect } from '../../../utils';
 import Button, { ButtonGroup } from '../../../components/button';
 import Icon from '../../../../node_modules/antd/lib/icon';
@@ -129,6 +129,13 @@ export default connect('store')(
         return acc;
       }, 0);
     };
+    submit = type => e => {
+      this.props.store.submitOrder({
+        ...toJS(this.internalState),
+        type,
+        eventId: this.props.event.id,
+      });
+    };
     render() {
       const { event } = this.props;
       const { internalState } = this;
@@ -140,7 +147,7 @@ export default connect('store')(
         ? internalState.school &&
           internalState.classRoom &&
           isValidNumber(internalState.phoneNumber, 'FI')
-        : internalState.name && isValidNumber(internalState.phoneNumber);
+        : internalState.name && isValidNumber(internalState.phoneNumber, 'FI');
       return (
         <Wrapper bgColor={event.themeColor}>
           <Typography type="title">Varaa/osta lippu</Typography>
@@ -259,6 +266,8 @@ export default connect('store')(
                   backgroundColor="white"
                   style={{ alignSelf: 'flex-start' }}
                   disabled={!submittable}
+                  onClick={this.submit}
+                  onTouchEnd={this.submit('reservation')}
                 >
                   VARAA LIPUT
                 </Button>
@@ -268,7 +277,7 @@ export default connect('store')(
                 backgroundColor={event.themeColor}
                 disabled={!submittable}
                 onClick={this.submit}
-                onTouchEnd={this.submit}
+                onTouchEnd={this.submit('payment')}
               >
                 OSTA LIPUT
               </Button>

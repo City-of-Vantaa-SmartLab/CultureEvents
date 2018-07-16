@@ -207,7 +207,7 @@ export default class EventCard extends React.Component {
         {!this.props.active && (
           <BottomSection themeColor={themeColor}>
             <Typography type="body" color="white">
-              {location} •
+              {location} •{' '}
             </Typography>
             <Typography type="body" color="white">
               {eventDate} |{' '}

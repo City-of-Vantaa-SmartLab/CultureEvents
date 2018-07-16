@@ -32,7 +32,7 @@ const CustomButton = styled(AntButton)`
           border-color: ${props => props.backgroundColor};
           color: ${props => getContrastColor(props.backgroundColor)} !important;
         }`
-        : 'filter: grayscale(100%) opacity(30%);'}
+        : 'filter: grayscale(100%) opacity(30%); pointer-events: none;'}
 `;
 
 export default class Button extends React.Component {
