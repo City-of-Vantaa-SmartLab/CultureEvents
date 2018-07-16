@@ -9,7 +9,7 @@ import { tween } from 'popmotion';
 
 const WrapperBase = posed.div({
   normal: {
-    height: '20rem',
+    height: props => (props.mini ? '13rem' : '20rem'),
     width: '100%',
     flip: true,
     transition: tween,
@@ -156,7 +156,7 @@ const BackButton = styled(Button)`
 
 export default class EventCard extends React.Component {
   render() {
-    const { className, style, active, expandable } = this.props;
+    const { className, style, active, expandable, mini } = this.props;
     const {
       name,
       coverImage,
@@ -168,14 +168,16 @@ export default class EventCard extends React.Component {
       ageGroupLimit,
     } = this.props.event;
 
+    const showBottomBar = !active && !mini;
     return (
       <Wrapper
         style={style}
         className={className}
-        expanded={active && expandable}
+        expanded={active && expandable && !mini}
         onClick={e => {
-          this.props.onSelect(e);
+          !mini && this.props.onSelect(e);
         }}
+        mini={mini}
         pose={active && expandable ? 'expanded' : 'normal'}
       >
         <BackgroundImageGroup>
@@ -204,7 +206,7 @@ export default class EventCard extends React.Component {
             </Typography>
           </Content>
         </BackgroundImageGroup>
-        {!this.props.active && (
+        {showBottomBar && (
           <BottomSection themeColor={themeColor}>
             <Typography type="body" color="white">
               {location} •{' '}
@@ -226,7 +228,7 @@ export default class EventCard extends React.Component {
         {this.props.active && (
           <React.Fragment>
             <BackButton
-              backgroundColor="transparent"
+              backgroundColor="rgba(0,0,0, .4)"
               icon="arrow-left"
               onClick={this.props.onDeselect}
               onTouchEnd={this.props.onDeselect}

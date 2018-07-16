@@ -15,10 +15,10 @@ export default withTheme(
       constructor(props) {
         super(props);
         if (props.store.ui.auth.validateTokenFailed) {
-          this.state = { show: true, handledSignalToShow: true };
+          this.state = { show: true };
           window.setTimeout(() => {
             try {
-              this.setState({ show: false });
+              props.store.ui.auth.clearValidationError();
             } catch (error) {
               console.error(error);
             }
@@ -50,7 +50,7 @@ export default withTheme(
         if (this.props.store.ui.auth.validateTokenFailed) {
           window.setTimeout(() => {
             try {
-              this.setState({ show: false });
+              this.props.store.ui.auth.clearValidationError();
             } catch (error) {
               console.error(error);
             }
@@ -69,7 +69,7 @@ export default withTheme(
             hideCloseButton={auth.validateTokenInProgress}
             onClear={() => this.setState({ show: false })}
           >
-            {auth.validateTokenInProgress ? (
+            {!auth.validateTokenFailed ? (
               <Content>
                 <Typography type="title" color={palette.primary}>
                   Validating session...{' '}

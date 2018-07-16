@@ -21,14 +21,21 @@ const transformToMap = (arr = []) => {
 
 const UI = types.model({
   auth: types.optional(
-    types.model({
-      // for login; @TODO: maybe move this UI state to User model?
-      authInProgress: false,
-      authError: false,
-      // for validation
-      validateTokenInProgress: false,
-      validateTokenFailed: false,
-    }),
+    types
+      .model({
+        // for login; @TODO: maybe move this UI state to User model?
+        authInProgress: false,
+        authError: false,
+        // for validation
+        validateTokenInProgress: false,
+        validateTokenFailed: false,
+      })
+      .actions(self => ({
+        clearValidationError: () => {
+          self.validateTokenFailed = false;
+          self.validateTokenInProgress = false;
+        },
+      })),
     {},
   ),
   eventList: types.optional(
@@ -141,7 +148,6 @@ export const RootModel = types
         self.user.username = result.username;
         self.user.token = result.token;
         self.user.id = result.id;
-        console.log('User id is', result.id);
 
         self.ui.auth.authInProgress = false;
         self.ui.authError = false;
@@ -157,7 +163,6 @@ export const RootModel = types
     validateToken: flow(function*() {
       self.ui.auth.validateTokenInProgress = true;
       self.ui.auth.validateTokenFailed = false;
-      console.log(self.user.id);
       try {
         yield validateUserToken(self.user.id, self.user.token);
         self.ui.auth.validateTokenFailed = false;
