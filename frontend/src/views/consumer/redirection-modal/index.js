@@ -49,10 +49,13 @@ export default withTheme(
 
         return (
           <Modal
-            show={orderAndPayment.pending}
-            onClear={orderAndPayment.clearOrderPendingFlag}
+            show={orderAndPayment.redirectStatus > 0}
+            onClear={() => {
+              orderAndPayment.clearOrderPendingFlag();
+              window.clearInterval(this.interval);
+            }}
           >
-            {orderAndPayment.redirecting ? (
+            {orderAndPayment.redirectStatus == 2 && (
               <Content>
                 <Typography type="title" color={palette.primaryDark}>
                   Redirecting{' '}
@@ -80,7 +83,9 @@ export default withTheme(
                   <Typography type="body">Redirection in progress</Typography>
                 )}
               </Content>
-            ) : (
+            )}
+
+            {orderAndPayment.redirectStatus == 1 && (
               <Content>
                 <Typography type="title" color={palette.primaryDark}>
                   Please wait
@@ -93,6 +98,17 @@ export default withTheme(
                 </Typography>
                 <Typography type="body">
                   Waiting for our server to process your order
+                </Typography>
+              </Content>
+            )}
+            {orderAndPayment.redirectStatus == 3 && (
+              <Content>
+                <Typography type="title" color={palette.red}>
+                  Cannot fulfill your order
+                </Typography>
+                <Typography type="body">
+                  Your order cannot be fulfulled. This might be due to
+                  insufficent tickets left.
                 </Typography>
               </Content>
             )}

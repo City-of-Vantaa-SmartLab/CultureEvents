@@ -53,9 +53,15 @@ const UI = types.model({
     types
       .model({
         // for payment
-        pending: false,
+        redirectStatus: types.optional(
+          types.refinement(
+            'Redirect code',
+            types.number,
+            v => v >= 0 && v <= 3,
+          ),
+          0,
+        ),
         redirectUrl: '',
-        redirecting: false,
         // for reservation
         reservationStatus: types.optional(
           types.refinement(
@@ -68,8 +74,8 @@ const UI = types.model({
       })
       .actions(self => {
         const clearOrderPendingFlag = () => {
-          self.pending = false;
-          self.redirecting = false;
+          self.redirectStatus = 0;
+          self.redirectUrl = '';
         };
         const clearReservationFlag = () => {
           self.reservationStatus = 0;
@@ -196,7 +202,7 @@ export const RootModel = types
     submitOrder: flow(function*(orderInfo) {
       // setting UI
       if (orderInfo.type == 'payment') {
-        self.ui.orderAndPayment.pending = true;
+        self.ui.orderAndPayment.redirectStatus = 1;
 
         const payload = {
           customer_type: orderInfo.customerGroup,
@@ -213,11 +219,12 @@ export const RootModel = types
         try {
           const result = yield getPaymentRedirectUrl(payload);
 
-          self.ui.orderAndPayment.redirecting = true;
+          self.ui.orderAndPayment.redirectStatus = 2;
           self.ui.orderAndPayment.redirectUrl = result.redirect_url;
           // setting UI state for success
         } catch (error) {
           // setting UI error
+          self.ui.orderAndPayment.redirectStatus = 3;
           console.error('Operation to fetch redirect URL failed', error);
         }
       }
