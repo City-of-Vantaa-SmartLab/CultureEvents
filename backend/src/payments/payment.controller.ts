@@ -95,6 +95,9 @@ export class PaymentController {
           return res.redirect(`${APP_REDIRECT_URL}?status=1`);
         }
 
+        const reservation_details = await this.reservationService.findOneById(
+          payment.reservation_id,
+        );
         // Checking if the payment has already been done.
         if (payment.payment_status) {
           console.error(
@@ -103,9 +106,7 @@ export class PaymentController {
             }`,
           );
           return res.redirect(
-            `${APP_REDIRECT_URL}?status=2&reservation=${
-              payment.reservation_id
-            }`,
+            `${APP_REDIRECT_URL}?status=2&event_id=${reservation_details.id}`,
           );
         } else {
           // Updating payment as completed.
@@ -118,7 +119,7 @@ export class PaymentController {
         res.redirect(
           `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
             payment.amount
-          }&status=0&reservation=${payment.reservation_id}`,
+          }&status=0&event_id=${reservation_details.id}`,
         );
       } else {
         console.error(
@@ -156,9 +157,9 @@ export class PaymentController {
 
       if (reservations) {
         const paymentObj = {
-          amount: 100,
+          amount: await this.reservationService.getTotalAmount(reservations),
           reservation_id: reservations.id,
-          username: reservations.username,
+          username: reservations.name,
         };
         const url = await this.paymentService.getPaymentRedirectUrl(paymentObj);
         res.status(301).redirect(url);
@@ -182,44 +183,40 @@ export class PaymentController {
   @UsePipes(new ValidationPipe())
   async makePayment(@Res() response, @Body() reservation: ReservationsDto) {
     try {
-      const seatsAvailable = await this.reservationService.checkSeatAvailability(
+      const checkIfSoldOut = await this.reservationService.checkSeatAvailability(
         reservation,
       );
-      if (seatsAvailable) {
-        const reservationDto = await this.reservationService.createReservation(
-          reservation,
-        );
-
-        if (reservationDto && reservationDto != null) {
-          const paymentObj = {
-            amount: this.reservationService.getTotalAmount(reservationDto),
-            reservation_id: reservationDto.id,
-            username: reservationDto.username,
-          };
-          const redirectUrl = await this.paymentService.getPaymentRedirectUrl(
-            paymentObj,
-          );
-          if (redirectUrl) {
-            response.status(200).json({
-              redirect_url: redirectUrl
-            });
-          } else {
-            return response
-              .status(404)
-              .json(
-                `Failed to make payment for the request: Could not make payment request with Bambora`,
-              );
-          }
-        } else {
-          return response
-            .status(404)
-            .json(`Failed to make a reservation for the request`);
-        }
-      } else {
+      if (checkIfSoldOut) {
         return response
-          .status(404)
+          .status(422)
           .json(`There are not enough seats available for this event`);
       }
+      const reservationDto = await this.reservationService.createReservation(
+        reservation,
+        false,
+      );
+
+      if (!reservationDto) {
+        return response
+          .status(422)
+          .json(`Failed to make a reservation for the request`);
+      }
+      const paymentObj = {
+        amount: await this.reservationService.getTotalAmount(reservationDto),
+        reservation_id: reservationDto.id,
+        username: reservationDto.name,
+      };
+      const redirectUrl = await this.paymentService.getPaymentRedirectUrl(
+        paymentObj,
+      );
+      if (!redirectUrl) {
+        return response
+          .status(422)
+          .json(
+            `Failed to make payment for the request: Could not make payment request with Bambora`,
+          );
+      }
+      response.status(301).redirect(redirectUrl);
     } catch (error) {
       return response
         .status(500)

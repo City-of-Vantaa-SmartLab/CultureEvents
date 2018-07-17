@@ -1,5 +1,6 @@
 import { IsString, IsNumber, IsOptional } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { Tickets } from 'tickets/tickets.entity';
 export class ReservationsDto {
   @IsOptional()
   @ApiModelProperty()
@@ -30,4 +31,6 @@ export class ReservationsDto {
   @IsOptional()
   @ApiModelProperty()
   readonly email: string;
+
+  @IsOptional() tickets: Tickets[];
 }

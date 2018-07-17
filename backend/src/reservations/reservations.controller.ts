@@ -47,18 +47,19 @@ export class ReservationsController {
   @UsePipes(new ValidationPipe())
   async create(@Res() response, @Body() reservation: ReservationsDto) {
     try {
-      const seatsAvailable = await this.reservationsService.checkSeatAvailability(
+      const checkIfSoldOut = await this.reservationsService.checkSeatAvailability(
         reservation,
       );
-      if (seatsAvailable) {
+      if (!checkIfSoldOut) {
         const reservationDto = await this.reservationsService.createReservation(
           reservation,
+          true,
         );
 
         return response.status(201).json(reservation);
       } else {
         return response
-          .status(404)
+          .status(422)
           .json(`There are not enough seats available for this event`);
       }
     } catch (error) {

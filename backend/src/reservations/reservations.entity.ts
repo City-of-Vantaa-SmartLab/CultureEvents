@@ -14,7 +14,9 @@ export class Reservations {
   @PrimaryGeneratedColumn() id: number;
 
   @Column('int')
-  @ManyToOne(type => Events, event => event.id)
+  @ManyToOne(type => Events, event => event.id, {
+    cascade: true,
+  })
   event_id: number;
 
   @Column({ length: 30, nullable: true })
@@ -29,7 +31,7 @@ export class Reservations {
   @Column({ length: 100, nullable: true })
   class: string;
 
-  @Column({ length: 15, nullable: true })
+  @Column({ length: 15 })
   phone: string;
 
   @Column({ length: 100, nullable: true })
