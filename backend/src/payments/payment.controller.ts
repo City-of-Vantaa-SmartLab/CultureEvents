@@ -116,6 +116,10 @@ export class PaymentController {
             true,
           );
         }
+        await this.reservationService.updatePaymentStatus(
+          payment.reservation_id,
+          true,
+        );
         res.redirect(
           `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
             payment.amount

@@ -10,7 +10,11 @@ export class Price {
   @Column({ length: 200 })
   ticket_description: string;
 
-  @Column('int') available_seat_for_this_type: number;
+  @Column({ type: 'int', nullable: true })
+  max_seats: number;
+
+  @Column({ type: 'int', nullable: true })
+  occupied_seats: number;
 
   @ManyToOne(type => Events, event => event.ticket_catalog, {
     onDelete: 'CASCADE',

@@ -14,7 +14,6 @@ import { ReservationService } from './reservations.service';
 import { ValidationPipe } from 'validations/validation.pipe';
 import { Reservations } from './reservations.entity';
 import { ValidationService } from '../utils/validations/validations.service';
-import { SMSService } from 'notifications/sms/sms.service';
 import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
 
 @ApiUseTags('reservations')
@@ -23,7 +22,6 @@ export class ReservationsController {
   constructor(
     private readonly reservationsService: ReservationService,
     private readonly validationService: ValidationService,
-    private readonly smsService: SMSService,
   ) {}
   @Get()
   async findAll(@Res() response): Promise<Reservations[]> {
@@ -47,21 +45,19 @@ export class ReservationsController {
   @UsePipes(new ValidationPipe())
   async create(@Res() response, @Body() reservation: ReservationsDto) {
     try {
-      const checkIfSoldOut = await this.reservationsService.checkSeatAvailability(
+      const seatsAvailable = await this.reservationsService.checkSeatAvailability(
         reservation,
       );
-      if (!checkIfSoldOut) {
-        const reservationDto = await this.reservationsService.createReservation(
-          reservation,
-          true,
-        );
-
-        return response.status(201).json(reservation);
-      } else {
+      if (!seatsAvailable) {
         return response
           .status(422)
           .json(`There are not enough seats available for this event`);
       }
+      const reservationDto = await this.reservationsService.createReservation(
+        reservation,
+        true,
+      );
+      return response.status(201).json(reservation);
     } catch (error) {
       return response
         .status(500)

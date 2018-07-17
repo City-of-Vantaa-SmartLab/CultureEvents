@@ -7,7 +7,15 @@ const path = require('path');
 const PORT = process.env.PORT;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useStaticAssets(path.resolve(__dirname + '/../public'));
+  app.use(/^\/$/, (req, res) => {
+    res.redirect('/app/');
+  });
+
+  app.setGlobalPrefix('api');
+
+  app.use('/app/**', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+  });
 
   const options = new DocumentBuilder()
     .setTitle('Vantaa Culture Events')
