@@ -157,4 +157,36 @@ export class EventsController {
         .json(`Failed to get any reservations for event with id: ${id}`);
     }
   }
+
+  @Get('/:id/getSeats')
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description: 'Event Id, for which available seats needs to be fetched',
+    type: String,
+  })
+  async getAvailableSeats(@Res() response, @Param('id') id: number) {
+    try {
+      if (this.validationService.validateId(+id)) {
+        return response.status(400).json(`Invalid event Id: ${id}`);
+      } else {
+        const remainingSeats = await this.reservationsService.getRemainingTicketsForAnEvent(
+          id,
+        );
+        if (remainingSeats) {
+          return response.status(200).json(remainingSeats);
+        } else {
+          return response
+            .status(404)
+            .json(
+              `Could not find any remaining Seats for event with id: ${id}`,
+            );
+        }
+      }
+    } catch (error) {
+      return response
+        .status(500)
+        .json(`Failed to get any remaining Seats for event with id: ${id}`);
+    }
+  }
 }

@@ -5,9 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Events } from './events.entity';
 import { ValidationService } from 'utils/validations/validations.service';
 import { ReservationsModule } from 'reservations/reservations.module';
+import { Reservations } from 'reservations/reservations.entity';
+import { ReservationService } from 'reservations/reservations.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Events]), ReservationsModule],
+  imports: [
+    TypeOrmModule.forFeature([Events]),
+    TypeOrmModule.forFeature([Reservations]),
+    ReservationsModule,
+  ],
   controllers: [EventsController],
   providers: [EventsService, ValidationService],
   exports: [EventsService],

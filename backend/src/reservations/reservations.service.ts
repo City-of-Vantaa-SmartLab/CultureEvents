@@ -9,6 +9,8 @@ import { EventsDto } from 'event/events.dto';
 import { format } from 'date-fns';
 import { I18Service } from '../i18/i18.service';
 import { EventsService } from 'event/events.service';
+import { Tickets } from 'tickets/tickets.entity';
+import { PriceDto } from 'price/price.dto';
 
 @Injectable()
 export class ReservationService {
@@ -20,14 +22,18 @@ export class ReservationService {
     private readonly eventService: EventsService,
   ) {}
 
-  async createReservation(reservation: ReservationsDto) {
+  async createReservation(reservation: ReservationsDto, sendSms: boolean) {
     const response = await this.reservationsRepository.save(reservation);
     if (response) {
-      const smsResponse = this.sendSmsToUser(reservation);
-      if (smsResponse) {
-        return response;
+      if (sendSms) {
+        const smsResponse = this.sendSmsToUser(reservation);
+        if (smsResponse) {
+          return response;
+        } else {
+          throw new Error('Sms Funtionality failed!.');
+        }
       } else {
-        throw new Error('Sms Funtionality failed!.');
+        return response;
       }
     } else {
       throw new Error('Failed to create reservation!.');
@@ -82,14 +88,63 @@ export class ReservationService {
     return response;
   }
 
-  getTotalAmount(reservation: ReservationsDto) {
-    // TO-DO
-    return 100;
+  async getTotalAmount(reservation: ReservationsDto) {
+    const event = await this.eventService.findOneById(reservation.event_id);
+    const amount = reservation.tickets.map(tickets => {
+      return (
+        tickets.no_of_tickets *
+        this.getTicketPrice(event.ticket_catalog, tickets.price_id)
+      );
+    });
+    return amount;
   }
 
-  checkSeatAvailability(reservation: ReservationsDto) {
-    // Check for seat availability
-    return true;
+  getTicketPrice(ticket_catalog: PriceDto[], id: number): number {
+    const response = ticket_catalog.find(ticket => ticket.id == id);
+    return response.price;
+  }
+
+  async checkSeatAvailability(reservation: ReservationsDto) {
+    const remaining_tickets = await this.getRemainingTicketsForAnEvent(
+      reservation.event_id,
+    );
+    const notEnoughSeatsAvailable = await reservation.tickets.map(tickets => {
+      if (remaining_tickets[tickets.price_id] < tickets.no_of_tickets) {
+        return true;
+      }
+    });
+    return notEnoughSeatsAvailable;
+  }
+
+  async getRemainingTicketsForAnEvent(event_id: number) {
+    const eventDetails = await this.eventService.findOneById(event_id);
+
+    const total_tickets_available = await eventDetails.ticket_catalog.reduce(
+      (obj, mapTickets) => {
+        obj[mapTickets.id] = obj[mapTickets.id] || [];
+        obj[mapTickets.id] = mapTickets.available_seat_for_this_type;
+        return obj;
+      },
+      {},
+    );
+    const reservationsForEvent = await this.findReservationsForEvent(event_id);
+
+    const mapTickets = reservationsForEvent.map(reservation => {
+      return { ...reservation.tickets };
+    });
+    const remaining_tickets = await mapTickets.reduce((obj, mapTickets) => {
+      const ticketAvailable = total_tickets_available[mapTickets[0].price_id];
+      obj[mapTickets[0].price_id] = obj[mapTickets[0].price_id] || [];
+      if (Number(obj[mapTickets[0].price_id]) == 0) {
+        obj[mapTickets[0].price_id] =
+          ticketAvailable - mapTickets[0].no_of_tickets;
+      } else {
+        obj[mapTickets[0].price_id] =
+          Number(obj[mapTickets[0].price_id]) - mapTickets[0].no_of_tickets;
+      }
+      return obj;
+    }, {});
+    return remaining_tickets;
   }
 
   getTime(date) {
