@@ -12,12 +12,7 @@ export class ValidationService {
   }
 
   validateAmount(amount: number) {
-    if (
-      typeof amount !== 'number' ||
-      isNaN(amount) ||
-      amount <= 0 ||
-      amount > 50
-    ) {
+    if (typeof amount !== 'number' || isNaN(amount) || amount > 50) {
       return 'Amount is not valid';
     }
   }

@@ -14,25 +14,28 @@ export class Reservations {
   @PrimaryGeneratedColumn() id: number;
 
   @Column('int')
-  @ManyToOne(type => Events, event => event.id)
+  @ManyToOne(type => Events, event => event.id, {
+    cascade: true,
+  })
   event_id: number;
 
-  @Column({ length: 30 })
-  username: string;
+  @Column({ length: 30, nullable: true })
+  name: string;
 
   @Column({ length: 15 })
-  type: string;
+  customer_type: string;
 
-  @Column({ length: 100 })
-  address: string;
+  @Column({ length: 100, nullable: true })
+  school_name: string;
+
+  @Column({ length: 100, nullable: true })
+  class: string;
 
   @Column({ length: 15 })
-  phone_number: string;
+  phone: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   email: string;
-
-  @Column('double precision') total_amount: number;
 
   @OneToMany(type => Tickets, tickets => tickets.tickets, {
     cascade: true,
