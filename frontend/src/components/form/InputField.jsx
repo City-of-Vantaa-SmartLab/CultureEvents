@@ -1,23 +1,36 @@
 import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
-import Input, { TextArea } from './Input';
+import Input, { TextArea, NumericInput, Select } from './Input';
 
 const LabelText = styled(Typography)`
   && {
     margin-bottom: 4px;
     font-size: ${props => (props.horizontal ? '0.86rem' : '1rem')};
     white-space: nowrap;
+    position: relative;
+
+    &::after {
+      content: ${props => (props.mandatory ? ' "*"' : 'none')};
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: red;
+      transform: translate(0.5rem, -5px);
+    }
   }
 `;
 const Label = props => (
-  <LabelText type="secondarybody" color={props.lightMode ? 'black' : 'white'}>
+  <LabelText
+    type="secondarybody"
+    color={props.lightMode ? 'black' : 'white'}
+    mandatory={props.mandatory}
+  >
     {props.children}
   </LabelText>
 );
 
 export const Wrapper = styled.div`
-  margin-bottom: 1rem;
   ${props =>
     props.horizontal &&
     `
@@ -31,6 +44,46 @@ export const Wrapper = styled.div`
 `;
 
 export default class InputField extends React.Component {
+  getChildrenFromType = inputType => {
+    const {
+      horizontal,
+      lightMode,
+      inputStyle,
+      inputClassName,
+      type,
+      ...inputProps
+    } = this.props;
+
+    if (inputType === 'textarea')
+      return (
+        <TextArea
+          className={inputClassName}
+          style={inputStyle}
+          {...inputProps}
+        />
+      );
+    if (inputType === 'number')
+      return (
+        <NumericInput
+          className={inputClassName}
+          style={inputStyle}
+          {...inputProps}
+        />
+      );
+    if (inputType === 'select')
+      return (
+        <Select className={inputClassName} style={inputStyle} {...inputProps} />
+      );
+    else
+      return (
+        <Input
+          className={inputClassName}
+          style={inputStyle}
+          {...inputProps}
+          type={type}
+        />
+      );
+  };
   render() {
     const {
       label,
@@ -39,10 +92,7 @@ export default class InputField extends React.Component {
       style,
       horizontal,
       lightMode,
-      inputStyle,
-      inputClassName,
       type,
-      ...inputProps
     } = this.props;
     return (
       <Wrapper className={className} style={style} horizontal={horizontal}>
@@ -53,22 +103,9 @@ export default class InputField extends React.Component {
         >
           {label}
         </Label>
-        {this.props.children ? (
-          this.props.children
-        ) : type === 'textarea' ? (
-          <TextArea
-            className={inputClassName}
-            style={inputStyle}
-            {...inputProps}
-          />
-        ) : (
-          <Input
-            className={inputClassName}
-            style={inputStyle}
-            type={type}
-            {...inputProps}
-          />
-        )}
+        {this.props.children
+          ? this.props.children
+          : this.getChildrenFromType(type)}
       </Wrapper>
     );
   }

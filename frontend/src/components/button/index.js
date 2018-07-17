@@ -2,6 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import AntButton from 'antd/lib/button';
 import 'antd/lib/button/style/css';
+import chroma from 'chroma-js';
+
+const getContrastColor = color => {
+  try {
+    return chroma(color).luminance() > 0.5 ? 'black' : 'white';
+  } catch (error) {
+    return 'white';
+  }
+};
 
 const CustomButton = styled(AntButton)`
   && {
@@ -9,15 +18,21 @@ const CustomButton = styled(AntButton)`
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    background-color: ${props => props.backgroundColor};
+    background-color: ${props => props.backgroundColor} !important;
+    border-color: ${props => props.backgroundColor};
+    color: ${props => getContrastColor(props.backgroundColor)} !important;
 
-    &:hover {
-      transform: translate(0, -3px);
-      background-color: ${props => props.backgroundColor};
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-    }
-  }
+    ${props =>
+      !props.disabled
+        ? `&:hover {
+          transform: translate(0, -3px);
+          background-color: ${props => props.backgroundColor} !important;
+          box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+          text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+          border-color: ${props => props.backgroundColor};
+          color: ${props => getContrastColor(props.backgroundColor)} !important;
+        }`
+        : 'filter: grayscale(100%) opacity(30%);'}
 `;
 
 export default class Button extends React.Component {
@@ -25,8 +40,8 @@ export default class Button extends React.Component {
     return (
       <CustomButton
         type={this.props.type || 'primary'}
-        {...this.props}
         backgroundColor={this.props.backgroundColor}
+        {...this.props}
       />
     );
   }

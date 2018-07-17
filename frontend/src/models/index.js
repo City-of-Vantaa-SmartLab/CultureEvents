@@ -2,6 +2,7 @@ import EventModel from './event';
 import User from './user';
 import { types, flow, applySnapshot, resolveIdentifier } from 'mobx-state-tree';
 import { fetchEvents, postEvent, putEvent, login as loginAPI } from '../apis';
+import { removeIdRecursively } from '../utils';
 
 const transformToMap = (arr = []) => {
   const result = arr.reduce((accumulator, current) => {
@@ -9,12 +10,6 @@ const transformToMap = (arr = []) => {
     return accumulator;
   }, {});
   return result;
-};
-
-const removeId = item => {
-  const itemClone = { ...item };
-  delete itemClone.id;
-  return itemClone;
 };
 
 const UI = types.model({
@@ -70,7 +65,10 @@ export const RootModel = types
         // new event. POST
         try {
           self.ui.eventList.fetching = true;
-          const result = yield postEvent(removeId(event), self.user.token);
+          const result = yield postEvent(
+            removeIdRecursively(event),
+            self.user.token,
+          );
 
           self.ui.eventList.fetching = false;
           self.events.put(result);
@@ -112,6 +110,8 @@ export const RootModel = types
     getUserToken: () => {
       return self.user.token;
     },
+    // order related actions
+    submitOrder: flow(function*(orderInfo) {}),
   }))
   .views(self => ({
     get isEmpty() {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Typography from '../typography';
+import Typography from '../../../components/typography';
 import Icon from 'antd/lib/icon';
 
 const StyledList = styled.li`

@@ -101,6 +101,9 @@ const TicketCatalogInputGroup = props => {
           <InputField
             backgroundColor={props.inputBackgroundColor}
             label="Price"
+            formatter={value =>
+              value == 0 ? `${value} €` : `${value} €`.replace(/^0/g, '')
+            }
             lightMode
             horizontal
             type="number"
@@ -220,8 +223,8 @@ class Editor extends React.Component {
     const index = this.internalData.eventDraft.ticketCatalog.findIndex(
       elem => elem.id === id,
     );
-    let value = e.target.value;
-    if (fieldName != 'ticketDescription') value = Number(e.target.value);
+    let value = e;
+    if (fieldName == 'ticketDescription') value = e.target.value;
     catalog[index][fieldName] = value;
   };
   switchToCreationMode = () => {
@@ -357,7 +360,7 @@ class Editor extends React.Component {
               value={this.internalData.eventDraft.eventTime}
             />
             <InputField
-              style={{ width: '100%' }}
+              style={{ width: '100%', flexGrow: 1, flexShrink: 1 }}
               backgroundColor={inputBackgroundColor}
               label="Performer"
               lightMode

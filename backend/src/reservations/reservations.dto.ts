@@ -24,6 +24,7 @@ export class ReservationsDto {
   @ApiModelProperty()
   readonly class: string;
   @IsString()
+  @IsOptional()
   @ApiModelProperty()
   readonly phone: string;
   @IsString()
