@@ -66,6 +66,13 @@ const getPaymentRedirectUrl = orderInfo => {
   });
 };
 
+const postReservation = orderInfo => {
+  return customFetchFn(`/reservations`, {
+    method: 'POST',
+    body: orderInfo,
+  });
+};
+
 export {
   fetchEvents,
   postEvent,
@@ -73,4 +80,5 @@ export {
   login,
   getPaymentRedirectUrl,
   validateUserToken,
+  postReservation,
 };

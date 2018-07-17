@@ -40,7 +40,7 @@ const LogoBox = props => (
 );
 
 export default withTheme(
-  class Appbar extends Component {
+  class AppBar extends Component {
     render() {
       return (
         <Wrapper>

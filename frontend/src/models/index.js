@@ -8,6 +8,7 @@ import {
   login as loginAPI,
   getPaymentRedirectUrl,
   validateUserToken,
+  postReservation,
 } from '../apis';
 import { removeIdRecursively } from '../utils';
 
@@ -51,16 +52,30 @@ const UI = types.model({
   orderAndPayment: types.optional(
     types
       .model({
+        // for payment
         pending: false,
         redirectUrl: '',
         redirecting: false,
+        // for reservation
+        reservationStatus: types.optional(
+          types.refinement(
+            'Reservation Code',
+            types.number,
+            value => value >= 0 && value <= 3,
+          ),
+          0,
+        ),
       })
       .actions(self => {
         const clearOrderPendingFlag = () => {
           self.pending = false;
           self.redirecting = false;
         };
-        return { clearOrderPendingFlag };
+        const clearReservationFlag = () => {
+          self.reservationStatus = 0;
+        };
+
+        return { clearOrderPendingFlag, clearReservationFlag };
       }),
     {},
   ),
@@ -180,9 +195,9 @@ export const RootModel = types
     // order related actions
     submitOrder: flow(function*(orderInfo) {
       // setting UI
-      self.ui.orderAndPayment.pending = true;
-
       if (orderInfo.type == 'payment') {
+        self.ui.orderAndPayment.pending = true;
+
         const payload = {
           customer_type: orderInfo.customerGroup,
           event_id: orderInfo.eventId,
@@ -204,6 +219,31 @@ export const RootModel = types
         } catch (error) {
           // setting UI error
           console.error('Operation to fetch redirect URL failed', error);
+        }
+      }
+      if (orderInfo.type == 'reservation') {
+        self.ui.orderAndPayment.reservationStatus = 1;
+        try {
+          const payload = {
+            customer_type: orderInfo.customerGroup,
+            event_id: orderInfo.eventId,
+            school_name: orderInfo.school,
+            class: orderInfo.classRoom,
+            phone: orderInfo.phoneNumber,
+            email: orderInfo.email,
+            tickets: orderInfo.tickets.map(ticket => ({
+              price_id: ticket.value,
+              no_of_tickets: ticket.amount,
+            })),
+          };
+
+          const result = yield postReservation(payload);
+          console.log(result);
+          // @TODO: somehow add this result into a reservation model
+          self.ui.orderAndPayment.reservationStatus = 2;
+        } catch (error) {
+          console.error(error);
+          self.ui.orderAndPayment.reservationStatus = 3;
         }
       }
     }),
