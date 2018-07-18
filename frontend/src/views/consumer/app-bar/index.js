@@ -3,6 +3,7 @@ import styled, { withTheme } from 'styled-components';
 import Logo from '../../../components/logo';
 import Typography from '../../../components/typography';
 import Button from '../../../components/button';
+import { connect } from '../../../utils';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -40,18 +41,23 @@ const LogoBox = props => (
 );
 
 export default withTheme(
-  class Appbar extends Component {
-    render() {
-      return (
-        <Wrapper>
-          <LogoBox />
-          <div>
-            <Button backgroundColor={this.props.theme.palette.primaryDeep}>
-              Rajaa hakua
-            </Button>
-          </div>
-        </Wrapper>
-      );
-    }
-  },
+  connect('store')(
+    class Appbar extends Component {
+      render() {
+        return (
+          <Wrapper>
+            <LogoBox />
+            <div>
+              <Button
+                backgroundColor={this.props.theme.palette.primaryDeep}
+                onClick={this.props.store.toggleFilterView}
+              >
+                Rajaa hakua
+              </Button>
+            </div>
+          </Wrapper>
+        );
+      }
+    },
+  ),
 );

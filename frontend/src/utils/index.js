@@ -2,6 +2,7 @@ import { inject, observer } from 'mobx-react';
 import traverse from 'traverse';
 import toSnakeCase from 'to-snake-case';
 import toCamelCase from 'to-camel-case';
+import equal from 'lodash.isequal';
 
 // front-end transfromer. Accepts
 // @params caseType = 'snake' | any

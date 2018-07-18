@@ -3,6 +3,7 @@ import User from './user';
 import { types, flow, applySnapshot, resolveIdentifier } from 'mobx-state-tree';
 import { fetchEvents, postEvent, putEvent, login as loginAPI } from '../apis';
 import { removeIdRecursively } from '../utils';
+import FilterModel from './filter';
 
 const transformToMap = (arr = []) => {
   const result = arr.reduce((accumulator, current) => {
@@ -13,6 +14,7 @@ const transformToMap = (arr = []) => {
 };
 
 const UI = types.model({
+  filterViewActive: types.optional(types.boolean, false),
   eventList: types.optional(
     types.model({
       fetching: false,
@@ -31,6 +33,7 @@ export const RootModel = types
     selectedEvent: types.maybe(types.reference(EventModel)),
     user: types.optional(User, User.create().toJSON()),
     ui: types.optional(UI, {}),
+    filter: types.optional(FilterModel, {}),
   })
   .actions(self => ({
     // hooks
@@ -112,6 +115,10 @@ export const RootModel = types
     },
     // order related actions
     submitOrder: flow(function*(orderInfo) {}),
+    // filter related activity
+    toggleFilterView: () => {
+      self.ui.filterViewActive = !self.ui.filterViewActive;
+    },
   }))
   .views(self => ({
     get isEmpty() {

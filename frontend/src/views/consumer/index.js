@@ -4,7 +4,8 @@ import RootStore from '../../models';
 import styled from 'styled-components';
 import { Provider } from 'mobx-react';
 import EventListing from './event-listing';
-import { onSnapshot } from '../../../node_modules/mobx-state-tree';
+import FilterView from './filter-view';
+import { onSnapshot } from 'mobx-state-tree';
 
 const store = RootStore.create();
 onSnapshot(store, console.log);
@@ -23,6 +24,7 @@ export default class ConsumerUI extends React.Component {
         <Wrapper>
           <Appbar />
           <EventListing />
+          <FilterView />
         </Wrapper>
       </Provider>
     );
