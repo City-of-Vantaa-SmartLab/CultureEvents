@@ -41,9 +41,9 @@ export class EventsDto {
   @IsString()
   @ApiModelProperty()
   readonly event_type: string;
-  @IsString()
+  @IsArray()
   @ApiModelProperty()
-  readonly age_group_limit: string;
+  readonly age_group_limits: string[];
   @IsBoolean()
   @ApiModelProperty()
   readonly is_wordless: boolean;
