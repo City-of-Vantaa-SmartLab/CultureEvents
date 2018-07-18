@@ -5,6 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Payments } from './payment.entity';
 import { Repository } from 'typeorm';
 import { BamboraService } from 'services/bambora.service';
+import { ReservationService } from 'reservations/reservations.service';
+import { EventsService } from 'event/events.service';
+import { I18Service } from 'i18/i18.service';
+import { format } from 'date-fns';
+import { EventsDto } from 'event/events.dto';
+import { SMSService } from 'notifications/sms/sms.service';
+import * as stringInterpolator from 'interpolate';
 
 const TOKEN_URL = 'https://payform.bambora.com/pbwapi/auth_payment';
 const BAMBORA_API_URL = 'https://payform.bambora.com/pbwapi/token/';
@@ -15,6 +22,10 @@ export class PaymentService {
     @InjectRepository(Payments)
     private readonly paymentRepository: Repository<Payments>,
     private readonly bamboraService: BamboraService,
+    private readonly reservationService: ReservationService,
+    private readonly eventService: EventsService,
+    private readonly i18Service: I18Service,
+    private readonly smsService: SMSService,
   ) {}
 
   async getPaymentRedirectUrl(paymentObj) {
@@ -46,5 +57,42 @@ export class PaymentService {
     const payment = await this.getPaymentByOrderNumber(orderNumber);
     payment.payment_status = payment_status;
     this.paymentRepository.save(payment);
+  }
+
+  async sendSmsToUser(id: number, amount: number) {
+    const reservation = await this.reservationService.findOneById(id);
+    const event = await this.eventService.findOneById(reservation.event_id);
+    const reservationMessage = await this.buildPaymentMessage(event, amount);
+    return await this.smsService.sendMessageToUser(
+      reservation.phone,
+      reservation.name,
+      reservationMessage,
+    );
+  }
+
+  async buildPaymentMessage(event: EventsDto, amount: number) {
+    const time = this.getTime(event.event_date);
+    const date = this.getDate(event.event_date);
+    const name = event.name;
+    const location = event.location;
+    const message = stringInterpolator(
+      this.i18Service.getContents().payments.confirmation,
+      {
+        amount,
+        name,
+        location,
+        date,
+        time,
+      },
+    );
+    return message;
+  }
+
+  getTime(date) {
+    return format(date, this.i18Service.getContents().payments.timeFormat);
+  }
+
+  getDate(date) {
+    return format(date, this.i18Service.getContents().payments.dateFormat);
   }
 }
