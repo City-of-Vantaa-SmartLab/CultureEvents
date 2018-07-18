@@ -36,12 +36,15 @@ export class Events {
   @Column({ length: 30 })
   event_type: string;
 
-  @Column({ length: 15 })
+  @Column({ length: 15, nullable: true })
   age_group_limits: string;
 
   @Column() is_wordless: boolean;
 
   @Column() is_bilingual: boolean;
+
+  @Column({ nullable: true })
+  area: string;
 
   @Column({ length: 500 })
   cover_image: string;

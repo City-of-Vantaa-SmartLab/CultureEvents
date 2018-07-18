@@ -6,10 +6,13 @@ import {
   ArrayNotEmpty,
   ValidateNested,
   IsOptional,
+  IsIn,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PriceDto } from '../price/price.dto';
 import { ApiModelProperty } from '@nestjs/swagger';
+const areas = require('../data/areas.json');
+
 export class EventsDto {
   @IsOptional() id: number;
   @IsString()
@@ -41,6 +44,11 @@ export class EventsDto {
   @IsString()
   @ApiModelProperty()
   readonly event_type: string;
+
+  @IsString()
+  @IsIn(areas)
+  readonly area: string;
+
   @IsArray()
   @ApiModelProperty()
   readonly age_group_limits: string[];
