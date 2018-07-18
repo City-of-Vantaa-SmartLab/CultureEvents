@@ -7,7 +7,7 @@ import Icon from 'antd/lib/icon';
 
 export default withTheme(
   connect('store')(
-    class AppModal extends Component {
+    class ProducerModal extends Component {
       state = {
         show: false,
         handledSignalToShow: false,
@@ -37,13 +37,13 @@ export default withTheme(
               handledSignalToShow: true,
             },
             () => {
-              new Promise((resolve, reject) => {
-                window.setTimeout(resolve, 300);
-              }).then(() => {
-                this.setState({
-                  show: true,
-                });
-              });
+              window.setTimeout(
+                () =>
+                  this.setState({
+                    show: true,
+                  }),
+                500,
+              );
             },
           );
         }
@@ -72,13 +72,11 @@ export default withTheme(
             {!auth.validateTokenFailed ? (
               <Content>
                 <Typography type="title" color={palette.primary}>
-                  Validating session...{' '}
-                  {
-                    <Icon
-                      type="loading"
-                      style={{ fontSize: '1.5rem', marginLeft: '1rem' }}
-                    />
-                  }
+                  Validating session...
+                  <Icon
+                    type="loading"
+                    style={{ fontSize: '1.5rem', marginLeft: '1rem' }}
+                  />
                 </Typography>
                 <Typography type="body">
                   We are checking if your session is still valid

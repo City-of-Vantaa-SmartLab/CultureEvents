@@ -22,6 +22,8 @@ export default withTheme(
       state = {
         show: true,
       };
+      // @TODO: status code be enums constant for easier readability
+      // also would be nice to group it into a object instead
       getColor = statusCode => {
         const { red, primary, lightGreen, purple } = this.props.theme.palette;
         if (statusCode == 0) return lightGreen;
