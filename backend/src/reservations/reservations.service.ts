@@ -34,7 +34,7 @@ export class ReservationService {
           await Promise.all(
             reservation.tickets.map(
               async ticket =>
-                await this.priceService.updateSeatsBooked(
+                await this.priceService.increaseOccupiedSeats(
                   ticket.price_id,
                   ticket.no_of_tickets,
                 ),
@@ -59,6 +59,7 @@ export class ReservationService {
   }
 
   async updateReservation(id: number, reservation: ReservationsDto) {
+    //TODO - Increate/decrease seats based on the reservation status.
     await this.reservationsRepository.update(id, reservation);
     return await this.reservationsRepository.findOne(id);
   }

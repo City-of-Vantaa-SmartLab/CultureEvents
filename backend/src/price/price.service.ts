@@ -19,7 +19,7 @@ export class PriceService {
     }
   }
 
-  async updateSeatsBooked(id: number, seats_booked: number) {
+  async increaseOccupiedSeats(id: number, seats_booked: number) {
     const priceDetails = await this.priceRepository.findOne(id);
     if (priceDetails) {
       priceDetails.occupied_seats = priceDetails.occupied_seats + seats_booked;
