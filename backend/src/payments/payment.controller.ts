@@ -120,11 +120,24 @@ export class PaymentController {
           payment.reservation_id,
           true,
         );
-        res.redirect(
-          `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
-            payment.amount
-          }&status=0&event_id=${reservation_details.id}`,
+
+        const smsResponse = await this.paymentService.sendSmsToUser(
+          payment.reservation_id,
+          payment.amount,
         );
+        if (smsResponse) {
+          res.redirect(
+            `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
+              payment.amount
+            }&status=0&event_id=${reservation_details.id}`,
+          );
+        } else {
+          res.redirect(
+            `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
+              payment.amount
+            }&status=5&event_id=${reservation_details.id}`,
+          );
+        }
       } else {
         console.error(
           `Payment failed with error code: ${response}. Please try again later`,

@@ -25,6 +25,7 @@ export class PriceService {
       priceDetails.occupied_seats = priceDetails.occupied_seats + seats_booked;
       await this.priceRepository.save(priceDetails);
       const updatedPriceDetails = await this.priceRepository.findOne(id);
+      return updatedPriceDetails;
     } else {
       throw new Error('Failed to get Price details!.');
     }

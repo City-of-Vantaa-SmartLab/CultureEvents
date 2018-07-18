@@ -12,6 +12,7 @@ import { EventsService } from 'event/events.service';
 import { Tickets } from 'tickets/tickets.entity';
 import { PriceDto } from 'price/price.dto';
 import { PriceService } from 'price/price.service';
+import * as stringInterpolator from 'interpolate';
 
 @Injectable()
 export class ReservationService {
@@ -102,12 +103,20 @@ export class ReservationService {
   }
 
   async buildReservationMessage(event: EventsDto) {
-    const response = `Event: ${event.name} \nPremises: ${
-      event.location
-    }\nDate: ${this.getDate(event.event_date)}\nTime: ${this.getTime(
-      event.event_date,
-    )}`;
-    return response;
+    const time = this.getTime(event.event_date);
+    const date = this.getDate(event.event_date);
+    const name = event.name;
+    const location = event.location;
+    const message = stringInterpolator(
+      this.i18Service.getContents().reservations.confirmation,
+      {
+        name,
+        location,
+        date,
+        time,
+      },
+    );
+    return message;
   }
 
   async getTotalAmount(reservation: ReservationsDto) {
@@ -148,13 +157,9 @@ export class ReservationService {
         const ticketDetails = await this.priceService.getPriceDetails(
           tickets.price_id,
         );
-        let availability = false;
-        if (
+        const availability =
           ticketDetails.max_seats - ticketDetails.occupied_seats >=
-          tickets.no_of_tickets
-        ) {
-          availability = true;
-        }
+          tickets.no_of_tickets;
         return {
           ...tickets,
           max_seats: ticketDetails.max_seats,
