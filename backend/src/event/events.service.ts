@@ -15,7 +15,7 @@ export class EventsService {
   async createEvent(event: EventsDto) {
     const event_to_save = {
       ...event,
-      age_group_limit: event.age_group_limit.join(','),
+      age_group_limits: event.age_group_limits.join(','),
     };
     const response = await this.eventRepository.save(event_to_save);
     return this.mapSingleEventForAPI(response);
@@ -31,7 +31,7 @@ export class EventsService {
     if (dbEvent) {
       const event_to_update = {
         ...event,
-        age_group_limit: event.age_group_limit.join(','),
+        age_group_limits: event.age_group_limits.join(','),
       };
       await this.eventRepository.update(id, event_to_update);
       const updatedEvent = await this.eventRepository.findOne(id, {
@@ -60,14 +60,14 @@ export class EventsService {
   private mapEventsForAPI(events: Events[]) {
     return events.map(event => ({
       ...event,
-      age_group_limit: event.age_group_limit.split(','),
+      age_group_limits: event.age_group_limits.split(','),
     }));
   }
 
   private mapSingleEventForAPI(event: Events) {
     return {
       ...event,
-      age_group_limit: event.age_group_limit.split(','),
+      age_group_limits: event.age_group_limits.split(','),
     };
   }
 }

@@ -37,7 +37,7 @@ export class Events {
   event_type: string;
 
   @Column({ length: 15 })
-  age_group_limit: string;
+  age_group_limits: string;
 
   @Column() is_wordless: boolean;
 
