@@ -14,7 +14,9 @@ export class Reservations {
   @PrimaryGeneratedColumn() id: number;
 
   @Column('int')
-  @ManyToOne(type => Events, event => event.id)
+  @ManyToOne(type => Events, event => event.id, {
+    cascade: true,
+  })
   event_id: number;
 
   @Column({ length: 30, nullable: true })
@@ -39,4 +41,10 @@ export class Reservations {
     cascade: true,
   })
   tickets: Tickets[];
+
+  @Column({ default: false })
+  confirmed: boolean;
+
+  @Column({ default: false })
+  payment_completed: boolean;
 }

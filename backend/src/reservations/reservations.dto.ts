@@ -1,5 +1,15 @@
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  ArrayNotEmpty,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { Tickets } from 'tickets/tickets.entity';
+import { TicketsDto } from 'tickets/tickets.dto';
 export class ReservationsDto {
   @IsOptional()
   @ApiModelProperty()
@@ -11,7 +21,6 @@ export class ReservationsDto {
   @ApiModelProperty()
   readonly customer_type: string;
   @IsString()
-  @IsOptional()
   @ApiModelProperty()
   readonly name: string;
   @IsString()
@@ -30,4 +39,10 @@ export class ReservationsDto {
   @IsOptional()
   @ApiModelProperty()
   readonly email: string;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested()
+  @Type(type => TicketsDto)
+  tickets: Tickets[];
 }

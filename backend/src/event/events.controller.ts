@@ -102,7 +102,9 @@ export class EventsController {
         }
       }
     } catch (error) {
-      return response.status(500).json(`Failed to update event with id: ${id}`);
+      return response
+        .status(500)
+        .json(`Failed to update event with id: ${id}: ${error.message}`);
     }
   }
 

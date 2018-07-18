@@ -9,6 +9,10 @@ import { EventsDto } from 'event/events.dto';
 import { format } from 'date-fns';
 import { I18Service } from '../i18/i18.service';
 import { EventsService } from 'event/events.service';
+import { Tickets } from 'tickets/tickets.entity';
+import { PriceDto } from 'price/price.dto';
+import { PriceService } from 'price/price.service';
+import * as stringInterpolator from 'interpolate';
 
 @Injectable()
 export class ReservationService {
@@ -18,16 +22,31 @@ export class ReservationService {
     private readonly smsService: SMSService,
     private readonly i18Service: I18Service,
     private readonly eventService: EventsService,
+    private readonly priceService: PriceService,
   ) {}
 
-  async createReservation(reservation: ReservationsDto) {
+  async createReservation(reservation: ReservationsDto, sendSms: boolean) {
     const response = await this.reservationsRepository.save(reservation);
     if (response) {
-      const smsResponse = this.sendSmsToUser(reservation);
-      if (smsResponse) {
-        return response;
+      if (sendSms) {
+        const smsResponse = await this.sendSmsToUser(reservation);
+        if (smsResponse) {
+          await Promise.all(
+            reservation.tickets.map(
+              async ticket =>
+                await this.priceService.increaseOccupiedSeats(
+                  ticket.price_id,
+                  ticket.no_of_tickets,
+                ),
+            ),
+          );
+          this.updateReservationStatus(reservation.id, true);
+          return response;
+        } else {
+          throw new Error('Sms Funtionality failed!.');
+        }
       } else {
-        throw new Error('Sms Funtionality failed!.');
+        return response;
       }
     } else {
       throw new Error('Failed to create reservation!.');
@@ -40,8 +59,19 @@ export class ReservationService {
   }
 
   async updateReservation(id: number, reservation: ReservationsDto) {
-    const response = await this.reservationsRepository.update(id, reservation);
-    return response;
+    //TODO - Increate/decrease seats based on the reservation status.
+    await this.reservationsRepository.update(id, reservation);
+    return await this.reservationsRepository.findOne(id);
+  }
+
+  async updateReservationStatus(id: number, status: boolean) {
+    await this.reservationsRepository.update(id, { confirmed: status });
+    return await this.reservationsRepository.findOne(id);
+  }
+
+  async updatePaymentStatus(id: number, status: boolean) {
+    await this.reservationsRepository.update(id, { payment_completed: status });
+    return await this.reservationsRepository.findOne(id);
   }
 
   async findAll(): Promise<Reservations[]> {
@@ -66,7 +96,7 @@ export class ReservationService {
   async sendSmsToUser(reservation: ReservationsDto) {
     const event = await this.eventService.findOneById(reservation.event_id);
     const reservationMessage = await this.buildReservationMessage(event);
-    await this.smsService.sendMessageToUser(
+    return await this.smsService.sendMessageToUser(
       reservation.phone,
       reservation.name,
       reservationMessage,
@@ -74,22 +104,73 @@ export class ReservationService {
   }
 
   async buildReservationMessage(event: EventsDto) {
-    const response = ` Event: ${event.name} 
-    <br> Premises: ${event.location} 
-    <br> Date: ${this.getDate(event.event_date)} 
-    <br> Time: ${this.getTime(event.event_date)} 
-    <br> Name of the Reservation: ${event.name}`;
-    return response;
+    const time = this.getTime(event.event_date);
+    const date = this.getDate(event.event_date);
+    const name = event.name;
+    const location = event.location;
+    const message = stringInterpolator(
+      this.i18Service.getContents().reservations.confirmation,
+      {
+        name,
+        location,
+        date,
+        time,
+      },
+    );
+    return message;
   }
 
-  getTotalAmount(reservation: ReservationsDto) {
-    // TO-DO
-    return 100;
+  async getTotalAmount(reservation: ReservationsDto) {
+    const event = await this.eventService.findOneById(reservation.event_id);
+    const amount = reservation.tickets.map(tickets => {
+      return (
+        tickets.no_of_tickets *
+        this.getTicketPrice(event.ticket_catalog, tickets.price_id)
+      );
+    });
+    return amount;
   }
 
-  checkSeatAvailability(reservation: ReservationsDto) {
-    // Check for seat availability
-    return true;
+  getTicketPrice(ticket_catalog: PriceDto[], id: number): number {
+    const response = ticket_catalog.find(ticket => ticket.id == id);
+    return response.price;
+  }
+
+  async checkSeatAvailability(reservationReq: ReservationsDto) {
+    const ticketDetails = await this.checkTicketDetails(reservationReq);
+    const availableTickets = ticketDetails.filter(
+      ticket => ticket.seats_available,
+    );
+    if (ticketDetails.length === availableTickets.length) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async getSeatAvailabilityDetails(eventId: number) {
+    const eventDetails = await this.eventService.findOneById(eventId);
+  }
+
+  async checkTicketDetails(reservationReq: ReservationsDto) {
+    const reducedTickets = await Promise.all(
+      reservationReq.tickets.map(async tickets => {
+        const ticketDetails = await this.priceService.getPriceDetails(
+          tickets.price_id,
+        );
+        const availability =
+          ticketDetails.max_seats - ticketDetails.occupied_seats >=
+          tickets.no_of_tickets;
+        return {
+          ...tickets,
+          max_seats: ticketDetails.max_seats,
+          occupied_seats: ticketDetails.occupied_seats,
+          seats_available: availability,
+        };
+      }),
+    );
+
+    return reducedTickets;
   }
 
   getTime(date) {
