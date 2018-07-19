@@ -30,10 +30,10 @@ export default class LogoBox extends React.Component {
         <Logo noText />
         <div>
           <LogoText type="title" color="#FEF283">
-            VANTAA KULTTURIA
+            VANTAA KULTTUURIA
           </LogoText>
           <FlavorText type="body" color="white">
-            Producer
+            Tuottaja
           </FlavorText>
         </div>
       </Wrapper>

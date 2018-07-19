@@ -151,6 +151,8 @@ export default connect('store')(
 
       const isPrivateCustomer = internalState.customerGroup == 'private';
       const isGroupConductorCustomer = internalState.customerGroup == 'group';
+      const formDisabled = event.totalAvailableTickets < 1;
+      const themeColor = formDisabled ? '#9B9B9B' : event.themeColor;
       const { totalCost, totalTicket } = this.getPricingAggrevate();
       const submittable =
         (isGroupConductorCustomer
@@ -160,13 +162,14 @@ export default connect('store')(
           : internalState.name &&
             isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
       return (
-        <Wrapper bgColor={event.themeColor}>
+        <Wrapper bgColor={themeColor}>
           <Typography type="title">Varaa/osta lippu</Typography>
           <FormListItem title="1 - Olen">
             <ButtonGroup style={{ display: 'flex' }}>
               <CustomerGroupButton
+                disabled={formDisabled}
                 backgroundColor={
-                  isGroupConductorCustomer ? event.themeColor : 'white'
+                  isGroupConductorCustomer ? themeColor : 'white'
                 }
                 onClick={e => (internalState.customerGroup = 'group')}
                 onTouchEnd={e => (internalState.customerGroup = 'group')}
@@ -175,9 +178,10 @@ export default connect('store')(
                 {isGroupConductorCustomer && <Icon type="check" />}
               </CustomerGroupButton>
               <CustomerGroupButton
+                disabled={formDisabled}
                 onClick={e => (internalState.customerGroup = 'private')}
                 onTouchEnd={e => (internalState.customerGroup = 'private')}
-                backgroundColor={isPrivateCustomer ? event.themeColor : 'white'}
+                backgroundColor={isPrivateCustomer ? themeColor : 'white'}
               >
                 Yksityishenkilö
                 {isPrivateCustomer && <Icon type="check" />}
@@ -186,7 +190,7 @@ export default connect('store')(
           </FormListItem>
           <FormListItem
             title="2 - Lippujen määrä"
-            disabled={!internalState.customerGroup}
+            disabled={!internalState.customerGroup || formDisabled}
           >
             <TicketInputSet
               ticketCatalog={event.ticketCatalog}
@@ -196,7 +200,7 @@ export default connect('store')(
               disabled={
                 internalState.tickets.length >= event.ticketCatalog.length
               }
-              backgroundColor={event.themeColor}
+              backgroundColor={themeColor}
               icon="plus"
               onClick={e =>
                 internalState.tickets.push({
@@ -210,14 +214,14 @@ export default connect('store')(
             </Button>
             <TotalAmountCalculated>
               <Typography type="subheader">Yhteissumma</Typography>
-              <Typography type="subheader" color={event.themeColor}>
+              <Typography type="subheader" color={themeColor}>
                 {totalCost} €
               </Typography>
             </TotalAmountCalculated>
           </FormListItem>
           <FormListItem
             title="3 - Tiedot varausta varten"
-            disabled={!internalState.customerGroup}
+            disabled={!internalState.customerGroup || formDisabled}
           >
             <Form>
               {isPrivateCustomer ? (
@@ -286,7 +290,7 @@ export default connect('store')(
               )}
               <Button
                 style={{ alignSelf: 'flex-end' }}
-                backgroundColor={event.themeColor}
+                backgroundColor={themeColor}
                 disabled={!submittable}
                 onClick={this.submit}
                 onTouchEnd={this.submit('payment')}

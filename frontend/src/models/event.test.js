@@ -12,7 +12,7 @@ test('event model has correct default', () => {
     time: null,
     ticketCatalog: null,
     eventType: 'Esitykset',
-    ageGroupLimit: '0-3',
+    ageGroupLimits: '0-3',
     isWordless: false,
     isBilingual: false,
     contactInformation: '',
@@ -29,13 +29,13 @@ test('eventModel instantiated from backup correctly', () => {
     id: 'typeA',
     ticketDescription: 'Ticket mock of type A',
     price: 100,
-    availableSeatForThisType: 50,
+    maxSeats: 50,
   };
   const snapshotTypeB = {
     id: 'typeB',
     ticketDescription: 'Ticket mock of type B',
     price: 150,
-    availableSeatForThisType: 43,
+    maxSeats: 43,
   };
   const expectation = {
     id: '1',
@@ -46,7 +46,7 @@ test('eventModel instantiated from backup correctly', () => {
     time: null,
     ticketCatalog: [snapshotTypeA, snapshotTypeB],
     eventType: 'Esitykset',
-    ageGroupLimit: '0-3',
+    ageGroupLimits: '0-3',
     isWordless: false,
     isBilingual: false,
     contactInformation: '',

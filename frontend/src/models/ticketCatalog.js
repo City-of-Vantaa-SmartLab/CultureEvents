@@ -13,7 +13,14 @@ const TicketCatalog = types.model({
     ),
     0,
   ),
-  availableSeatForThisType: types.optional(
+  maxSeats: types.optional(
+    types.refinement(
+      types.number,
+      value => !isNaN(Number(value)) && Number(value) >= 0,
+    ),
+    0,
+  ),
+  occupiedSeats: types.optional(
     types.refinement(
       types.number,
       value => !isNaN(Number(value)) && Number(value) >= 0,

@@ -71,7 +71,7 @@ const Wrapper = styled.div`
   }
 `;
 const filterByAgeGroup = age => events => {
-  return events.filter(event => event.ageGroupLimit === age);
+  return events.filter(event => event.ageGroupLimits === age);
 };
 const filterByArea = area => events => {
   return events.filter(event => event.area === area);
@@ -87,12 +87,12 @@ export default withTheme(
     class EventListing extends Component {
       render() {
         const { events, selectedEvent, filters } = this.props.store;
-        const { ageGroupLimit, area, eventType, date } = filters;
+        const { ageGroupLimits, area, eventType, date } = filters;
         // @TODO: beware of performance cost
         // This might not be the best for performance
         // See if we can memoize the filter function
         const displayableEvents = pipeable(values(events)).pipe(
-          ageGroupLimit && filterByAgeGroup(ageGroupLimit),
+          ageGroupLimits && filterByAgeGroup(ageGroupLimits),
           area && filterByArea(area),
           date && filterByDate(date),
           eventType && filterByEventType(eventType),

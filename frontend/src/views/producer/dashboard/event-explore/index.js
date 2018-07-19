@@ -53,10 +53,10 @@ class EventExplorer extends React.Component {
           ) : (
             <EmptyStateContainer>
               <Typography type="subheader" backgroundColor="transparent">
-                There is no event found
+                Tapahtumaa ei löytynyt
               </Typography>
               <Typography type="body">
-                Adjust your filter, or add new event
+                Muuta suodatusta tai lisää uusi tapahtuma
               </Typography>
             </EmptyStateContainer>
           )}
