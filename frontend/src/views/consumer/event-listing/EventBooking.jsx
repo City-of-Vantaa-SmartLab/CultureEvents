@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Typography from '../../../components/typography';
 import chroma from 'chroma-js';
-import { observable } from 'mobx';
+import { observable, toJS } from 'mobx';
 import { toRgba, genRandomKey, connect } from '../../../utils';
 import Button, { ButtonGroup } from '../../../components/button';
 import Icon from '../../../../node_modules/antd/lib/icon';
@@ -116,31 +116,49 @@ export default connect('store')(
       classRoom: '',
       school: '',
     });
-    getTotalPrice = () => {
-      return this.internalState.tickets.reduce((acc, curr) => {
-        const targetCatalog = this.props.event.ticketCatalog.find(
-          elem => elem.id == curr.value,
-        );
-        if (targetCatalog) {
-          const singlePrice = targetCatalog.price;
-          const totalPriceForThisCatalog = singlePrice * curr.amount;
-          acc += totalPriceForThisCatalog;
-        }
-        return acc;
-      }, 0);
+    getPricingAggrevate = () => {
+      return this.internalState.tickets.reduce(
+        (acc, curr) => {
+          const targetCatalog = this.props.event.ticketCatalog.find(
+            elem => elem.id == curr.value,
+          );
+          if (targetCatalog) {
+            const singlePrice = targetCatalog.price;
+            const totalPriceForThisCatalog = singlePrice * curr.amount;
+            acc.totalCost += totalPriceForThisCatalog;
+            acc.totalTicket += curr.amount;
+          }
+          return acc;
+        },
+        {
+          totalCost: 0,
+          totalTicket: 0,
+        },
+      );
+    };
+    submit = type => e => {
+      this.props.store.submitOrder({
+        ...toJS(this.internalState),
+        type,
+        eventId: this.props.event.id,
+      });
     };
     render() {
-      const { event } = this.props;
+      const { event, store } = this.props;
       const { internalState } = this;
+      const isReservationPending =
+        store.ui.orderAndPayment.reservationStatus == 1;
 
       const isPrivateCustomer = internalState.customerGroup == 'private';
       const isGroupConductorCustomer = internalState.customerGroup == 'group';
-      const totalCost = this.getTotalPrice();
-      const submittable = isGroupConductorCustomer
-        ? internalState.school &&
-          internalState.classRoom &&
-          isValidNumber(internalState.phoneNumber, 'FI')
-        : internalState.name && isValidNumber(internalState.phoneNumber);
+      const { totalCost, totalTicket } = this.getPricingAggrevate();
+      const submittable =
+        (isGroupConductorCustomer
+          ? internalState.school &&
+            internalState.classRoom &&
+            isValidNumber(internalState.phoneNumber, 'FI')
+          : internalState.name &&
+            isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
       return (
         <Wrapper bgColor={event.themeColor}>
           <Typography type="title">Varaa/osta lippu</Typography>
@@ -259,6 +277,9 @@ export default connect('store')(
                   backgroundColor="white"
                   style={{ alignSelf: 'flex-start' }}
                   disabled={!submittable}
+                  icon={isReservationPending && 'loading'}
+                  onClick={this.submit}
+                  onTouchEnd={this.submit('reservation')}
                 >
                   VARAA LIPUT
                 </Button>
@@ -268,7 +289,7 @@ export default connect('store')(
                 backgroundColor={event.themeColor}
                 disabled={!submittable}
                 onClick={this.submit}
-                onTouchEnd={this.submit}
+                onTouchEnd={this.submit('payment')}
               >
                 OSTA LIPUT
               </Button>

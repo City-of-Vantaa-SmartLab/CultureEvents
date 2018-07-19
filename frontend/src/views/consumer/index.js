@@ -6,6 +6,9 @@ import { Provider } from 'mobx-react';
 import EventListing from './event-listing';
 import FilterView from './filter-view';
 import { onSnapshot } from 'mobx-state-tree';
+import RedirectModal from './redirection-modal';
+import ReservationStatusModal from './reservation-status-modal';
+import PaymentStatusModal from './paymentstatus-modal';
 
 const store = RootStore.create();
 onSnapshot(store, console.log);
@@ -25,6 +28,9 @@ export default class ConsumerUI extends React.Component {
           <Appbar />
           <EventListing />
           <FilterView />
+          <RedirectModal />
+          <PaymentStatusModal />
+          <ReservationStatusModal />
         </Wrapper>
       </Provider>
     );

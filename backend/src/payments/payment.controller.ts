@@ -116,11 +116,28 @@ export class PaymentController {
             true,
           );
         }
-        res.redirect(
-          `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
-            payment.amount
-          }&status=0&event_id=${reservation_details.id}`,
+        await this.reservationService.updatePaymentStatus(
+          payment.reservation_id,
+          true,
         );
+
+        const smsResponse = await this.paymentService.sendSmsToUser(
+          payment.reservation_id,
+          payment.amount,
+        );
+        if (smsResponse) {
+          res.redirect(
+            `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
+              payment.amount
+            }&status=0&event_id=${reservation_details.id}`,
+          );
+        } else {
+          res.redirect(
+            `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
+              payment.amount
+            }&status=5&event_id=${reservation_details.id}`,
+          );
+        }
       } else {
         console.error(
           `Payment failed with error code: ${response}. Please try again later`,

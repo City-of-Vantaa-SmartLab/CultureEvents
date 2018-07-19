@@ -2,7 +2,15 @@
   "finnish": {
     "reservations": {
       "dateFormat": "DD.MM.YYYY",
-      "timeFormat": "HH:mm"
+      "timeFormat": "HH:mm",
+      "confirmation":
+        "Vantaa Kulttuuri\nReservation Successful.\nEvent: {name} \nPremises: {location}\nDate: {date}\nTime: {time}"
+    },
+    "payments": {
+      "dateFormat": "DD.MM.YYYY",
+      "timeFormat": "HH:mm",
+      "confirmation":
+        "Vantaa Kulttuuri\nPayment Successful.\nAmount Paid: {amount}\nEvent: {name} \nPremises: {location}\nDate: {date}\nTime: {time}"
     }
   }
 }

@@ -11,11 +11,22 @@ import { Reservations } from 'reservations/reservations.entity';
 import { SMSService } from 'notifications/sms/sms.service';
 import { EventsService } from 'event/events.service';
 import { ReservationsModule } from 'reservations/reservations.module';
+import { EventsModule } from 'event/events.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Payments]), ReservationsModule],
+  imports: [
+    TypeOrmModule.forFeature([Payments]),
+    ReservationsModule,
+    EventsModule,
+  ],
   controllers: [PaymentController],
-  providers: [PaymentService, ValidationService, BamboraService],
+  providers: [
+    PaymentService,
+    ValidationService,
+    BamboraService,
+    SMSService,
+    I18Service,
+  ],
   exports: [PaymentService],
 })
 export class PaymentModule {}

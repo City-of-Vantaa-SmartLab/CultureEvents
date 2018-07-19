@@ -12,8 +12,9 @@ export class TicketService {
   async getTicketDetails(id: number) {
     const response = await this.ticketsRepository.findOne(id);
     if (response) {
+      return response;
     } else {
-      throw new Error('Failed to create reservation!.');
+      throw new Error('Failed to get ticket details!.');
     }
   }
 }

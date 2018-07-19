@@ -102,6 +102,19 @@ const clamp = (min, max) => num => {
   return Math.max(min, Math.min(num, max));
 };
 
+// stuff got from Stackoverflow: https://stackoverflow.com/a/13419367
+const parseQuery = queryString => {
+  let query = {};
+  let pairs = (queryString[0] === '?'
+    ? queryString.substr(1)
+    : queryString
+  ).split('&');
+  for (let i = 0; i < pairs.length; i++) {
+    let pair = pairs[i].split('=');
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  }
+  return query;
+};
 export {
   genRandomKey,
   toRgba,
@@ -110,4 +123,5 @@ export {
   parseTo,
   removeIdRecursively,
   clamp,
+  parseQuery,
 };

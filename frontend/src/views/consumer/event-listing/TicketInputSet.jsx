@@ -16,6 +16,7 @@ export default observer(
     render() {
       const { tickets, ticketCatalog } = this.props;
       return (
+        // @TODO: consider pulling inline functions into methods for easier reasoning, and testing
         <Form>
           {tickets.map((ticket, index) => (
             <FlexBoxHorizontal key={ticket.id || index}>
@@ -24,9 +25,17 @@ export default observer(
                 value={ticket.label}
                 onChange={value => {
                   ticket.value = value + '';
-                  ticket.label = ticketCatalog.find(
-                    elem => elem.id === value,
-                  ).ticketDescription;
+                  const origTicketTypeRef = ticketCatalog.find(
+                    elem => elem.id == value,
+                  );
+                  if (!origTicketTypeRef)
+                    console.error(
+                      'Cannot find original ticketType',
+                      origTicketTypeRef,
+                      'from id, ',
+                      value,
+                    );
+                  else ticket.label = origTicketTypeRef.ticketDescription;
                 }}
                 style={{ width: '100%' }}
                 type="select"
@@ -34,7 +43,7 @@ export default observer(
                   label: catalog.ticketDescription,
                   value: catalog.id,
                   // option is diabled if it is present in other input
-                  disabled: tickets.find(elem => elem.value === catalog.id),
+                  disabled: tickets.find(elem => elem.value == catalog.id),
                 }))}
                 lightMode
               />
