@@ -13,6 +13,9 @@ const Wrapper = styled.div`
   form {
     display: flex;
     flex-direction: column;
+    & > * {
+      margin-bottom: 0.5rem;
+    }
   }
 `;
 const SignInButton = styled(Button)`
@@ -40,6 +43,7 @@ class SignInForm extends React.Component {
   };
 
   render() {
+    const { auth } = this.props.store.ui;
     if (this.props.store.user.isAuthenticated)
       return <Redirect to="./dashboard" />;
     return (
@@ -56,7 +60,12 @@ class SignInForm extends React.Component {
             value={this.state.password}
             onChange={this.onChangePassword}
           />
-          <SignInButton onClick={this.login}>Kirjaudu</SignInButton>
+          <SignInButton
+            icon={auth.authInProgress ? 'loading' : 'arrow-right'}
+            onClick={this.login}
+          >
+            Kirjaudu
+          </SignInButton>
         </Form>
       </Wrapper>
     );

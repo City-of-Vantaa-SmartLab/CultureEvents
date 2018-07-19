@@ -10,6 +10,9 @@ const BASE_URL = 'http://' + window.location.host;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  & > * {
+    margin: 0.5rem 0;
+  }
 `;
 const Image = styled.img`
   width: 100%;
@@ -84,15 +87,6 @@ class CoverImage extends React.Component {
               type="largebody"
             >
               Cover image
-              <InputField type="file" onChange={this.handleUploadImage} />
-            </Typography>
-            <Typography
-              style={{ transform: 'translateY(-1rem)' }}
-              type="errorMessage"
-              show={this.state.uploadFailed}
-              color="red"
-            >
-              <p>Image upload failed.. Please try again!.</p>
             </Typography>
             <Image src={this.props.value} />
             <FlexBox>
@@ -105,6 +99,22 @@ class CoverImage extends React.Component {
                 onChange={onChange}
                 value={value}
               />
+            </FlexBox>
+            <FlexBox>
+              <InputField
+                label="Or upload a file"
+                lightMode
+                type="file"
+                onChange={this.handleUploadImage}
+              />
+              <Typography
+                style={{ transform: 'translateY(-1rem)' }}
+                type="errorMessage"
+                show={this.state.uploadFailed}
+                color="red"
+              >
+                <p>Image upload failed.. Please try again!.</p>
+              </Typography>
             </FlexBox>
           </React.Fragment>
         )}

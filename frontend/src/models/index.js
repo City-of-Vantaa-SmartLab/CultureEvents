@@ -1,7 +1,14 @@
 import EventModel from './event';
 import User from './user';
 import { types, flow, applySnapshot, resolveIdentifier } from 'mobx-state-tree';
-import { fetchEvents, postEvent, putEvent, login as loginAPI } from '../apis';
+import {
+  fetchEvents,
+  postEvent,
+  putEvent,
+  login as loginAPI,
+  getPaymentRedirectUrl,
+  validateUserToken,
+} from '../apis';
 import { removeIdRecursively } from '../utils';
 
 const transformToMap = (arr = []) => {
@@ -13,6 +20,24 @@ const transformToMap = (arr = []) => {
 };
 
 const UI = types.model({
+  auth: types.optional(
+    types
+      .model({
+        // for login; @TODO: maybe move this UI state to User model?
+        authInProgress: false,
+        authError: false,
+        // for validation
+        validateTokenInProgress: false,
+        validateTokenFailed: false,
+      })
+      .actions(self => ({
+        clearValidationError: () => {
+          self.validateTokenFailed = false;
+          self.validateTokenInProgress = false;
+        },
+      })),
+    {},
+  ),
   eventList: types.optional(
     types.model({
       fetching: false,
@@ -23,21 +48,41 @@ const UI = types.model({
     }),
     {},
   ),
+  orderAndPayment: types.optional(
+    types
+      .model({
+        pending: false,
+        redirectUrl: '',
+        redirecting: false,
+      })
+      .actions(self => {
+        const clearOrderPendingFlag = () => {
+          self.pending = false;
+          self.redirecting = false;
+        };
+        return { clearOrderPendingFlag };
+      }),
+    {},
+  ),
 });
 
 export const RootModel = types
   .model({
     events: types.optional(types.map(EventModel), {}),
     selectedEvent: types.maybe(types.reference(EventModel)),
-    user: types.optional(User, User.create().toJSON()),
+    user: types.optional(User, {}),
     ui: types.optional(UI, {}),
   })
   .actions(self => ({
     // hooks
     afterCreate() {
+      // hydrate from localStorage
       if (window.localStorage.getItem('store'))
         applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
       self.selectedEvent = null;
+      // validate token access (only happen in Producer)
+      if (self.user.token) self.validateToken();
+      // fetch event list from remote
       self.fetchEvents();
     },
     // event actions
@@ -95,23 +140,73 @@ export const RootModel = types
     }),
     // auth actions
     login: flow(function*(username, password) {
+      self.ui.auth.authInProgress = true;
+      self.ui.authError = false;
       try {
         const result = yield loginAPI(username, password);
 
         self.user.username = result.username;
         self.user.token = result.token;
+        self.user.id = result.id;
+
+        self.ui.auth.authInProgress = false;
+        self.ui.authError = false;
       } catch (error) {
+        self.ui.authInProgress = false;
+        self.ui.authError = true;
         console.error(error);
       }
     }),
     logout: () => {
       self.user.token = null;
     },
+    validateToken: flow(function*() {
+      self.ui.auth.validateTokenInProgress = true;
+      self.ui.auth.validateTokenFailed = false;
+      try {
+        yield validateUserToken(self.user.id, self.user.token);
+        self.ui.auth.validateTokenFailed = false;
+        self.ui.auth.validateTokenInProgress = false;
+      } catch (error) {
+        self.user.token = null;
+        self.ui.auth.validateTokenFailed = true;
+        self.ui.auth.validateTokenInProgress = false;
+        console.error('Token expired', error);
+      }
+    }),
     getUserToken: () => {
       return self.user.token;
     },
     // order related actions
-    submitOrder: flow(function*(orderInfo) {}),
+    submitOrder: flow(function*(orderInfo) {
+      // setting UI
+      self.ui.orderAndPayment.pending = true;
+
+      if (orderInfo.type == 'payment') {
+        const payload = {
+          customer_type: orderInfo.customerGroup,
+          event_id: orderInfo.eventId,
+          name: orderInfo.name,
+          phone: orderInfo.phoneNumber,
+          email: orderInfo.email,
+          tickets: orderInfo.tickets.map(ticket => ({
+            price_id: ticket.value,
+            no_of_tickets: ticket.amount,
+          })),
+        };
+
+        try {
+          const result = yield getPaymentRedirectUrl(payload);
+
+          self.ui.orderAndPayment.redirecting = true;
+          self.ui.orderAndPayment.redirectUrl = result.redirect_url;
+          // setting UI state for success
+        } catch (error) {
+          // setting UI error
+          console.error('Operation to fetch redirect URL failed', error);
+        }
+      }
+    }),
   }))
   .views(self => ({
     get isEmpty() {

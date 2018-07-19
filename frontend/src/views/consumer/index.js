@@ -4,6 +4,8 @@ import RootStore from '../../models';
 import styled from 'styled-components';
 import { Provider } from 'mobx-react';
 import EventListing from './event-listing';
+import AppModal from './app-modal';
+import PaymentStatusModal from './paymentstatus-modal';
 import { onSnapshot } from '../../../node_modules/mobx-state-tree';
 
 const store = RootStore.create();
@@ -23,6 +25,8 @@ export default class ConsumerUI extends React.Component {
         <Wrapper>
           <Appbar />
           <EventListing />
+          <AppModal />
+          <PaymentStatusModal />
         </Wrapper>
       </Provider>
     );

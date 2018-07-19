@@ -55,4 +55,22 @@ const login = (username, password) => {
   });
 };
 
-export { fetchEvents, postEvent, putEvent, login };
+const validateUserToken = (userId, authToken) => {
+  return customFetchFn(`/user/${userId}`, {}, authToken);
+};
+
+const getPaymentRedirectUrl = orderInfo => {
+  return customFetchFn('/payments/make-payment', {
+    method: 'POST',
+    body: orderInfo,
+  });
+};
+
+export {
+  fetchEvents,
+  postEvent,
+  putEvent,
+  login,
+  getPaymentRedirectUrl,
+  validateUserToken,
+};

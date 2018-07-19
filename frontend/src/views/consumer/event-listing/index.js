@@ -4,6 +4,7 @@ import EventCard from '../../../components/event-card';
 import EventDetail from './EventDetail';
 import EventBooking from './EventBooking';
 import { connect } from '../../../utils';
+import { values } from 'mobx';
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,7 +27,7 @@ export default connect('store')(
       return (
         <Wrapper>
           {!this.props.store.isEmpty ? (
-            Object.values(events.toJSON()).map((event, index) => (
+            values(events).map(event => (
               <EventCard
                 expandable
                 active={selectedEvent && selectedEvent.id == event.id}

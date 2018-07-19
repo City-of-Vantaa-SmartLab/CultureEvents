@@ -24,9 +24,17 @@ export default observer(
                 value={ticket.label}
                 onChange={value => {
                   ticket.value = value + '';
-                  ticket.label = ticketCatalog.find(
-                    elem => elem.id === value,
-                  ).ticketDescription;
+                  const origTicketTypeRef = ticketCatalog.find(
+                    elem => elem.id == value,
+                  );
+                  if (!origTicketTypeRef)
+                    console.error(
+                      'Cannot find original ticketType',
+                      origTicketTypeRef,
+                      'from id, ',
+                      value,
+                    );
+                  else ticket.label = origTicketTypeRef.ticketDescription;
                 }}
                 style={{ width: '100%' }}
                 type="select"
