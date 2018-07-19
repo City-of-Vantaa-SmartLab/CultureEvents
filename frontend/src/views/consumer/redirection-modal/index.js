@@ -123,3 +123,14 @@ export default withTheme(
     },
   ),
 );
+
+fetch('http://localhost:3001/api/payments/make-payment', {
+  credentials: 'include',
+  headers: {},
+  referrer: 'http://localhost:3001/consumer',
+  referrerPolicy: 'no-referrer-when-downgrade',
+  body:
+    '{"customer_type":"private","event_id":1,"name":"Thanh","phone":"040 2159666","email":"","tickets":[{"price_id":1,"no_of_tickets":1}]}',
+  method: 'POST',
+  mode: 'cors',
+});

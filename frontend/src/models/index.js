@@ -226,9 +226,17 @@ export const RootModel = types
         try {
           const result = yield getPaymentRedirectUrl(payload);
 
+          // setting UI state for success
           self.ui.orderAndPayment.redirectStatus = 2;
           self.ui.orderAndPayment.redirectUrl = result.redirect_url;
-          // setting UI state for success
+          // reduce amount of ticket in the event
+          payload.tickets.forEach(
+            ticket =>
+              (self.events[orderInfo.eventId].ticketCatalog[
+                ticket.price_id
+              ].occupiedSeats +=
+                ticket.no_of_tickets),
+          );
         } catch (error) {
           // setting UI error
           self.ui.orderAndPayment.redirectStatus = 3;
@@ -253,7 +261,14 @@ export const RootModel = types
           };
 
           const result = yield postReservation(payload);
-          console.log(result);
+
+          payload.tickets.forEach(
+            ticket =>
+              (self.events[orderInfo.eventId].ticketCatalog[
+                ticket.price_id
+              ].occupiedSeats +=
+                ticket.no_of_tickets),
+          );
           // @TODO: somehow add this result into a reservation model
           self.ui.orderAndPayment.reservationStatus = 2;
         } catch (error) {
