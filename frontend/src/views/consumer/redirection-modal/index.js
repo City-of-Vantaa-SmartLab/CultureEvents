@@ -39,7 +39,9 @@ export default withTheme(
 
         if (this.state.countDown < 1) {
           window.clearInterval(this.interval);
-          window.location.replace(orderAndPayment.redirectUrl);
+          window.location.replace(
+            this.props.store.ui.orderAndPayment.redirectUrl,
+          );
         }
       }
       componentWillUnmount() {
