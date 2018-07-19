@@ -53,6 +53,66 @@ const ScrollContainer = styled.div`
   }
 `;
 
+const MONTHS = [
+  {
+    value: 1,
+    label: 'Tammikuu',
+  },
+  {
+    value: 2,
+    label: 'Helmikuu',
+  },
+  {
+    value: 3,
+    label: 'Maaliskuu',
+  },
+  {
+    value: 4,
+    label: 'Huhtikuu',
+  },
+  {
+    value: 5,
+    label: 'Toukokuu',
+  },
+  {
+    value: 6,
+    label: 'Kesäkuu',
+  },
+  {
+    value: 7,
+    label: 'Heinäkuu',
+  },
+  {
+    value: 8,
+    label: 'Elokuu',
+  },
+  {
+    value: 9,
+    label: 'Syyskuu',
+  },
+  {
+    value: 10,
+    label: 'Lokakuu',
+  },
+  {
+    value: 11,
+    label: 'Marraskuu',
+  },
+  {
+    value: 12,
+    label: 'Joulukuu',
+  },
+];
+const EVENT_TYPES = ['Kurssit Ja Työpajat', 'Näyttelyt', 'Esitykset'];
+const AREA = [
+  'Tikkurila',
+  'Aviapolis',
+  'Myyrmäki',
+  'Korso',
+  'Hakunila',
+  'Koivukylä',
+];
+
 export default withTheme(
   connect('store')(
     class FilterView extends Component {
@@ -71,14 +131,6 @@ export default withTheme(
 
       render() {
         const { theme, store } = this.props;
-        const area = [
-          'Tikkurila',
-          'Aviapolis',
-          'Myyrmäki',
-          'Korso',
-          'Hakunila',
-          'Koivukylä',
-        ];
 
         return (
           <Wrapper pose={store.ui.filterViewActive ? 'enter' : 'exit'}>
@@ -106,7 +158,7 @@ export default withTheme(
                   value={store.filters.area}
                   onChange={this.setAreaFilter}
                   highlightColor={theme.palette.primaryDeep}
-                  tags={area.map(a => ({ value: a, label: a }))}
+                  tags={AREA.map(a => ({ value: a, label: a }))}
                 />
               </div>
               <div>
@@ -115,56 +167,7 @@ export default withTheme(
                   highlightColor={theme.palette.primaryDeep}
                   value={store.filters.date}
                   onChange={this.setDateFilter}
-                  tags={[
-                    {
-                      value: 1,
-                      label: 'Tammikuu',
-                    },
-                    {
-                      value: 2,
-                      label: 'Helmikuu',
-                    },
-                    {
-                      value: 3,
-                      label: 'Maaliskuu',
-                    },
-                    {
-                      value: 4,
-                      label: 'Huhtikuu',
-                    },
-                    {
-                      value: 5,
-                      label: 'Toukokuu',
-                    },
-                    {
-                      value: 6,
-                      label: 'Kesäkuu',
-                    },
-                    {
-                      value: 7,
-                      label: 'Heinäkuu',
-                    },
-                    {
-                      value: 8,
-                      label: 'Elokuu',
-                    },
-                    {
-                      value: 9,
-                      label: 'Syyskuu',
-                    },
-                    {
-                      value: 10,
-                      label: 'Lokakuu',
-                    },
-                    {
-                      value: 11,
-                      label: 'Marraskuu',
-                    },
-                    {
-                      value: 12,
-                      label: 'Joulukuu',
-                    },
-                  ]}
+                  tags={MONTHS}
                 />
               </div>
               <div>
@@ -173,9 +176,7 @@ export default withTheme(
                   value={store.filters.eventType}
                   onChange={this.setEventTypeFilter}
                   highlightColor={theme.palette.primaryDeep}
-                  tags={['Kurssit Ja Työpajat', 'Näyttelyt', 'Esitykset'].map(
-                    v => ({ value: v, label: v }),
-                  )}
+                  tags={EVENT_TYPES.map(v => ({ value: v, label: v }))}
                 />
               </div>
               <Button
