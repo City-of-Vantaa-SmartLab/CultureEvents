@@ -200,14 +200,15 @@ export class PaymentController {
   @UsePipes(new ValidationPipe())
   async makePayment(@Res() response, @Body() reservation: ReservationsDto) {
     try {
-      const checkIfSoldOut = await this.reservationService.checkSeatAvailability(
+      const seatsAvailable = await this.reservationService.checkSeatAvailability(
         reservation,
       );
-      if (checkIfSoldOut) {
+      if (!seatsAvailable) {
         return response
           .status(422)
           .json(`There are not enough seats available for this event`);
       }
+
       const reservationDto = await this.reservationService.createReservation(
         reservation,
         false,
