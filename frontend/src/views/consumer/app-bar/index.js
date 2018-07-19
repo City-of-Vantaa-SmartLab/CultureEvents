@@ -4,15 +4,32 @@ import Logo from '../../../components/logo';
 import Typography from '../../../components/typography';
 import Button from '../../../components/button';
 import { connect } from '../../../utils';
+import posed, { PoseGroup } from 'react-pose';
+import { tween } from 'popmotion';
+import { values } from 'mobx';
+import { format } from 'date-fns';
+import fiLocale from 'date-fns/locale/fi';
 
-const Wrapper = styled.div`
+const Sliddable = posed.div({
+  exit: {
+    y: '-100%',
+    transition: props => tween({ ...props, duration: 600 }),
+  },
+  enter: {
+    y: '0%',
+    transition: tween,
+    transition: props => tween({ ...props, duration: 600 }),
+  },
+});
+const Wrapper = styled(Sliddable)`
   width: 100%;
   padding: 1rem;
-  background-color: ${props => props.theme.palette.primary};
+  background-color: ${props => props.bgColor};
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
 `;
 const LeftBox = styled.div`
   display: flex;
@@ -39,23 +56,83 @@ const LogoBox = props => (
     </div>
   </LeftBox>
 );
+const FlexBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const FilterStrings = ({ filters }) => {
+  return (
+    <FlexBox>
+      {Object.keys(filters)
+        .filter(f => filters[f] !== null)
+        .map((key, index, arr) => {
+          let value = filters[key];
+          if (key == 'date') {
+            value = format(new Date(2018, filters[key] - 1, 5), 'MMMM YYYY', {
+              locale: fiLocale,
+            });
+          }
+          const hasDot = index !== arr.length - 1 && arr.length > 1;
+
+          return (
+            <Typography
+              style={{ textTransform: 'capitalize', whiteSpace: 'pre-wrap' }}
+              key={index}
+              type="body"
+              color="white"
+            >
+              {' ' + value} {hasDot && '•'}
+            </Typography>
+          );
+        })}
+    </FlexBox>
+  );
+};
 
 export default withTheme(
   connect('store')(
     class Appbar extends Component {
       render() {
+        const { theme, store } = this.props;
+        const { filters } = store;
+
         return (
-          <Wrapper>
-            <LogoBox />
-            <div>
-              <Button
-                backgroundColor={this.props.theme.palette.primaryDeep}
-                onClick={this.props.store.toggleFilterView}
+          <PoseGroup>
+            {!filters.hasActiveFilter ? (
+              <Wrapper key="app-bar-no-filter" bgColor={theme.palette.primary}>
+                <LogoBox />
+                <div>
+                  <Button
+                    backgroundColor={theme.palette.primaryDeep}
+                    onClick={this.props.store.toggleFilterView}
+                  >
+                    Rajaa hakua
+                  </Button>
+                </div>
+              </Wrapper>
+            ) : (
+              <Wrapper
+                key="app-bar-has-filter"
+                bgColor={theme.palette.primaryDeep}
               >
-                Rajaa hakua
-              </Button>
-            </div>
-          </Wrapper>
+                <LeftBox
+                  style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+                >
+                  <Typography type="subheader" color="white">
+                    Rajaa hakua
+                  </Typography>
+                  <FilterStrings filters={filters.toJSON()} />
+                </LeftBox>
+                <Button
+                  backgroundColor={this.props.theme.palette.red}
+                  onClick={this.props.store.filters.clearAllFilters}
+                >
+                  POISTA
+                </Button>
+              </Wrapper>
+            )}
+          </PoseGroup>
         );
       }
     },

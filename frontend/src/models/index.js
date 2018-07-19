@@ -33,7 +33,7 @@ export const RootModel = types
     selectedEvent: types.maybe(types.reference(EventModel)),
     user: types.optional(User, User.create().toJSON()),
     ui: types.optional(UI, {}),
-    filter: types.optional(FilterModel, {}),
+    filters: types.optional(FilterModel, {}),
   })
   .actions(self => ({
     // hooks

@@ -64,7 +64,7 @@ export default observer(
     }
     onChildClick = tagValue => () => {
       const { value, onChange, multiple } = this.props;
-      if (value) {
+      if (value !== undefined) {
         if (multiple) {
           const result = removeIfFoundOrInsertPure(value, tagValue);
           onChange(result);
@@ -86,7 +86,7 @@ export default observer(
 
     isChildSelected = tag => {
       // the presence of value props means that the component is controlled
-      if (this.props.value) {
+      if (this.props.value !== undefined) {
         if (this.props.multiple) return this.props.value.find(tag.value);
         else return this.props.value == tag.value;
       } else {

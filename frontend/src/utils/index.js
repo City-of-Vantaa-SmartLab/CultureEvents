@@ -83,10 +83,12 @@ const pipeable = obj => {
   // @params: ...funcList = Function[]
   // return any
   const pipe = (...funcList) =>
-    funcList.reduce(
-      (resultFromLast, currentFunc) => currentFunc(resultFromLast),
-      clone,
-    );
+    funcList
+      .filter(func => func instanceof Function)
+      .reduce(
+        (resultFromLast, currentFunc) => currentFunc(resultFromLast),
+        clone,
+      );
   return {
     pipe,
   };

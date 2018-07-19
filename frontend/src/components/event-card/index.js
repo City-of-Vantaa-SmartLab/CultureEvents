@@ -156,7 +156,7 @@ const BackButton = styled(Button)`
 
 export default class EventCard extends React.Component {
   render() {
-    const { className, style, active, expandable } = this.props;
+    const { className, style, active, expandable, _pose } = this.props;
     const {
       name,
       coverImage,
@@ -231,7 +231,7 @@ export default class EventCard extends React.Component {
               onClick={this.props.onDeselect}
               onTouchEnd={this.props.onDeselect}
             >
-              Back
+              Takaisin
             </BackButton>
             {this.props.children}
           </React.Fragment>
