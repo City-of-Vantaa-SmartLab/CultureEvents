@@ -88,7 +88,9 @@ export default withTheme(
       render() {
         const { events, selectedEvent, filters } = this.props.store;
         const { ageGroupLimit, area, eventType, date } = filters;
-
+        // @TODO: beware of performance cost
+        // This might not be the best for performance
+        // See if we can memoize the filter function
         const displayableEvents = pipeable(values(events)).pipe(
           ageGroupLimit && filterByAgeGroup(ageGroupLimit),
           area && filterByArea(area),
