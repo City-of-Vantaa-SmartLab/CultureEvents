@@ -4,7 +4,8 @@ import RootStore from '../../models';
 import styled from 'styled-components';
 import { Provider } from 'mobx-react';
 import EventListing from './event-listing';
-import AppModal from './app-modal';
+import RedirectModal from './redirection-modal';
+import ReservationStatusModal from './reservation-status-modal';
 import PaymentStatusModal from './paymentstatus-modal';
 import { onSnapshot } from '../../../node_modules/mobx-state-tree';
 
@@ -25,8 +26,9 @@ export default class ConsumerUI extends React.Component {
         <Wrapper>
           <Appbar />
           <EventListing />
-          <AppModal />
+          <RedirectModal />
           <PaymentStatusModal />
+          <ReservationStatusModal />
         </Wrapper>
       </Provider>
     );

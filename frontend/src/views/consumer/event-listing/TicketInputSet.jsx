@@ -16,6 +16,7 @@ export default observer(
     render() {
       const { tickets, ticketCatalog } = this.props;
       return (
+        // @TODO: consider pulling inline functions into methods for easier reasoning, and testing
         <Form>
           {tickets.map((ticket, index) => (
             <FlexBoxHorizontal key={ticket.id || index}>
@@ -42,7 +43,7 @@ export default observer(
                   label: catalog.ticketDescription,
                   value: catalog.id,
                   // option is diabled if it is present in other input
-                  disabled: tickets.find(elem => elem.value === catalog.id),
+                  disabled: tickets.find(elem => elem.value == catalog.id),
                 }))}
                 lightMode
               />

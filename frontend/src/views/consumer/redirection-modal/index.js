@@ -5,9 +5,11 @@ import { connect } from '../../../utils';
 import { withTheme } from 'styled-components';
 import Icon from 'antd/lib/icon';
 
+// redirect modal letting they know they are leaving the app
+// specifically to the case they gets to Bambora
 export default withTheme(
   connect('store')(
-    class AppModal extends Component {
+    class RedirectModal extends Component {
       state = {
         countDown: 5,
       };
@@ -37,7 +39,9 @@ export default withTheme(
 
         if (this.state.countDown < 1) {
           window.clearInterval(this.interval);
-          window.location.replace(orderAndPayment.redirectUrl);
+          window.location.replace(
+            this.props.store.ui.orderAndPayment.redirectUrl,
+          );
         }
       }
       componentWillUnmount() {
@@ -49,10 +53,13 @@ export default withTheme(
 
         return (
           <Modal
-            show={orderAndPayment.pending}
-            onClear={orderAndPayment.clearOrderPendingFlag}
+            show={orderAndPayment.redirectStatus > 0}
+            onClear={() => {
+              orderAndPayment.clearOrderPendingFlag();
+              window.clearInterval(this.interval);
+            }}
           >
-            {orderAndPayment.redirecting ? (
+            {orderAndPayment.redirectStatus == 2 && (
               <Content>
                 <Typography type="title" color={palette.primaryDark}>
                   Redirecting{' '}
@@ -80,7 +87,9 @@ export default withTheme(
                   <Typography type="body">Redirection in progress</Typography>
                 )}
               </Content>
-            ) : (
+            )}
+
+            {orderAndPayment.redirectStatus == 1 && (
               <Content>
                 <Typography type="title" color={palette.primaryDark}>
                   Please wait
@@ -93,6 +102,17 @@ export default withTheme(
                 </Typography>
                 <Typography type="body">
                   Waiting for our server to process your order
+                </Typography>
+              </Content>
+            )}
+            {orderAndPayment.redirectStatus == 3 && (
+              <Content>
+                <Typography type="title" color={palette.red}>
+                  Cannot fulfill your order
+                </Typography>
+                <Typography type="body">
+                  Your order cannot be fulfulled. This might be due to
+                  insufficent tickets left.
                 </Typography>
               </Content>
             )}

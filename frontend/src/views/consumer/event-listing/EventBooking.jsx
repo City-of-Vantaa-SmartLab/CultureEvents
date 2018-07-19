@@ -144,8 +144,10 @@ export default connect('store')(
       });
     };
     render() {
-      const { event } = this.props;
+      const { event, store } = this.props;
       const { internalState } = this;
+      const isReservationPending =
+        store.ui.orderAndPayment.reservationStatus == 1;
 
       const isPrivateCustomer = internalState.customerGroup == 'private';
       const isGroupConductorCustomer = internalState.customerGroup == 'group';
@@ -275,6 +277,7 @@ export default connect('store')(
                   backgroundColor="white"
                   style={{ alignSelf: 'flex-start' }}
                   disabled={!submittable}
+                  icon={isReservationPending && 'loading'}
                   onClick={this.submit}
                   onTouchEnd={this.submit('reservation')}
                 >

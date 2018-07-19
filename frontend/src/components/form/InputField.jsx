@@ -45,6 +45,7 @@ export const Wrapper = styled.div`
 
 export default class InputField extends React.Component {
   getChildrenFromType = inputType => {
+    // @TODO: This is confusing. either inputType or type
     const {
       horizontal,
       lightMode,
@@ -53,13 +54,13 @@ export default class InputField extends React.Component {
       type,
       ...inputProps
     } = this.props;
-
+    // @TODO: consider using SWITCH statement
     if (inputType === 'textarea')
       return (
         <TextArea
           className={inputClassName}
           style={inputStyle}
-          {...inputProps}
+          {...inputProps} // @TODO: explicit passage of props to make it easier to be understood
         />
       );
     if (inputType === 'number')
