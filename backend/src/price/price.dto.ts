@@ -10,7 +10,11 @@ export class PriceDto {
   @ApiModelProperty()
   readonly ticket_description: string;
 
-  @IsString()
+  @IsNumber()
   @ApiModelProperty()
-  readonly available_seat_for_this_type: number;
+  readonly max_seats: number;
+
+  @IsNumber()
+  @ApiModelProperty()
+  readonly occupied_seats: number;
 }

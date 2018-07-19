@@ -41,4 +41,10 @@ export class Reservations {
     cascade: true,
   })
   tickets: Tickets[];
+
+  @Column({ default: false })
+  confirmed: boolean;
+
+  @Column({ default: false })
+  payment_completed: boolean;
 }

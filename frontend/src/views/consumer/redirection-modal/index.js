@@ -33,6 +33,13 @@ export default withTheme(
               }, 1000);
             },
           );
+        } else if (this.state.redirectingLocally) {
+          this.setState({ redirectingLocally: false });
+        } // signal has been cleared from modal. Stop redirection
+
+        if (this.state.countDown < 1) {
+          window.clearInterval(this.interval);
+          window.location.replace(orderAndPayment.redirectUrl);
         }
       }
       componentWillUnmount() {
@@ -41,11 +48,6 @@ export default withTheme(
       render() {
         const { orderAndPayment } = this.props.store.ui;
         const { palette } = this.props.theme;
-
-        if (this.state.countDown < 1) {
-          window.clearInterval(this.interval);
-          window.location.replace(orderAndPayment.redirectUrl);
-        }
 
         return (
           <Modal

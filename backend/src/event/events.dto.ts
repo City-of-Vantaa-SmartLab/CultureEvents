@@ -1,7 +1,20 @@
-import { IsString, IsNumber, IsArray, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsArray,
+  IsBoolean,
+  ArrayNotEmpty,
+  ValidateNested,
+  IsOptional,
+  IsIn,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 import { PriceDto } from '../price/price.dto';
 import { ApiModelProperty } from '@nestjs/swagger';
+const areas = require('../data/areas.json');
+
 export class EventsDto {
+  @IsOptional() id: number;
   @IsString()
   @ApiModelProperty()
   readonly name: string;
@@ -17,18 +30,28 @@ export class EventsDto {
   @IsString()
   @ApiModelProperty()
   readonly event_time: string;
+
   @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested()
+  @Type(type => PriceDto)
   @ApiModelProperty({ type: PriceDto, isArray: true })
   readonly ticket_catalog: PriceDto[];
+
   @IsString()
   @ApiModelProperty()
   readonly contact_information: string;
   @IsString()
   @ApiModelProperty()
   readonly event_type: string;
+
   @IsString()
+  @IsIn(areas)
+  readonly area: string;
+
+  @IsArray()
   @ApiModelProperty()
-  readonly age_group_limit: string;
+  readonly age_group_limits: string[];
   @IsBoolean()
   @ApiModelProperty()
   readonly is_wordless: boolean;
