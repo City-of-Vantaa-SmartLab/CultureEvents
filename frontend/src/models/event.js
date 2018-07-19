@@ -25,7 +25,7 @@ const Event = types
       ]),
       'Esitykset',
     ),
-    ageGroupLimits: types.optional(types.array(types.string), ['0-3']), // @TODO: change this to array once have backend support
+    ageGroupLimits: types.optional(types.array(types.string), ['0-3']),
     isWordless: types.optional(types.boolean, false),
     isBilingual: types.optional(types.boolean, false),
     coverImage: types.optional(types.string, ''),
@@ -44,12 +44,10 @@ const Event = types
   })
   .views(self => ({
     get totalAvailableTickets() {
-      const result = self.ticketCatalog.reduce((acc, curr) => {
+      return self.ticketCatalog.reduce((acc, curr) => {
         acc += curr.maxSeats - curr.occupiedSeats;
         return acc;
       }, 0);
-      console.log(result);
-      return result;
     },
   }));
 export default Event;
