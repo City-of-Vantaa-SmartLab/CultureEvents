@@ -56,19 +56,19 @@ const GreenButton = styled(Button)`
   &&& {
     border-radius: 8px;
     border-color: ${props => props.theme.palette.deepGreen};
-    color: ${props => props.theme.palette.deepGreen};
+    color: ${props => props.theme.palette.deepGreen} !important;
     background-color: transparent;
 
-    &: hover {
+    &:hover {
       background-color: ${props => props.theme.palette.deepGreen};
-      color: white;
+      color: white !important;
     }
   }
 `;
 const RedButton = styled(GreenButton)`
   &&& {
     border-color: ${props => props.theme.palette.red};
-    color: ${props => props.theme.palette.red};
+    color: ${props => props.theme.palette.red} !important;
     &: hover {
       background-color: ${props => props.theme.palette.red};
     }
@@ -80,6 +80,15 @@ const HighlightedArea = styled.div`
   width: 100%;
 `;
 
+const AREA = [
+  'Tikkurila',
+  'Aviapolis',
+  'Myyrmäki',
+  'Korso',
+  'Hakunila',
+  'Koivukylä',
+];
+
 const TicketCatalogInputGroup = props => {
   if (props.ticketCatalog.length === 0) {
     return (
@@ -89,7 +98,7 @@ const TicketCatalogInputGroup = props => {
           onTouchEnd={props.addTicketType}
           icon="plus"
         >
-          Add ticket type
+          Lisää uusi lipputyyppi
         </GreenButton>
       </Row>
     );
@@ -100,7 +109,7 @@ const TicketCatalogInputGroup = props => {
         <Row key={ticketType.id}>
           <InputField
             backgroundColor={props.inputBackgroundColor}
-            label="Price"
+            label="Hinta"
             formatter={value =>
               value == 0 ? `${value} €` : `${value} €`.replace(/^0/g, '')
             }
@@ -115,7 +124,7 @@ const TicketCatalogInputGroup = props => {
             style={{
               width: '100%',
             }}
-            label="Price Type"
+            label="Lipun tyyppi"
             lightMode
             horizontal
             type="text"
@@ -127,15 +136,12 @@ const TicketCatalogInputGroup = props => {
           />
           <InputField
             backgroundColor={props.inputBackgroundColor}
-            label="Seat"
+            label="Paikkojen määrä"
             lightMode
             horizontal
             type="number"
-            onChange={props.updateTicketCatalogField(
-              ticketType.id,
-              'availableSeatForThisType',
-            )}
-            value={Number(ticketType.availableSeatForThisType)}
+            onChange={props.updateTicketCatalogField(ticketType.id, 'maxSeats')}
+            value={Number(ticketType.maxSeats)}
           />
           <ButtonGroup style={{ flexShrink: 0 }}>
             <RedButton onClick={props.removeTicketType(ticketType.id)}>
@@ -147,7 +153,7 @@ const TicketCatalogInputGroup = props => {
                 onTouchEnd={props.addTicketType}
                 icon="plus"
               >
-                Add ticket type
+                Lisää lipun tyyppi
               </GreenButton>
             )}
           </ButtonGroup>
@@ -208,7 +214,7 @@ class Editor extends React.Component {
     this.internalData.eventDraft[fieldName] = value;
   };
   onAgeGroupChange = valueArr => {
-    this.internalData.eventDraft.ageGroupLimit = valueArr;
+    this.internalData.eventDraft.ageGroupLimits = valueArr;
   };
   addTicketType = e => {
     this.internalData.eventDraft.ticketCatalog.push({
@@ -290,26 +296,39 @@ class Editor extends React.Component {
                 type="title"
                 color={this.internalData.eventDraft.themeColor}
               >
-                Create new event
+                Luo uusi tapahtuma
               </Typography>
             </Row>
           )}
           <Row fullsize>
             <InputField
               backgroundColor={inputBackgroundColor}
-              label="Name"
+              label="Tapahtuman nimi"
               lightMode
               horizontal
               onChange={this.onChange('name')}
               value={this.internalData.eventDraft.name}
             />
+          </Row>
+          <Row fullsize>
             <InputField
               backgroundColor={inputBackgroundColor}
-              label="Place"
+              label="Tapahtuman paikka"
               lightMode
               horizontal
               onChange={this.onChange('location')}
               value={this.internalData.eventDraft.location}
+            />
+            <InputField
+              style={{ flexShrink: 2 }}
+              backgroundColor={inputBackgroundColor}
+              label="Alue"
+              lightMode
+              horizontal
+              type="select"
+              data={AREA.map(value => ({ value, label: value }))}
+              onChange={value => (this.internalData.eventDraft.area = value)}
+              value={this.internalData.eventDraft.area}
             />
           </Row>
           <Row
@@ -330,12 +349,12 @@ class Editor extends React.Component {
           <Row
             fullsize
             style={{
-              backgroundColor: inputBackgroundColor,
               padding: '2rem 4rem',
             }}
           >
             <InputField
-              label="Description"
+              backgroundColor={inputBackgroundColor}
+              label="Kuvaus"
               type="textarea"
               lightMode
               rows={10}
@@ -346,7 +365,7 @@ class Editor extends React.Component {
           <Row>
             <InputField
               backgroundColor={inputBackgroundColor}
-              label="Date"
+              label="Päivämäärä"
               lightMode
               horizontal
               type="date"
@@ -355,7 +374,7 @@ class Editor extends React.Component {
             />
             <InputField
               backgroundColor={inputBackgroundColor}
-              label="Time"
+              label="Aika"
               lightMode
               horizontal
               type="time"
@@ -365,7 +384,7 @@ class Editor extends React.Component {
             <InputField
               style={{ width: '100%', flexGrow: 1, flexShrink: 1 }}
               backgroundColor={inputBackgroundColor}
-              label="Performer"
+              label="Esittäjä tai järjestäjä"
               lightMode
               horizontal
               type="text"
@@ -384,7 +403,7 @@ class Editor extends React.Component {
           <Row fullsize>
             <InputField
               backgroundColor={inputBackgroundColor}
-              label="Contact Information"
+              label="Yhteystiedot"
               lightMode
               horizontal
               type="text"
@@ -393,7 +412,7 @@ class Editor extends React.Component {
             />
           </Row>
           <Row>
-            <InputField label="Event type" lightMode horizontal>
+            <InputField label="Tapahtuman tyyppi" lightMode horizontal>
               <TagPillGroup
                 highlightColor={this.internalData.eventDraft.themeColor}
                 value={this.internalData.eventDraft.eventType}
@@ -410,12 +429,13 @@ class Editor extends React.Component {
             </InputField>
           </Row>
           <Row>
-            <InputField label="Age group limit" lightMode horizontal>
+            <InputField label="Ikäsuositus" lightMode horizontal>
               <TagPillGroup
                 //multiple //@TODO: toogle this once EventModal gets updated
                 highlightColor={this.internalData.eventDraft.themeColor}
                 onChange={this.onAgeGroupChange}
-                value={this.internalData.eventDraft.ageGroupLimit}
+                value={this.internalData.eventDraft.ageGroupLimits}
+                multiple
                 tags={[
                   { value: '0-3', label: '0-3' },
                   { value: '3-6', label: '3-6' },
@@ -441,7 +461,7 @@ class Editor extends React.Component {
                   .eventDraft.isWordless)
               }
             >
-              Wordless
+              Sanaton / sopii kaikenkielisille
             </Checkbox>
             <Checkbox
               style={{ marginRight: '1rem' }}
@@ -451,7 +471,7 @@ class Editor extends React.Component {
                   .eventDraft.isBilingual)
               }
             >
-              Bilingual
+              Esitys on kaksikielinen
             </Checkbox>
           </Row>
         </Form>

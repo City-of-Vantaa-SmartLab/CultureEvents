@@ -22,8 +22,14 @@ export const TextArea = styled(AntTextArea)`
   &&& {
     border-radius: 8px;
     padding: 0.5rem 1rem;
-    background-color: ${props => props.backgroundColor};
     border: white;
+
+    &,
+    div,
+    textarea,
+    input {
+      background-color: ${props => props.backgroundColor};
+    }
   }
 `;
 export const NumericInput = styled(AntNumericInput)`
@@ -42,13 +48,13 @@ export const NumericInput = styled(AntNumericInput)`
 
 const SelectWrapper = styled(AntSelect)`
   && {
-    background-color: ${props => props.backgroundColor};
     border: white;
     width: 100%;
 
-    div {
+    & > div {
       border-radius: 8px;
       width: 100%;
+      background-color: ${props => props.backgroundColor};
     }
   }
 `;

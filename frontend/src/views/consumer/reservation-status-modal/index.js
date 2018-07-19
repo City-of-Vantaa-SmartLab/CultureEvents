@@ -27,7 +27,6 @@ export default withTheme(
       render() {
         const { orderAndPayment } = this.props.store.ui;
         const { palette } = this.props.theme;
-        const { selectedEvent } = this.props.store;
         return (
           <Modal
             show={orderAndPayment.reservationStatus > 1}

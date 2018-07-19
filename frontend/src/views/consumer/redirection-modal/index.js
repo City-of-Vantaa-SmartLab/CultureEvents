@@ -71,11 +71,11 @@ export default withTheme(
                   }
                 </Typography>
                 <Typography type="body">
-                  Bambora is our payment service.{' '}
+                  Sinut uudelleenohjataan Bambora-maksujärjestelmään.{' '}
                 </Typography>
                 {this.state.countDown > 0 ? (
                   <Typography type="body">
-                    Redirecting you in{' '}
+                    Sinut uudelleenohjataan{' '}
                     {
                       <Typography type="body" color={palette.red}>
                         {this.state.countDown}
@@ -84,7 +84,10 @@ export default withTheme(
                     seconds
                   </Typography>
                 ) : (
-                  <Typography type="body">Redirection in progress</Typography>
+                  <Typography type="body">
+                    Sinua uudelleenohjataan maksujärjestelmään. Odota hetki,
+                    kiitos.
+                  </Typography>
                 )}
               </Content>
             )}
@@ -100,19 +103,17 @@ export default withTheme(
                     />
                   }
                 </Typography>
-                <Typography type="body">
-                  Waiting for our server to process your order
-                </Typography>
+                <Typography type="body">Käsittelemme tilaustasi</Typography>
               </Content>
             )}
             {orderAndPayment.redirectStatus == 3 && (
               <Content>
                 <Typography type="title" color={palette.red}>
-                  Cannot fulfill your order
+                  Varausta ei voitu tehdä
                 </Typography>
                 <Typography type="body">
-                  Your order cannot be fulfulled. This might be due to
-                  insufficent tickets left.
+                  Varausta ei voitu tehdä. Tämä voi johtua siitä, että vapaita
+                  paikkoja ei ollut tarpeeksi.
                 </Typography>
               </Content>
             )}

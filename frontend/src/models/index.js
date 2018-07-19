@@ -242,6 +242,7 @@ export const RootModel = types
             customer_type: orderInfo.customerGroup,
             event_id: orderInfo.eventId,
             school_name: orderInfo.school,
+            name: orderInfo.school + ' ' + orderInfo.class,
             class: orderInfo.classRoom,
             phone: orderInfo.phoneNumber,
             email: orderInfo.email,

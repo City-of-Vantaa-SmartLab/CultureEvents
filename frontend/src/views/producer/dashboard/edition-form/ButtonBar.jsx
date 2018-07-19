@@ -42,7 +42,7 @@ class ButtonBar extends React.Component {
             onClick={addNewEventCB}
             onTouchEnd={addNewEventCB}
           >
-            Add new event
+            Lisää uusi tapahtuma
           </Button>
           <Button
             disabled={!canConfirm}
@@ -51,7 +51,7 @@ class ButtonBar extends React.Component {
             onClick={confirmChangeCB}
             onTouchEnd={confirmChangeCB}
           >
-            Confirm change
+            Hyväksy muutokset
           </Button>
           <Button
             disabled={!canConfirm}
@@ -60,7 +60,7 @@ class ButtonBar extends React.Component {
             onClick={discardChangeCB}
             onTouchEnd={discardChangeCB}
           >
-            Discard change
+            Hylkää muutokset
           </Button>
         </AntButton.Group>
       </Wrapper>

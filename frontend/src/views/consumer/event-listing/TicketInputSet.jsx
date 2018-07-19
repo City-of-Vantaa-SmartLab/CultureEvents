@@ -11,7 +11,7 @@ export default observer(
       if (catalog == undefined) {
         return 0;
       }
-      return catalog.availableSeatForThisType;
+      return catalog.maxSeats;
     };
     render() {
       const { tickets, ticketCatalog } = this.props;

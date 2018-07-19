@@ -59,8 +59,7 @@ class CoverImage extends React.Component {
         method: 'POST',
       });
 
-      if (!response.ok)
-        throw new Error('Failed to upload image. Server threw HTTP error code');
+      if (!response.ok) throw new Error('Kuvan lataus epäonnistui.');
       const imageurl = await response.json();
       return imageurl;
     } catch (error) {
@@ -79,20 +78,20 @@ class CoverImage extends React.Component {
     return (
       <Wrapper>
         {this.state.uploadInProgress ? (
-          <Spin spinning={true}>Uploading Image.. Please Wait!.</Spin>
+          <Spin spinning={true}>Ladataan kuvaa.. Odota hetki, kiitos.</Spin>
         ) : (
           <React.Fragment>
             <Typography
               style={{ transform: 'translateY(-1rem)' }}
               type="largebody"
             >
-              Cover image
+              Kansikuva
             </Typography>
             <Image src={this.props.value} />
             <FlexBox>
               <InputField
                 style={{ width: '100%', marginRight: '1rem' }}
-                label="Image URL"
+                label="Kuvan verkko-osoite (URL)"
                 lightMode
                 backgroundColor={inputBackgroundColor}
                 type="text"
@@ -102,7 +101,7 @@ class CoverImage extends React.Component {
             </FlexBox>
             <FlexBox>
               <InputField
-                label="Or upload a file"
+                label="Tai lataa tiedosto"
                 lightMode
                 type="file"
                 onChange={this.handleUploadImage}
@@ -113,7 +112,7 @@ class CoverImage extends React.Component {
                 show={this.state.uploadFailed}
                 color="red"
               >
-                <p>Image upload failed.. Please try again!.</p>
+                <p>Kuvan lataaminen epäonnistui. Yritä uudelleen, kiitos.</p>
               </Typography>
             </FlexBox>
           </React.Fragment>
