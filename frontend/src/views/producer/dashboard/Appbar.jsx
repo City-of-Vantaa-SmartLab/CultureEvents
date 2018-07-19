@@ -56,7 +56,7 @@ class Appbar extends React.Component {
             <Typography type="title" color="white">
               VANTAA
             </Typography>
-            <Typography type="title" color={theme.palette.secondary}>
+            <Typography type="title" color={theme.palette.primary}>
               KULTTUURIA
             </Typography>
           </LogoSection>

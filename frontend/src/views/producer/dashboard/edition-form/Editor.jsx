@@ -207,6 +207,9 @@ class Editor extends React.Component {
   onPillChange = fieldName => value => {
     this.internalData.eventDraft[fieldName] = value;
   };
+  onAgeGroupChange = valueArr => {
+    this.internalData.eventDraft.ageGroupLimit = valueArr;
+  };
   addTicketType = e => {
     this.internalData.eventDraft.ticketCatalog.push({
       ...TicketCatalog.create({ id: genRandomKey() }),
@@ -395,9 +398,12 @@ class Editor extends React.Component {
                 highlightColor={this.internalData.eventDraft.themeColor}
                 value={this.internalData.eventDraft.eventType}
                 tags={[
-                  { id: 'Kurssit Ja Työpajat', text: 'Kurssit ja työpajat' },
-                  { id: 'Näyttelyt', text: 'Näyttelyt' },
-                  { id: 'Esitykset', text: 'Esitykset' },
+                  {
+                    value: 'Kurssit Ja Työpajat',
+                    label: 'Kurssit ja työpajat',
+                  },
+                  { value: 'Näyttelyt', label: 'Näyttelyt' },
+                  { value: 'Esitykset', label: 'Esitykset' },
                 ]}
                 onChange={this.onPillChange('eventType')}
               />
@@ -406,14 +412,15 @@ class Editor extends React.Component {
           <Row>
             <InputField label="Age group limit" lightMode horizontal>
               <TagPillGroup
+                //multiple //@TODO: toogle this once EventModal gets updated
                 highlightColor={this.internalData.eventDraft.themeColor}
-                onChange={this.onPillChange('ageGroupLimit')}
+                onChange={this.onAgeGroupChange}
                 value={this.internalData.eventDraft.ageGroupLimit}
                 tags={[
-                  { id: '0-3', text: '0-3' },
-                  { id: '3-6', text: '3-6' },
-                  { id: '7-12', text: '7-12' },
-                  { id: '13+', text: '13+' },
+                  { value: '0-3', label: '0-3' },
+                  { value: '3-6', label: '3-6' },
+                  { value: '6-12', label: '6-12' },
+                  { value: '13+', label: '13+' },
                 ]}
               />
             </InputField>

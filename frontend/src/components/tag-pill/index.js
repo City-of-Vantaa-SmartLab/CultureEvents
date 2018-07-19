@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react';
 
 const TagPillText = styled(Typography)`
   display: inline;
-  padding: 0.4rem 0.8rem;
+  padding: 0.3rem 0.6rem;
   background-color: rgba(0, 0, 0, 0.15);
   opacity: 1;
   text-transform: capitalize;
@@ -31,10 +33,19 @@ const TagPillGroupWrapper = styled.div`
   display: flex;
   flex-flow: wrap;
 
-  span {
-    margin-left: 0.5rem;
+  & > * {
+    margin-left: 0.3rem;
+    margin-top: 0.3rem;
   }
 `;
+
+const removeIfFoundOrInsertPure = (arr, value) => {
+  const array = [...arr];
+  const index = array.findIndex(elem => elem == value);
+  if (index != -1) array.splice(index, 1);
+  else array.push(value);
+  return array;
+};
 
 export class TagPill extends React.Component {
   render() {
@@ -42,44 +53,68 @@ export class TagPill extends React.Component {
   }
 }
 
-export default class TagPillGroup extends React.Component {
-  state = {
-    selected: null,
-  };
-  constructor(props) {
-    super(props);
-    this.state.selected = props.value;
-  }
-  onChildClick = identifier => () => {
-    if (this.props.onChange) {
-      this.props.onChange(identifier);
-    } else {
-      this.setState({ selected: identifier });
+export default observer(
+  class TagPillGroup extends React.Component {
+    internalState = observable({
+      selected: [],
+    });
+    constructor(props) {
+      super(props);
+      this.internalState.selected = props.value;
     }
-  };
-  render() {
-    const { tags, className, pillClassName, highlightColor } = this.props;
-    return (
-      <TagPillGroupWrapper className={className}>
-        {tags.map((tag, index) => (
-          <TagPill
-            className={pillClassName}
-            highlightColor={highlightColor}
-            selected={
-              this.props.onChange
-                ? tag.id === this.props.value || index === this.props.value
-                : this.state.selected === tag.id ||
-                  this.state.selected === index
-            }
-            onClick={this.onChildClick(tag.id || index)}
-            onTouchEnd={this.onChildClick(tag.id || index)}
-            key={tag.id || index}
-            {...tag.tagProps}
-          >
-            {tag.text}
-          </TagPill>
-        ))}
-      </TagPillGroupWrapper>
-    );
-  }
-}
+    onChildClick = tagValue => () => {
+      const { value, onChange, multiple } = this.props;
+      if (value !== undefined) {
+        if (multiple) {
+          const result = removeIfFoundOrInsertPure(value, tagValue);
+          onChange(result);
+        } else {
+          onChange(tagValue);
+        }
+      } else {
+        if (multiple) {
+          const index = this.internalState.selected.findIndex(
+            elem => elem.id == tagValue,
+          );
+          if (index == -1) this.internalState.selected.push(tagValue);
+          else this.internalState.selected.splice(index, 1);
+        } else {
+          this.internalState.selected = tagValue;
+        }
+      }
+    };
+
+    isChildSelected = tag => {
+      // the presence of value props means that the component is controlled
+      if (this.props.value !== undefined) {
+        if (this.props.multiple) return this.props.value.find(tag.value);
+        else return this.props.value == tag.value;
+      } else {
+        // otherwise we use internal state
+        if (this.props.multiple) {
+          return this.internalState.selected.find(tag.value);
+        } else return this.internalState.selected == tag.value;
+      }
+    };
+    render() {
+      const { tags, className, pillClassName, highlightColor } = this.props;
+      return (
+        <TagPillGroupWrapper className={className}>
+          {tags.map((tag, index) => (
+            <TagPill
+              className={pillClassName}
+              highlightColor={highlightColor}
+              selected={this.isChildSelected(tag)}
+              onClick={this.onChildClick(tag.value)}
+              onTouchEnd={this.onChildClick(tag.value)}
+              key={index}
+              {...tag.tagProps}
+            >
+              {tag.label}
+            </TagPill>
+          ))}
+        </TagPillGroupWrapper>
+      );
+    }
+  },
+);

@@ -24,10 +24,7 @@ const Event = types.model({
     ]),
     'Esitykset',
   ),
-  ageGroupLimit: types.optional(
-    types.enumeration('AgeGroupLimit', ['0-3', '3-6', '7-12', '13+']),
-    '0-3',
-  ),
+  ageGroupLimit: types.optional(types.string, '0-3'), // @TODO: change this to array once have backend support
   isWordless: types.optional(types.boolean, false),
   isBilingual: types.optional(types.boolean, false),
   coverImage: types.optional(types.string, ''),

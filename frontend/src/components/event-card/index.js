@@ -233,7 +233,7 @@ export default class EventCard extends React.Component {
               onClick={this.props.onDeselect}
               onTouchEnd={this.props.onDeselect}
             >
-              Back
+              Takaisin
             </BackButton>
             {this.props.children}
           </React.Fragment>

@@ -2,6 +2,7 @@ import { inject, observer } from 'mobx-react';
 import traverse from 'traverse';
 import toSnakeCase from 'to-snake-case';
 import toCamelCase from 'to-camel-case';
+import equal from 'lodash.isequal';
 
 // front-end transfromer. Accepts
 // @params caseType = 'snake' | any
@@ -82,10 +83,12 @@ const pipeable = obj => {
   // @params: ...funcList = Function[]
   // return any
   const pipe = (...funcList) =>
-    funcList.reduce(
-      (resultFromLast, currentFunc) => currentFunc(resultFromLast),
-      clone,
-    );
+    funcList
+      .filter(func => func instanceof Function)
+      .reduce(
+        (resultFromLast, currentFunc) => currentFunc(resultFromLast),
+        clone,
+      );
   return {
     pipe,
   };

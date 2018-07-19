@@ -25,12 +25,12 @@ const customFetchFn = async (url, config = {}, authToken) => {
 };
 
 const fetchEvents = async () => {
-  const result = await customFetchFn('/events');
+  const result = await customFetchFn('/api/events');
   return parseTo()(result);
 };
 const postEvent = async (event, authToken) => {
   const result = await customFetchFn(
-    '/events',
+    '/api/events',
     { method: 'POST', body: parseTo('snake')(event) },
     authToken,
   );
@@ -38,7 +38,7 @@ const postEvent = async (event, authToken) => {
 };
 const putEvent = async (event, authToken) => {
   const result = await customFetchFn(
-    '/events/' + event.id,
+    '/api/events/' + event.id,
     { method: 'PUT', body: parseTo('snake')(event) },
     authToken,
   );
@@ -46,7 +46,7 @@ const putEvent = async (event, authToken) => {
 };
 
 const login = (username, password) => {
-  return customFetchFn('/auth/login', {
+  return customFetchFn('/api/auth/login', {
     method: 'POST',
     body: {
       username,
@@ -56,18 +56,18 @@ const login = (username, password) => {
 };
 
 const validateUserToken = (userId, authToken) => {
-  return customFetchFn(`/user/${userId}`, {}, authToken);
+  return customFetchFn(`/api/user/${userId}`, {}, authToken);
 };
 
 const getPaymentRedirectUrl = orderInfo => {
-  return customFetchFn('/payments/make-payment', {
+  return customFetchFn('/api/payments/make-payment', {
     method: 'POST',
     body: orderInfo,
   });
 };
 
 const postReservation = orderInfo => {
-  return customFetchFn(`/reservations`, {
+  return customFetchFn(`/api/reservations`, {
     method: 'POST',
     body: orderInfo,
   });

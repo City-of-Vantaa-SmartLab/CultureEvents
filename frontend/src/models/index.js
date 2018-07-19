@@ -11,6 +11,7 @@ import {
   postReservation,
 } from '../apis';
 import { removeIdRecursively } from '../utils';
+import FilterModel from './filter';
 
 const transformToMap = (arr = []) => {
   const result = arr.reduce((accumulator, current) => {
@@ -21,6 +22,7 @@ const transformToMap = (arr = []) => {
 };
 
 const UI = types.model({
+  filterViewActive: types.optional(types.boolean, false),
   auth: types.optional(
     types
       .model({
@@ -93,6 +95,7 @@ export const RootModel = types
     selectedEvent: types.maybe(types.reference(EventModel)),
     user: types.optional(User, {}),
     ui: types.optional(UI, {}),
+    filters: types.optional(FilterModel, {}),
   })
   .actions(self => ({
     // hooks
@@ -197,6 +200,10 @@ export const RootModel = types
     }),
     getUserToken: () => {
       return self.user.token;
+    },
+    // filter related activity
+    toggleFilterView: () => {
+      self.ui.filterViewActive = !self.ui.filterViewActive;
     },
     // order related actions
     submitOrder: flow(function*(orderInfo) {
