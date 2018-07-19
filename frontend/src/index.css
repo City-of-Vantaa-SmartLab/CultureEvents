@@ -106,13 +106,6 @@ input::-webkit-inner-spin-button {
   html {
     min-height: 480px;
   }
-
-  /* for small devices */
-  @media (max-width: 320px) {
-    html {
-      font-size: 6px;
-    }
-  }
 }
 
 @media only screen and (min-width: 600px) {
