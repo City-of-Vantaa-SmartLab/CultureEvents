@@ -3,42 +3,62 @@ import { values } from 'mobx';
 
 const FilterModel = types
   .model('FilterModel', {
-    ageGroupLimit: types.maybe(
-      types.enumeration('AgeGroupLimit', ['0-3', '3-6', '6-12', '13+']),
+    ageGroupLimits: types.optional(
+      types.array(
+        types.maybe(
+          types.enumeration('ageGroupLimits', ['0-3', '3-6', '6-12', '13+']),
+        ),
+      ),
+      [],
     ),
-    area: types.maybe(
-      types.enumeration('Area', [
-        'Tikkurila',
-        'Aviapolis',
-        'Myyrmäki',
-        'Korso',
-        'Hakunila',
-        'Koivukylä',
-      ]),
+    areas: types.optional(
+      types.array(
+        types.maybe(
+          types.enumeration('Area', [
+            'Tikkurila',
+            'Aviapolis',
+            'Myyrmäki',
+            'Korso',
+            'Hakunila',
+            'Koivukylä',
+          ]),
+        ),
+      ),
+      [],
     ),
-    date: types.maybe(types.refinement(types.number, v => v > 0 && v < 13)),
-    eventType: types.maybe(
-      types.enumeration('EventType', [
-        'Kurssit Ja Työpajat',
-        'Näyttelyt',
-        'Esitykset',
-      ]),
+    months: types.optional(
+      types.array(
+        types.maybe(types.refinement(types.number, v => v > 0 && v < 13)),
+      ),
+      [],
+    ),
+    eventTypes: types.optional(
+      types.array(
+        types.maybe(
+          types.enumeration('EventType', [
+            'Kurssit Ja Työpajat',
+            'Näyttelyt',
+            'Esitykset',
+          ]),
+        ),
+      ),
+      [],
     ),
   })
   .actions(self => ({
-    setFilters(filterType, value) {
+    setFilters(filterType, values) {
       if (!self.criteria.includes(filterType))
         throw new Error('Filter type is non-existent');
-      self[filterType] = value;
+      self[filterType] = values;
     },
     removeFilter(filterType) {
-      self.setFilters(filterType, null);
+      self.setFilters(filterType, []);
     },
     clearAllFilters() {
-      self.ageGroupLimit = null;
-      self.area = null;
-      self.eventType = null;
-      self.date = null;
+      self.ageGroupLimits = [];
+      self.areas = [];
+      self.eventTypes = [];
+      self.months = [];
     },
   }))
   .views(self => ({
@@ -46,7 +66,7 @@ const FilterModel = types
       return Object.keys(getSnapshot(self));
     },
     get hasActiveFilter() {
-      return !values(self).every(c => c == null);
+      return values(self).some(c => c.length > 0);
     },
   }));
 
