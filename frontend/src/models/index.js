@@ -205,6 +205,13 @@ export const RootModel = types
     toggleFilterView: () => {
       self.ui.filterViewActive = !self.ui.filterViewActive;
     },
+    updateAvailableSeat: (eventId, ticketCatalogId, amount) => {
+      const ticketCatalog =
+        self.events[eventId].ticketCatalogs[ticketCatalogId];
+      if (ticketCatalog.maxSeats < ticketCatalog.occupiedSeats + amount)
+        throw new Error('Invalid amount of seat');
+      ticketCatalog.occupiedSeats += amount;
+    },
     // order related actions
     submitOrder: flow(function*(orderInfo) {
       // setting UI
@@ -230,12 +237,12 @@ export const RootModel = types
           self.ui.orderAndPayment.redirectStatus = 2;
           self.ui.orderAndPayment.redirectUrl = result.redirect_url;
           // reduce amount of ticket in the event
-          payload.tickets.forEach(
-            ticket =>
-              (self.events[orderInfo.eventId].ticketCatalog[
-                ticket.price_id
-              ].occupiedSeats +=
-                ticket.no_of_tickets),
+          payload.tickets.forEach(ticket =>
+            self.updateAvailableSeat(
+              orderInfo.eventId,
+              ticket.price_id,
+              ticket.no_of_tickets,
+            ),
           );
         } catch (error) {
           // setting UI error
@@ -262,12 +269,12 @@ export const RootModel = types
 
           const result = yield postReservation(payload);
 
-          payload.tickets.forEach(
-            ticket =>
-              (self.events[orderInfo.eventId].ticketCatalog[
-                ticket.price_id
-              ].occupiedSeats +=
-                ticket.no_of_tickets),
+          payload.tickets.forEach(ticket =>
+            self.updateAvailableSeat(
+              orderInfo.eventId,
+              ticket.price_id,
+              ticket.no_of_tickets,
+            ),
           );
           // @TODO: somehow add this result into a reservation model
           self.ui.orderAndPayment.reservationStatus = 2;

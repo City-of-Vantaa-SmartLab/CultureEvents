@@ -44,12 +44,10 @@ const Event = types
   })
   .views(self => ({
     get totalAvailableTickets() {
-      const result = self.ticketCatalog.reduce((acc, curr) => {
+      return self.ticketCatalog.reduce((acc, curr) => {
         acc += curr.maxSeats - curr.occupiedSeats;
         return acc;
       }, 0);
-      console.log(result);
-      return result;
     },
   }));
 export default Event;
