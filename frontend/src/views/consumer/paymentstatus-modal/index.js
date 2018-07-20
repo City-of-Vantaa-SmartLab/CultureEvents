@@ -36,11 +36,11 @@ export default withTheme(
       // @TODO: get translation for these text
       getMeaning = statusCode => {
         if (statusCode == 0) return 'Maksu vahvistettu';
-        if (statusCode == 1) return 'Payment not in system';
-        if (statusCode == 2) return 'Already paid';
-        if (statusCode == 3) return 'Bambora failure';
+        if (statusCode == 1) return 'Varausta ei löytynyt järjestelmästä';
+        if (statusCode == 2) return 'Varaus on jo maksettu';
+        if (statusCode == 3) return 'Maksu epäonnistui maksujärjestelmässä';
         if (statusCode == 4) return 'Maksu epäonnistui';
-        return 'Unknown Error';
+        return 'Tuntematon virhe';
       };
       getMeaningLong = statusCode => {
         if (statusCode == 0)
@@ -48,17 +48,17 @@ export default withTheme(
         puhelinnumeroon tekstiviestillä.`;
         // @TODO: Wording to handle this case?
         if (statusCode == 1)
-          return `It seems like you have stumbled upon a weird error. Please let our engineer know what happened`;
+          return `Olemme pahoillamme! Varaus epäonnistui, koska maksua vastaavaa varausta ei löytynyt järjestelmästä`;
         if (statusCode == 2)
-          return `You already paid for this event. The order that you requested are therefore not fulfilled. You have not been charge anything.`;
+          return `Varaus on jo maksettu, joten uutta maksua ei suoritettu. `;
         if (statusCode == 3)
-          return 'Our third party payment system seemed to have a problem at the moment. Your order have not been fulfilled. We are sorry for this inconvenience.';
+          return 'Olemme pahoillamme! Maksu epäonnistui maksujärjestelmässä, eikä varaus onnistunut.';
         if (statusCode == 4)
           return `Olemme pahoillamme!
           Maksunvälityksessä tapahtui häiriö, eikä
           maksun tekeminen onnistunut.
           `;
-        return 'Some thing strange happened and we could not fulfill your order. Please try again.';
+        return 'Maksu epäonnistui tuntemattomasta syystä, eikä varausta voitu tehdä. Yritä uudelleen, kiitos.';
       };
       render() {
         return (

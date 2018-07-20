@@ -117,7 +117,7 @@ export default withTheme(
   connect('store')(
     class FilterView extends Component {
       setAgeGroupFilter = value => {
-        this.props.store.filters.setFilters('ageGroupLimit', value);
+        this.props.store.filters.setFilters('ageGroupLimits', value);
       };
       setAreaFilter = value => {
         this.props.store.filters.setFilters('area', value);
@@ -141,7 +141,7 @@ export default withTheme(
               <div>
                 <Typography type="subheader">Lapsen ikä</Typography>
                 <TagPillGroup
-                  value={store.filters.ageGroupLimit}
+                  value={store.filters.ageGroupLimits}
                   onChange={this.setAgeGroupFilter}
                   highlightColor={theme.palette.primaryDeep}
                   tags={[

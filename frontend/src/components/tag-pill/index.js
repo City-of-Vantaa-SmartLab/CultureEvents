@@ -87,12 +87,13 @@ export default observer(
     isChildSelected = tag => {
       // the presence of value props means that the component is controlled
       if (this.props.value !== undefined) {
-        if (this.props.multiple) return this.props.value.find(tag.value);
+        if (this.props.multiple)
+          return this.props.value.find(v => v === tag.value);
         else return this.props.value == tag.value;
       } else {
         // otherwise we use internal state
         if (this.props.multiple) {
-          return this.internalState.selected.find(tag.value);
+          return this.internalState.selected.find(v => v === tag.value);
         } else return this.internalState.selected == tag.value;
       }
     };

@@ -3,8 +3,8 @@ import { values } from 'mobx';
 
 const FilterModel = types
   .model('FilterModel', {
-    ageGroupLimit: types.maybe(
-      types.enumeration('AgeGroupLimit', ['0-3', '3-6', '6-12', '13+']),
+    ageGroupLimits: types.maybe(
+      types.enumeration('ageGroupLimits', ['0-3', '3-6', '6-12', '13+']),
     ),
     area: types.maybe(
       types.enumeration('Area', [
@@ -35,7 +35,7 @@ const FilterModel = types
       self.setFilters(filterType, null);
     },
     clearAllFilters() {
-      self.ageGroupLimit = null;
+      self.ageGroupLimits = null;
       self.area = null;
       self.eventType = null;
       self.date = null;

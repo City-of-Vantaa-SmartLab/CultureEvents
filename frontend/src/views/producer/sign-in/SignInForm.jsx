@@ -55,7 +55,7 @@ class SignInForm extends React.Component {
             onChange={this.onChangeName}
           />
           <InputField
-            label="Password"
+            label="Salasana"
             type="password"
             value={this.state.password}
             onChange={this.onChangePassword}

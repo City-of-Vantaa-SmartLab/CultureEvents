@@ -101,8 +101,12 @@ export const RootModel = types
     // hooks
     afterCreate() {
       // hydrate from localStorage
-      if (window.localStorage.getItem('store'))
-        applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
+      try {
+        if (window.localStorage.getItem('store'))
+          applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
+      } catch (error) {
+        console.log('Failed to apply snapshot');
+      }
       self.selectedEvent = null;
       // validate token access (only happen in Producer)
       if (self.user.token) self.validateToken();
@@ -205,6 +209,23 @@ export const RootModel = types
     toggleFilterView: () => {
       self.ui.filterViewActive = !self.ui.filterViewActive;
     },
+    updateAvailableSeat: (eventId, ticketCatalogId, amount) => {
+      const resolvedEvent = resolveIdentifier(EventModel, self.events, eventId);
+      if (!resolvedEvent)
+        throw new Error('UpdateAvailableSeat failed. Cant find the event');
+      const resolveTicketType = resolvedEvent.ticketCatalog.find(
+        catalogs => catalogs.id === ticketCatalogId,
+      );
+      if (resolveTicketType.maxSeats < resolveTicketType.occupiedSeats + amount)
+        throw new Error(
+          `Invalid amount of seat. There are max ${
+            resolveTicketType.maxSeats
+          }, and there are ${
+            resolveTicketType.occupiedSeats
+          } while you try to occupy ${amount} seats`,
+        );
+      resolveTicketType.occupiedSeats += amount;
+    },
     // order related actions
     submitOrder: flow(function*(orderInfo) {
       // setting UI
@@ -226,9 +247,9 @@ export const RootModel = types
         try {
           const result = yield getPaymentRedirectUrl(payload);
 
+          // setting UI state for success
           self.ui.orderAndPayment.redirectStatus = 2;
           self.ui.orderAndPayment.redirectUrl = result.redirect_url;
-          // setting UI state for success
         } catch (error) {
           // setting UI error
           self.ui.orderAndPayment.redirectStatus = 3;
@@ -242,8 +263,11 @@ export const RootModel = types
             customer_type: orderInfo.customerGroup,
             event_id: orderInfo.eventId,
             school_name: orderInfo.school,
+            name: orderInfo.school + ' ' + orderInfo.classRoom,
             class: orderInfo.classRoom,
-            phone: orderInfo.phoneNumber,
+            phone: orderInfo.phoneNumber
+              .replace(/^0/, '+358')
+              .replace(/\s/g, ''),
             email: orderInfo.email,
             tickets: orderInfo.tickets.map(ticket => ({
               price_id: ticket.value,
@@ -252,7 +276,14 @@ export const RootModel = types
           };
 
           const result = yield postReservation(payload);
-          console.log(result);
+
+          payload.tickets.forEach(ticket =>
+            self.updateAvailableSeat(
+              orderInfo.eventId,
+              ticket.price_id,
+              ticket.no_of_tickets,
+            ),
+          );
           // @TODO: somehow add this result into a reservation model
           self.ui.orderAndPayment.reservationStatus = 2;
         } catch (error) {

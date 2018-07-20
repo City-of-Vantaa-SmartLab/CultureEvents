@@ -11,7 +11,10 @@ export class SMSService {
       console.log(`Sending sms for user ${user} to number ${phoneNumber}`);
       const request = this.generateTeliaMessageRequest(phoneNumber, message);
       const response = await axios.post(teliaEndPoint, request);
-      if (response && response.data.accepted[0].to === phoneNumber.slice(1)) {
+      if (
+        response &&
+        response.data.accepted[0].to === phoneNumber.replace(/\s/g, '').slice(1)
+      ) {
         return response;
       } else {
         return null;

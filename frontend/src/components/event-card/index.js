@@ -68,7 +68,7 @@ const Wrapper = styled(WrapperBase)`
 `;
 
 const Shim = styled.div`
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: 1;
   left: 0;
   top: 0;
@@ -154,21 +154,33 @@ const BackButton = styled(Button)`
   }
 `;
 
+const EventTypeLabel = styled(Typography)`
+  font-weight: 700 !important;
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  transform: translate(0, -2rem);
+  text-transform: uppercase;
+`;
+
 export default class EventCard extends React.Component {
   render() {
-    const { className, style, active, expandable, mini } = this.props;
+    const { className, style, active, expandable, mini, event } = this.props;
     const {
       name,
       coverImage,
-      themeColor,
-      location,
+      area,
       eventTime,
       eventDate,
       performer,
-      ageGroupLimit,
-    } = this.props.event;
+      ageGroupLimits,
+      eventType,
+    } = event;
 
-    const showBottomBar = !active && !mini;
+    const soldOut = event.totalAvailableTickets < 1;
+    const themeColor = soldOut ? 'black' : event.themeColor;
+
+    const showBottomBar = !active && !mini && !soldOut;
     return (
       <Wrapper
         style={style}
@@ -192,24 +204,37 @@ export default class EventCard extends React.Component {
             <Typography
               type="largebody"
               style={{ fontWeight: 700 }}
-              color={toRgba(
-                chroma(themeColor)
-                  .saturate(2)
-                  .brighten(3)
-                  .rgba(),
-              )}
+              color={
+                soldOut
+                  ? '#DEDEDE'
+                  : toRgba(
+                      chroma(themeColor)
+                        .saturate(2)
+                        .brighten(3)
+                        .rgba(),
+                    )
+              }
             >
               {performer}
             </Typography>
             <Typography style={{ margin: 0 }} type="title" color="white">
               {name}
             </Typography>
+            {soldOut && (
+              <Typography
+                type="body"
+                color="#FF4B4B"
+                style={{ fontWeight: 700 }}
+              >
+                LOPPUUNMYYTY
+              </Typography>
+            )}
           </Content>
         </BackgroundImageGroup>
         {showBottomBar && (
           <BottomSection themeColor={themeColor}>
             <Typography type="body" color="white">
-              {location} •{' '}
+              {area} •{' '}
             </Typography>
             <Typography type="body" color="white">
               {eventDate} |{' '}
@@ -218,17 +243,20 @@ export default class EventCard extends React.Component {
               {eventTime}
             </Typography>
             <br />
-            {ageGroupLimit && (
+            {ageGroupLimits && (
               <Typography type="body" color="white">
-                Ikäsuositus: {ageGroupLimit} v.
+                Ikäsuositus: {ageGroupLimits.join(', ')} v.
               </Typography>
             )}
+            <EventTypeLabel type="body" color="white">
+              {eventType}
+            </EventTypeLabel>
           </BottomSection>
         )}
         {this.props.active && (
           <React.Fragment>
             <BackButton
-              backgroundColor="rgba(0,0,0, .4)"
+              backgroundColor="rgba(0,0,0, .6)"
               icon="arrow-left"
               onClick={this.props.onDeselect}
               onTouchEnd={this.props.onDeselect}
