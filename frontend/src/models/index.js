@@ -214,10 +214,16 @@ export const RootModel = types
       if (!resolvedEvent)
         throw new Error('UpdateAvailableSeat failed. Cant find the event');
       const resolveTicketType = resolvedEvent.ticketCatalog.find(
-        catalogs => catalogs.id == ticketCatalogId,
+        catalogs => catalogs.id === ticketCatalogId,
       );
       if (resolveTicketType.maxSeats < resolveTicketType.occupiedSeats + amount)
-        throw new Error('Invalid amount of seat');
+        throw new Error(
+          `Invalid amount of seat. There are max ${
+            resolveTicketType.maxSeats
+          }, and there are ${
+            resolveTicketType.occupiedSeats
+          } while you try to occupy ${amount} seats`,
+        );
       resolveTicketType.occupiedSeats += amount;
     },
     // order related actions
@@ -244,14 +250,6 @@ export const RootModel = types
           // setting UI state for success
           self.ui.orderAndPayment.redirectStatus = 2;
           self.ui.orderAndPayment.redirectUrl = result.redirect_url;
-          // reduce amount of ticket in the event
-          payload.tickets.forEach(ticket =>
-            self.updateAvailableSeat(
-              orderInfo.eventId,
-              ticket.price_id,
-              ticket.no_of_tickets,
-            ),
-          );
         } catch (error) {
           // setting UI error
           self.ui.orderAndPayment.redirectStatus = 3;
@@ -265,9 +263,11 @@ export const RootModel = types
             customer_type: orderInfo.customerGroup,
             event_id: orderInfo.eventId,
             school_name: orderInfo.school,
-            name: orderInfo.school + ' ' + orderInfo.class,
+            name: orderInfo.school + ' ' + orderInfo.classRoom,
             class: orderInfo.classRoom,
-            phone: orderInfo.phoneNumber,
+            phone: orderInfo.phoneNumber
+              .replace(/^0/, '+358')
+              .replace(/\s/g, ''),
             email: orderInfo.email,
             tickets: orderInfo.tickets.map(ticket => ({
               price_id: ticket.value,

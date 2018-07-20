@@ -204,12 +204,16 @@ export default class EventCard extends React.Component {
             <Typography
               type="largebody"
               style={{ fontWeight: 700 }}
-              color={toRgba(
-                chroma(themeColor)
-                  .saturate(2)
-                  .brighten(3)
-                  .rgba(),
-              )}
+              color={
+                soldOut
+                  ? '#DEDEDE'
+                  : toRgba(
+                      chroma(themeColor)
+                        .saturate(2)
+                        .brighten(3)
+                        .rgba(),
+                    )
+              }
             >
               {performer}
             </Typography>

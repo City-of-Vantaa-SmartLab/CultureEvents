@@ -23,14 +23,14 @@ export const ListItem = ({ style, color, iconName, title, content }) => (
       </Typography>
     </div>
     {React.isValidElement(content) ? (
-      <div>{content}</div>
+      <ul>{content}</ul>
     ) : (
       <Typography type="body">{content}</Typography>
     )}
   </StyledList>
 );
 const Wrapper = styled.ul`
-  padding: 0;
+  padding: 0.5rem;
   padding-top: 0.5rem;
   margin: 0;
 `;

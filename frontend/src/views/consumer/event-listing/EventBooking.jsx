@@ -100,22 +100,30 @@ const FormListItem = props => {
 // main class
 export default connect('store')(
   class EventBooking extends Component {
-    internalState = observable({
-      customerGroup: undefined,
-      tickets: [
-        {
-          id: 'first',
-          label: this.props.event.ticketCatalog[0].ticketDescription,
-          value: this.props.event.ticketCatalog[0].id,
-          amount: 0,
-        },
-      ],
-      phoneNumber: '',
-      name: '',
-      email: '',
-      classRoom: '',
-      school: '',
-    });
+    constructor(props) {
+      super(props);
+
+      const availableTicketType = props.event.ticketCatalog.find(
+        ticketType => ticketType.isAvailable,
+      );
+      this.internalState = observable({
+        customerGroup: undefined,
+        tickets: [
+          {
+            id: 'first',
+            label: availableTicketType && availableTicketType.ticketDescription,
+            value: availableTicketType && availableTicketType.id,
+            amount: 0,
+          },
+        ],
+        phoneNumber: '',
+        name: '',
+        email: '',
+        classRoom: '',
+        school: '',
+      });
+    }
+
     getPricingAggrevate = () => {
       return this.internalState.tickets.reduce(
         (acc, curr) => {

@@ -11,7 +11,7 @@ export default observer(
       if (catalog == undefined) {
         return 0;
       }
-      return catalog.maxSeats;
+      return catalog.maxSeats - catalog.occupiedSeats;
     };
     render() {
       const { tickets, ticketCatalog } = this.props;
@@ -22,6 +22,7 @@ export default observer(
             return (
               <FlexBoxHorizontal key={ticket.id || index}>
                 <InputField
+                  disabled={ticket.value === false}
                   placeholder="Lipputyppi"
                   value={ticket.label}
                   onChange={value => {
@@ -42,16 +43,15 @@ export default observer(
                   type="select"
                   data={ticketCatalog.map(catalog => {
                     const correspondingCatalog = tickets.find(
-                      elem => elem.value == catalog.id,
+                      elem => elem.value === catalog.id,
                     );
                     return {
                       label: catalog.ticketDescription,
                       value: catalog.id,
                       // option is diabled if it is present in other input
-                      disabled:
-                        correspondingCatalog &&
-                        correspondingCatalog.maxSeats <=
-                          correspondingCatalog.occupiedSeats,
+                      // or there is no available seats
+                      // @TODO fix the no available seat issue
+                      disabled: correspondingCatalog || !catalog.isAvailable,
                     };
                   })}
                   lightMode

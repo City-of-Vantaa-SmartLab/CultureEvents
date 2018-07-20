@@ -15,7 +15,6 @@ export default withTheme(
       };
       componentDidUpdate() {
         // if the signal is handled, do nothing
-        console.log(this.state);
         if (this.state.countDown < 1) {
           window.clearInterval(this.interval);
           window.location.assign(
