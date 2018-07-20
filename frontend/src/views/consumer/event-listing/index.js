@@ -29,7 +29,11 @@ const ContainerAnimation = posed.div({
     y: '-5%',
   },
 });
-const CardContainers = styled(ContainerAnimation)``;
+const CardContainers = styled(ContainerAnimation)`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
 const EmptyStateContainer = styled(ContainerAnimation)`
   width: 100%;
   height: 100%;
@@ -50,10 +54,8 @@ const EmptyStateContainer = styled(ContainerAnimation)`
 `;
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   width: 100%;
+  height: 100%;
   overflow: auto;
   padding: 1rem;
   background-image: linear-gradient(
