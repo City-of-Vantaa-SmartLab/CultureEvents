@@ -70,15 +70,17 @@ const Wrapper = styled.div`
     flex-grow: 0;
   }
 `;
-const filterByAgeGroup = age => events => {
-  return events.filter(event => event.ageGroupLimits === age);
+const filterByAgeGroup = ages => events => {
+  return events.filter(
+    event => event.ageGroupLimits.filter(ag => ages.includes(ag)).length > 0,
+  );
 };
-const filterByArea = area => events => {
-  return events.filter(event => event.area === area);
+const filterByArea = areas => events => {
+  return events.filter(event => areas.includes(event.area));
 };
-const filterByDate = month => events =>
-  events.filter(event => getMonth(event.date) === month);
-
+const filterByDate = months => events => {
+  return events.filter(event => months.includes(getMonth(event.eventDate) + 1));
+};
 const filterByEventType = eventType => events =>
   events.filter(event => event.eventType === eventType);
 
@@ -87,16 +89,17 @@ export default withTheme(
     class EventListing extends Component {
       render() {
         const { events, selectedEvent, filters } = this.props.store;
-        const { ageGroupLimits, area, eventType, date } = filters;
+        const { ageGroupLimits, areas, eventTypes, months } = filters;
         // @TODO: beware of performance cost
         // This might not be the best for performance
         // See if we can memoize the filter function
         const displayableEvents = pipeable(values(events)).pipe(
-          ageGroupLimits && filterByAgeGroup(ageGroupLimits),
-          area && filterByArea(area),
-          date && filterByDate(date),
-          eventType && filterByEventType(eventType),
+          ageGroupLimits.length > 0 && filterByAgeGroup(ageGroupLimits),
+          areas.length > 0 && filterByArea(areas),
+          months.length > 0 && filterByDate(months),
+          eventTypes.length > 0 && filterByEventType(eventTypes),
         );
+
         return (
           <Wrapper>
             <PoseGroup withParents={false} animateOnMount>

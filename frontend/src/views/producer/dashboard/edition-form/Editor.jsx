@@ -118,6 +118,7 @@ const TicketCatalogInputGroup = props => {
             type="number"
             onChange={props.updateTicketCatalogField(ticketType.id, 'price')}
             value={Number(ticketType.price)}
+            disabled={props.disabled}
           />
           <InputField
             backgroundColor={props.inputBackgroundColor}
@@ -133,6 +134,7 @@ const TicketCatalogInputGroup = props => {
               'ticketDescription',
             )}
             value={ticketType.ticketDescription}
+            disabled={props.disabled}
           />
           <InputField
             backgroundColor={props.inputBackgroundColor}
@@ -142,13 +144,18 @@ const TicketCatalogInputGroup = props => {
             type="number"
             onChange={props.updateTicketCatalogField(ticketType.id, 'maxSeats')}
             value={Number(ticketType.maxSeats)}
+            disabled={props.disabled}
           />
           <ButtonGroup style={{ flexShrink: 0 }}>
-            <RedButton onClick={props.removeTicketType(ticketType.id)}>
+            <RedButton
+              onClick={props.removeTicketType(ticketType.id)}
+              disabled={props.disabled}
+            >
               <Icon type="close" />
             </RedButton>
             {index === arr.length - 1 && (
               <GreenButton
+                disabled={props.disabled}
                 onClick={props.addTicketType}
                 onTouchEnd={props.addTicketType}
                 icon="plus"
@@ -399,6 +406,7 @@ class Editor extends React.Component {
             inputBackgroundColor={inputBackgroundColor}
             updateTicketCatalogField={this.updateTicketCatalogField}
             themeColor={this.internalData.eventDraft.themeColor}
+            disabled={!this.internalData.creationMode}
           />
           <Row fullsize>
             <InputField
