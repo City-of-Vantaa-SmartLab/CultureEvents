@@ -122,13 +122,15 @@ export class ReservationService {
 
   async getTotalAmount(reservation: ReservationsDto) {
     const event = await this.eventService.findOneById(reservation.event_id);
-    const amount = reservation.tickets.map(tickets => {
-      return (
-        tickets.no_of_tickets *
-        this.getTicketPrice(event.ticket_catalog, tickets.price_id)
-      );
-    });
-    return amount;
+    const total = await reservation.tickets.reduce((amount, ticket) => {
+      amount =
+        amount +
+        Number(ticket.no_of_tickets) *
+          Number(this.getTicketPrice(event.ticket_catalog, ticket.price_id));
+      return amount;
+    }, 0);
+
+    return total;
   }
 
   getTicketPrice(ticket_catalog: PriceDto[], id: number): number {
