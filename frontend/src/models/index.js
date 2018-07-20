@@ -73,6 +73,7 @@ const UI = types.model({
           ),
           0,
         ),
+        reservedEvent: types.maybe(types.reference(EventModel)),
       })
       .actions(self => {
         const clearOrderPendingFlag = () => {
@@ -81,6 +82,7 @@ const UI = types.model({
         };
         const clearReservationFlag = () => {
           self.reservationStatus = 0;
+          self.reservedEvent = null;
         };
 
         return { clearOrderPendingFlag, clearReservationFlag };
@@ -276,7 +278,7 @@ export const RootModel = types
           };
 
           const result = yield postReservation(payload);
-
+          self.ui.orderAndPayment.reservedEvent = result.event_id;
           payload.tickets.forEach(ticket =>
             self.updateAvailableSeat(
               orderInfo.eventId,

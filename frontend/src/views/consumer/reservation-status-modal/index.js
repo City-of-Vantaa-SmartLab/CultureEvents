@@ -13,8 +13,9 @@ const EventCardWrapper = styled.div`
     chroma(props.bgColor)
       .alpha(0.2)
       .css('rgba')};
-  padding: 2rem;
   border-radius: 0 0 8px 8px;
+  width: 100%;
+  display: flex;
 `;
 
 export default withTheme(
@@ -33,26 +34,31 @@ export default withTheme(
             onClear={orderAndPayment.clearReservationFlag}
           >
             {orderAndPayment.reservationStatus == 2 && (
-              <Content>
-                <Typography type="title" color={palette.deepGreen}>
-                  Varaus vahvistettu
-                  {
-                    <Icon
-                      type="check"
-                      style={{ fontSize: '1.5rem', marginLeft: '1rem' }}
-                    />
-                  }
-                </Typography>
-                <Typography type="body">
-                  Kiitos varauksestasi! Lähetämme varaustiedot antamaasi
-                  puhelinnumeroon tekstiviestillä.
-                </Typography>
-                {
-                  // have a card visualization here
-                  // to let user see what they reserved
-                }
-                <Redirect to="/consumer" />
-              </Content>
+              <React.Fragment>
+                <Content>
+                  <Typography type="title" color={palette.deepGreen}>
+                    Varaus vahvistettu
+                    {
+                      <Icon
+                        type="check"
+                        style={{ fontSize: '1.5rem', marginLeft: '1rem' }}
+                      />
+                    }
+                  </Typography>
+                  <Typography type="body">
+                    Kiitos varauksestasi! Lähetämme varaustiedot antamaasi
+                    puhelinnumeroon tekstiviestillä.
+                  </Typography>
+                  <Redirect to="/consumer" />
+                </Content>
+                {orderAndPayment.reservedEvent && (
+                  <EventCardWrapper
+                    bgColor={orderAndPayment.reservedEvent.themeColor}
+                  >
+                    <EventCard mini event={orderAndPayment.reservedEvent} />
+                  </EventCardWrapper>
+                )}
+              </React.Fragment>
             )}
             {orderAndPayment.reservationStatus == 3 && (
               <Content>
@@ -70,7 +76,7 @@ export default withTheme(
                 </Typography>
                 {
                   // have a card visualization here
-                  // to let user see what they reserved
+                  // insert a sorrowful image to show how sorry we are
                 }
               </Content>
             )}

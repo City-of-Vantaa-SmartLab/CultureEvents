@@ -13,10 +13,10 @@ import Button from '../../../components/button';
 
 const ContainerAnimation = posed.div({
   enter: {
-    delay: 600,
+    delay: 300,
     scale: 1,
     opacity: 1,
-    staggerChildren: 300,
+    staggerChildren: 500,
   },
   exit: {
     delay: 300,
