@@ -234,7 +234,7 @@ export class PaymentController {
             `Failed to make payment for the request: Could not make payment request with Bambora`,
           );
       }
-      response.status(301).redirect(redirectUrl);
+      response.status(200).json({ redirect_url: redirectUrl });
     } catch (error) {
       return response
         .status(500)

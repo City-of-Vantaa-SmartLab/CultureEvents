@@ -210,11 +210,15 @@ export const RootModel = types
       self.ui.filterViewActive = !self.ui.filterViewActive;
     },
     updateAvailableSeat: (eventId, ticketCatalogId, amount) => {
-      const ticketCatalog =
-        self.events[eventId].ticketCatalogs[ticketCatalogId];
-      if (ticketCatalog.maxSeats < ticketCatalog.occupiedSeats + amount)
+      const resolvedEvent = resolveIdentifier(EventModel, self.events, eventId);
+      if (!resolvedEvent)
+        throw new Error('UpdateAvailableSeat failed. Cant find the event');
+      const resolveTicketType = resolvedEvent.ticketCatalog.find(
+        catalogs => catalogs.id == ticketCatalogId,
+      );
+      if (resolveTicketType.maxSeats < resolveTicketType.occupiedSeats + amount)
         throw new Error('Invalid amount of seat');
-      ticketCatalog.occupiedSeats += amount;
+      resolveTicketType.occupiedSeats += amount;
     },
     // order related actions
     submitOrder: flow(function*(orderInfo) {

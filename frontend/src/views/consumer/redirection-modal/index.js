@@ -15,11 +15,17 @@ export default withTheme(
       };
       componentDidUpdate() {
         // if the signal is handled, do nothing
+        console.log(this.state);
+        if (this.state.countDown < 1) {
+          window.clearInterval(this.interval);
+          window.location.assign(
+            this.props.store.ui.orderAndPayment.redirectUrl,
+          );
+        }
         if (this.state.redirectingLocally) return;
         // when there is a redirecting signal from state, this components initiate a countdown
         // when the countdown hits 0, it will redirect
-        if (this.props.store.ui.orderAndPayment.redirecting) {
-          console.log('Handling redirect signal');
+        if (this.props.store.ui.orderAndPayment.redirectStatus === 2) {
           this.setState(
             {
               countDown: 5,
@@ -36,13 +42,6 @@ export default withTheme(
         } else if (this.state.redirectingLocally) {
           this.setState({ redirectingLocally: false });
         } // signal has been cleared from modal. Stop redirection
-
-        if (this.state.countDown < 1) {
-          window.clearInterval(this.interval);
-          window.location.replace(
-            this.props.store.ui.orderAndPayment.redirectUrl,
-          );
-        }
       }
       componentWillUnmount() {
         window.clearInterval(this.interval);
@@ -59,7 +58,7 @@ export default withTheme(
               window.clearInterval(this.interval);
             }}
           >
-            {orderAndPayment.redirectStatus == 2 && (
+            {orderAndPayment.redirectStatus === 2 && (
               <Content>
                 <Typography type="title" color={palette.primaryDark}>
                   Redirecting{' '}
