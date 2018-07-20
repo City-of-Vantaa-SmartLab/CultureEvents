@@ -15,14 +15,13 @@ const Sliddable = posed.div({
   },
   enter: {
     y: '0%',
-    transition: tween,
     transition: props =>
       tween({ ...props, duration: 700, ease: easing.easeOut }),
   },
 });
 
 const Wrapper = styled(Sliddable)`
-  position: fixed;
+  position: absolute;
   overflow-y: scroll;
   overflow-x: hidden;
   top: 0;
@@ -37,7 +36,8 @@ const ScrollContainer = styled.div`
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: auto;
+  min-height: 100%;
   width: 100%;
   padding: 2rem 1rem;
   padding-top: 9rem;
