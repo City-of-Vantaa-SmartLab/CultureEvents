@@ -78,7 +78,7 @@ export class ReservationsController {
           .status(422)
           .json(`Failed to update reservation as completed`);
       }
-      return response.status(201).json(reservation);
+      return response.status(200).json(reservation);
     } catch (error) {
       return response
         .status(500)
