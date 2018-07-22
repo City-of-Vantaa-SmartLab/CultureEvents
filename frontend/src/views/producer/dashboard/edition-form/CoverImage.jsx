@@ -6,7 +6,7 @@ import { connect } from '../../../../utils';
 import Spin from 'antd/lib/spin';
 import 'antd/dist/antd.css';
 
-const BASE_URL = 'http://' + window.location.host;
+const BASE_URL = 'https://' + window.location.host;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
