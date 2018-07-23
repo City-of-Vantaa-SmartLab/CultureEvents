@@ -40,7 +40,7 @@ const ScrollContainer = styled.div`
   height: 100%;
   width: 100%;
   padding: 2rem 1rem;
-  padding-top: 7rem;
+  padding-top: 9rem;
 
   & > div {
     margin: 0.5rem;
@@ -120,13 +120,13 @@ export default withTheme(
         this.props.store.filters.setFilters('ageGroupLimits', value);
       };
       setAreaFilter = value => {
-        this.props.store.filters.setFilters('area', value);
+        this.props.store.filters.setFilters('areas', value);
       };
       setDateFilter = value => {
-        this.props.store.filters.setFilters('date', value);
+        this.props.store.filters.setFilters('months', value);
       };
       setEventTypeFilter = value => {
-        this.props.store.filters.setFilters('eventType', value);
+        this.props.store.filters.setFilters('eventTypes', value);
       };
 
       render() {
@@ -144,6 +144,7 @@ export default withTheme(
                   value={store.filters.ageGroupLimits}
                   onChange={this.setAgeGroupFilter}
                   highlightColor={theme.palette.primaryDeep}
+                  multiple
                   tags={[
                     { value: '0-3', label: '0-3' },
                     { value: '3-6', label: '3-6' },
@@ -155,7 +156,8 @@ export default withTheme(
               <div>
                 <Typography type="subheader">Alue</Typography>
                 <TagPillGroup
-                  value={store.filters.area}
+                  multiple
+                  value={store.filters.areas}
                   onChange={this.setAreaFilter}
                   highlightColor={theme.palette.primaryDeep}
                   tags={AREA.map(a => ({ value: a, label: a }))}
@@ -164,8 +166,9 @@ export default withTheme(
               <div>
                 <Typography type="subheader">Päivämäärä</Typography>
                 <TagPillGroup
+                  multiple
                   highlightColor={theme.palette.primaryDeep}
-                  value={store.filters.date}
+                  value={store.filters.months}
                   onChange={this.setDateFilter}
                   tags={MONTHS}
                 />
@@ -173,7 +176,8 @@ export default withTheme(
               <div>
                 <Typography type="subheader">Tapahtuminen Typpi</Typography>
                 <TagPillGroup
-                  value={store.filters.eventType}
+                  multiple
+                  value={store.filters.eventTypes}
                   onChange={this.setEventTypeFilter}
                   highlightColor={theme.palette.primaryDeep}
                   tags={EVENT_TYPES.map(v => ({ value: v, label: v }))}

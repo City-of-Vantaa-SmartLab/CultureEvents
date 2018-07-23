@@ -107,7 +107,6 @@ export default observer(
               highlightColor={highlightColor}
               selected={this.isChildSelected(tag)}
               onClick={this.onChildClick(tag.value)}
-              onTouchEnd={this.onChildClick(tag.value)}
               key={index}
               {...tag.tagProps}
             >
