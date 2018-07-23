@@ -57,7 +57,6 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   overflow: auto;
-  padding: 1rem;
   background-image: linear-gradient(
     to top,
     #d5d4d0 0%,

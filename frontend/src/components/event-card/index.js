@@ -64,7 +64,7 @@ const Wrapper = styled(WrapperBase)`
   background-color: white;
   will-change: transform;
   transition: box-shadow 0.5s ease;
-  max-width: ${props => (props.expanded ? '100vw' : '25rem')};
+  max-width: ${props => (props.expanded ? '100vw' : '30rem')};
 
   &:hover {
     box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.3);

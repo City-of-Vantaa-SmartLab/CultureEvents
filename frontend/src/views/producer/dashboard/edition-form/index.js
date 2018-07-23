@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   flex-basis: 35rem;
   position: relative;
+  overflow-y: auto;
 `;
 
 class EditionForm extends React.Component {

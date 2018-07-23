@@ -73,6 +73,9 @@ const postReservation = orderInfo => {
   });
 };
 
+const getReservations = async () =>
+  parseTo('camel')(await customFetchFn(`/api/reservations`));
+
 export {
   fetchEvents,
   postEvent,
@@ -81,4 +84,5 @@ export {
   getPaymentRedirectUrl,
   validateUserToken,
   postReservation,
+  getReservations,
 };
