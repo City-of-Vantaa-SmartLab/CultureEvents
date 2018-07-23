@@ -6,7 +6,6 @@ import Button from '../../../components/button';
 import { connect } from '../../../utils';
 import posed, { PoseGroup } from 'react-pose';
 import { tween } from 'popmotion';
-import { values } from 'mobx';
 import { format } from 'date-fns';
 import fiLocale from 'date-fns/locale/fi';
 
@@ -34,6 +33,7 @@ const Wrapper = styled(Sliddable)`
 const LeftBox = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 2rem;
   svg {
     width: 3rem;
     height: auto;
@@ -44,6 +44,16 @@ const LeftBox = styled.div`
     margin: 0;
     font-weight: 700;
     line-height: 1;
+  }
+  * {
+    flex-shrink: 0;
+  }
+  .button-container {
+    display: flex;
+    align-items: center;
+    button {
+      margin-right: 0.5rem;
+    }
   }
 `;
 
@@ -65,10 +75,16 @@ const FilterStrings = ({ filters }) => {
   return (
     <FlexBox>
       {Object.keys(filters)
-        .filter(f => filters[f] !== null)
+        .filter(f => filters[f] !== null && filters[f].length > 0)
         .map((key, index, arr) => {
           let value = filters[key];
-          if (key == 'date') {
+
+          if (value.length > 1) {
+            if (key === 'areas') value = `${value.length} aluetta`;
+            if (key === 'months') value = `${value.length} kuukautta`;
+            if (key === 'ageGroupLimits') value = value.join(', ');
+            if (key === 'eventTypes') value = `${value.length} typpia`;
+          } else if (key == 'months') {
             value = format(new Date(2018, filters[key] - 1, 5), 'MMMM YYYY', {
               locale: fiLocale,
             });
@@ -102,14 +118,12 @@ export default withTheme(
             {!filters.hasActiveFilter ? (
               <Wrapper key="app-bar-no-filter" bgColor={theme.palette.primary}>
                 <LogoBox />
-                <div>
-                  <Button
-                    backgroundColor={theme.palette.primaryDeep}
-                    onClick={this.props.store.toggleFilterView}
-                  >
-                    Rajaa hakua
-                  </Button>
-                </div>
+                <Button
+                  backgroundColor={theme.palette.primaryDeep}
+                  onClick={this.props.store.toggleFilterView}
+                >
+                  Rajaa hakua
+                </Button>
               </Wrapper>
             ) : (
               <Wrapper
@@ -119,9 +133,16 @@ export default withTheme(
                 <LeftBox
                   style={{ flexDirection: 'column', alignItems: 'flex-start' }}
                 >
-                  <Typography type="subheader" color="white">
-                    Rajaa hakua
-                  </Typography>
+                  <div className="button-container">
+                    <Button
+                      icon="arrow-left"
+                      backgroundColor="transparent"
+                      onClick={store.toggleFilterView}
+                    />
+                    <Typography type="subheader" color="white">
+                      Rajaa hakua
+                    </Typography>
+                  </div>
                   <FilterStrings filters={filters.toJSON()} />
                 </LeftBox>
                 <Button

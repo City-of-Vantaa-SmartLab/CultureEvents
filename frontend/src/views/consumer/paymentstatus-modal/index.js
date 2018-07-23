@@ -12,8 +12,9 @@ const EventCardWrapper = styled.div`
     chroma(props.bgColor)
       .alpha(0.2)
       .css('rgba')};
-  padding: 2rem;
   border-radius: 0 0 8px 8px;
+  width: 100%;
+  display: flex;
 `;
 
 export default withTheme(

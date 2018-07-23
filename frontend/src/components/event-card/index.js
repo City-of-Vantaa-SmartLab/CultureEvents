@@ -14,6 +14,8 @@ const WrapperBase = posed.div({
     flip: true,
     transition: tween,
     borderRadius: 14,
+    top: 'initial',
+    bottom: 'initial',
   },
   expanded: {
     height: '100vh',
@@ -56,11 +58,13 @@ const Wrapper = styled(WrapperBase)`
   position: ${props => (props.expanded ? 'fixed' : 'relative')};
   z-index: ${props => (props.expanded ? 100 : 1)};
   overflow-y: ${props => (props.expanded ? 'auto' : 'hidden')};
+  margin: ${props => (props.expanded ? '0' : '1rem')};
   overflow-x: hidden;
   cursor: pointer;
   background-color: white;
   will-change: transform;
   transition: box-shadow 0.5s ease;
+  max-width: ${props => (props.expanded ? '100vw' : '25rem')};
 
   &:hover {
     box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.3);
@@ -187,7 +191,7 @@ export default class EventCard extends React.Component {
         className={className}
         expanded={active && expandable && !mini}
         onClick={e => {
-          !mini && this.props.onSelect(e);
+          !mini && !active && this.props.onSelect(e);
         }}
         mini={mini}
         pose={active && expandable ? 'expanded' : 'normal'}
