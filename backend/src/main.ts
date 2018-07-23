@@ -12,7 +12,7 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api');
-
+  app.useStaticAssets(path.resolve(__dirname + '/../public'));
   app.use('/app/**', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
   });

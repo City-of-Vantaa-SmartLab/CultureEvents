@@ -65,6 +65,27 @@ export class ReservationsController {
     }
   }
 
+  @Post('/mark-complete')
+  @UsePipes(new ValidationPipe())
+  async mark_complete(@Res() response, @Body() id: number) {
+    try {
+      const reservation = await this.reservationsService.updatePaymentStatus(
+        id,
+        true,
+      );
+      if (!reservation.payment_completed) {
+        return response
+          .status(422)
+          .json(`Failed to update reservation as completed`);
+      }
+      return response.status(200).json(reservation);
+    } catch (error) {
+      return response
+        .status(500)
+        .json(`Failed to update reservation as completed : ${error.message}`);
+    }
+  }
+
   @Get(':id')
   @ApiImplicitParam({
     name: 'id',
