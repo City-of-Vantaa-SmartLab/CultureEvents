@@ -1,4 +1,5 @@
 import axios from 'axios';
+const PhoneNumber = require('awesome-phonenumber');
 
 const teliaEndPoint = 'https://ws.mkv.telia.fi/restsms/lekabrest/send';
 const teliaUsername = process.env.TELIA_USERNAME;
@@ -8,6 +9,8 @@ const teliaUser = process.env.TELIA_USER;
 export class SMSService {
   async sendMessageToUser(phoneNumber, user, message) {
     try {
+      const formattedPhoneNumber = new PhoneNumber(phoneNumber, 'FI');
+      phoneNumber = formattedPhoneNumber.getNumber();
       console.log(`Sending sms for user ${user} to number ${phoneNumber}`);
       const request = this.generateTeliaMessageRequest(phoneNumber, message);
       const response = await axios.post(teliaEndPoint, request);
