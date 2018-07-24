@@ -19,7 +19,7 @@ export default class App extends React.Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
           <Switch>
             <Route path="/producer" component={LazyProducerUI} />
             <Route path="/consumer" component={LazyConsumerUI} />

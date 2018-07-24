@@ -17,7 +17,7 @@ import { ValidationService } from '../utils/validations/validations.service';
 import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
 
 @ApiUseTags('reservations')
-@Controller('reservations')
+@Controller('/api/reservations')
 export class ReservationsController {
   constructor(
     private readonly reservationsService: ReservationService,

@@ -18,7 +18,7 @@ import { AuthService } from 'auth/auth.service';
 import { ApiUseTags } from '@nestjs/swagger';
 
 @ApiUseTags('user')
-@Controller('user')
+@Controller('/api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

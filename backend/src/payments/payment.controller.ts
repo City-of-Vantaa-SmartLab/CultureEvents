@@ -20,10 +20,12 @@ import {
   ApiImplicitParam,
 } from '@nestjs/swagger';
 import { ReservationsDto } from '../reservations/reservations.dto';
+
 const APP_REDIRECT_URL =
   process.env.APP_REDIRECT_URL || '/app/payment-complete';
+
 @ApiUseTags('payments')
-@Controller('payments')
+@Controller('/api/payments')
 export class PaymentController {
   constructor(
     private readonly paymentService: PaymentService,

@@ -51,7 +51,7 @@ class CoverImage extends React.Component {
       const userToken = await this.props.store.getUserToken();
       const formData = new FormData();
       formData.append('upload', file);
-      const response = await window.fetch(BASE_URL + '/fileupload', {
+      const response = await window.fetch(BASE_URL + '/api/fileupload', {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ import { AuthModule } from 'auth/auth.module';
 import { PaymentModule } from 'payments/payment.module';
 import { SeedModule } from 'seed-db/seed.module';
 import { FileUploadModule } from 'fileupload/fileupload.module';
+import { FrontendMiddleware } from 'middleware/frontend.middleware';
 
 @Module({
   imports: [
@@ -25,6 +26,8 @@ import { FileUploadModule } from 'fileupload/fileupload.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  constructor(private readonly connection: Connection) {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(FrontendMiddleware).forRoutes('/**');
+  }
 }
