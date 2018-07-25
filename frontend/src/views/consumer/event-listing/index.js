@@ -16,24 +16,18 @@ const ContainerAnimation = posed.div({
     delay: 300,
     scale: 1,
     opacity: 1,
-    staggerChildren: 500,
   },
   exit: {
     delay: 300,
     scale: 0,
     opacity: 0,
-    staggerChildren: 200,
   },
   preEnter: {
     scale: 0,
     y: '-5%',
   },
 });
-const CardContainers = styled(ContainerAnimation)`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-`;
+const CardContainers = styled(ContainerAnimation)``;
 const EmptyStateContainer = styled(ContainerAnimation)`
   width: 100%;
   height: 100%;
@@ -57,6 +51,9 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   overflow: auto;
+  padding: 1rem;
+  -webkit-overflow-scroll: touch;
+
   background-image: linear-gradient(
     to top,
     #d5d4d0 0%,
@@ -105,22 +102,20 @@ export default withTheme(
           <Wrapper>
             <PoseGroup withParents={false} animateOnMount>
               {displayableEvents.length > 0 ? (
-                <CardContainers key="card-container">
-                  {displayableEvents.map((event, index) => (
-                    <EventCard
-                      expandable
-                      active={selectedEvent && selectedEvent.id == event.id}
-                      style={{ marginBottom: '0.7rem' }}
-                      key={event.id}
-                      event={event}
-                      onSelect={() => this.props.store.selectEvent(event.id)}
-                      onDeselect={this.props.store.deselectEvent}
-                    >
-                      <EventDetail event={event} />
-                      <EventBooking event={event} />
-                    </EventCard>
-                  ))}
-                </CardContainers>
+                displayableEvents.map((event, index) => (
+                  <EventCard
+                    expandable
+                    active={selectedEvent && selectedEvent.id == event.id}
+                    style={{ marginBottom: '0.7rem' }}
+                    key={event.id}
+                    event={event}
+                    onSelect={() => this.props.store.selectEvent(event.id)}
+                    onDeselect={this.props.store.deselectEvent}
+                  >
+                    <EventDetail event={event} />
+                    <EventBooking event={event} />
+                  </EventCard>
+                ))
               ) : (
                 <EmptyStateContainer key={'emptyState'}>
                   <NotFoundIcon />

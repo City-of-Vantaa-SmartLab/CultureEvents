@@ -18,8 +18,8 @@ const WrapperBase = posed.div({
     bottom: 'initial',
   },
   expanded: {
-    height: '100vh',
-    width: '100vw',
+    height: '100%',
+    width: '100%',
     left: 0,
     top: 0,
     borderRadius: 0,
@@ -55,10 +55,11 @@ const BoxImageAnimation = posed.div({
 });
 
 const Wrapper = styled(WrapperBase)`
-  position: ${props => (props.expanded ? 'fixed' : 'relative')};
+  position: ${props => (props.expanded ? 'absolute' : 'relative')};
   z-index: ${props => (props.expanded ? 100 : 1)};
   overflow-y: ${props => (props.expanded ? 'auto' : 'hidden')};
-  margin: ${props => (props.expanded ? '0' : '1rem')};
+  -webkit-overflow-scroll: touch;
+  margin: 0;
   overflow-x: hidden;
   cursor: pointer;
   background-color: white;

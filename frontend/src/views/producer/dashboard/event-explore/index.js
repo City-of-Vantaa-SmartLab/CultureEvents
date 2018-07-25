@@ -5,6 +5,7 @@ import Typography from '../../../../components/typography';
 import { connect } from '../../../../utils';
 
 const Wrapper = styled.div`
+  padding: 1rem;
   padding-top: calc(3rem + 5rem);
   height: 100%;
   width: 25rem;

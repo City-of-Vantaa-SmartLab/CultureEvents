@@ -10,17 +10,20 @@ import { tween, easing } from 'popmotion';
 const Sliddable = posed.div({
   exit: {
     y: '100%',
+    opacity: 0,
     transition: props =>
       tween({ ...props, duration: 300, ease: easing.easeIn }),
   },
   enter: {
     y: '0%',
+    opacity: 1,
     transition: props =>
       tween({ ...props, duration: 700, ease: easing.easeOut }),
   },
 });
 
 const Wrapper = styled(Sliddable)`
+  opacity: 0;
   position: absolute;
   overflow-y: scroll;
   overflow-x: hidden;

@@ -11,22 +11,10 @@ import TicketInputSet from './TicketInputSet';
 import posed from 'react-pose';
 import { AsYouType, isValidNumber } from 'libphonenumber-js';
 
-// posed components
-const Collapsible = posed.div({
-  collapsed: {
-    opacity: 0,
-    height: 0,
-    flip: true,
-  },
-  natural: {
-    opacity: 1,
-    height: '100%',
-    flip: true,
-  },
-});
 // styled componnents
 const Wrapper = styled.div`
   padding: 1rem;
+  padding-bottom: 3rem;
   margin-top: 1rem;
   width: 100%;
   background-color: ${props =>
@@ -64,7 +52,7 @@ const CustomerGroupButton = styled(Button)`
     border-radius: 8px;
   }
 `;
-const FlexBoxHorizontal = styled(Collapsible)`
+const FlexBoxHorizontal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -90,9 +78,7 @@ const FormListItem = props => {
   return (
     <FormListItemWrapper>
       <Typography type="largebody">{props.title}</Typography>
-      <Collapsible pose={props.disabled ? 'collapsed' : 'natural'}>
-        {props.children}
-      </Collapsible>
+      <div>{props.disabled || props.children}</div>
     </FormListItemWrapper>
   );
 };
@@ -180,7 +166,6 @@ export default connect('store')(
                   isGroupConductorCustomer ? themeColor : 'white'
                 }
                 onClick={e => (internalState.customerGroup = 'group')}
-                onTouchEnd={e => (internalState.customerGroup = 'group')}
               >
                 Ryhmänohjaaja
                 {isGroupConductorCustomer && <Icon type="check" />}
@@ -188,7 +173,6 @@ export default connect('store')(
               <CustomerGroupButton
                 disabled={formDisabled}
                 onClick={e => (internalState.customerGroup = 'private')}
-                onTouchEnd={e => (internalState.customerGroup = 'private')}
                 backgroundColor={isPrivateCustomer ? themeColor : 'white'}
               >
                 Yksityishenkilö
@@ -291,7 +275,6 @@ export default connect('store')(
                   disabled={!submittable}
                   icon={isReservationPending && 'loading'}
                   onClick={this.submit}
-                  onTouchEnd={this.submit('reservation')}
                 >
                   VARAA LIPUT
                 </Button>
@@ -301,7 +284,6 @@ export default connect('store')(
                 backgroundColor={themeColor}
                 disabled={!submittable}
                 onClick={this.submit}
-                onTouchEnd={this.submit('payment')}
               >
                 OSTA LIPUT
               </Button>
