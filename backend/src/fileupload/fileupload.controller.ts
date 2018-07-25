@@ -13,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags, ApiImplicitParam, ApiResponse } from '@nestjs/swagger';
 
 @ApiUseTags('fileupload')
-@Controller('fileupload')
+@Controller('/api/fileupload')
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
   @Post()

@@ -11,12 +11,6 @@ async function bootstrap() {
     res.redirect('/app/');
   });
 
-  app.setGlobalPrefix('api');
-  app.useStaticAssets(path.resolve(__dirname + '/../public'));
-  app.use('/app/**', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
-  });
-
   const options = new DocumentBuilder()
     .setTitle('Vantaa Culture Events')
     .setDescription('API description')

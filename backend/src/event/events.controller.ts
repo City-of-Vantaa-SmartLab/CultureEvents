@@ -21,7 +21,7 @@ import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
 import { ReservationService } from 'reservations/reservations.service';
 
 @ApiUseTags('events')
-@Controller('events')
+@Controller('/api/events')
 export class EventsController {
   constructor(
     private readonly eventsService: EventsService,
