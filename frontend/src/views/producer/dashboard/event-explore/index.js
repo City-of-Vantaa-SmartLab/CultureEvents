@@ -16,6 +16,11 @@ const Wrapper = styled.div`
   top: 0;
   z-index: 10;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  & > * {
+    width: auto !important;
+  }
 `;
 const WrapperFlat = styled(Wrapper)`
   position: relative;

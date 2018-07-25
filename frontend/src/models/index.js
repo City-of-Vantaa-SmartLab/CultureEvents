@@ -9,9 +9,11 @@ import {
   getPaymentRedirectUrl,
   validateUserToken,
   postReservation,
+  getReservations,
 } from '../apis';
 import { removeIdRecursively } from '../utils';
 import FilterModel from './filter';
+import ReservationAndOrder from './bookingsAndOrders';
 
 const transformToMap = (arr = []) => {
   const result = arr.reduce((accumulator, current) => {
@@ -98,6 +100,7 @@ export const RootModel = types
     user: types.optional(User, {}),
     ui: types.optional(UI, {}),
     filters: types.optional(FilterModel, {}),
+    reservationsAndOrders: types.maybe(types.map(ReservationAndOrder)),
   })
   .actions(self => ({
     // hooks
@@ -114,6 +117,7 @@ export const RootModel = types
       if (self.user.token) self.validateToken();
       // fetch event list from remote
       self.fetchEvents();
+      self.fetchReservationsAndOrders();
     },
     // event actions
     selectEvent: id => (self.selectedEvent = id),
@@ -292,6 +296,15 @@ export const RootModel = types
           console.error(error);
           self.ui.orderAndPayment.reservationStatus = 3;
         }
+      }
+    }),
+    fetchReservationsAndOrders: flow(function*() {
+      try {
+        // @TODO: UI state for fetching reservations
+        const result = yield getReservations();
+        self.reservationsAndOrders = transformToMap(result);
+      } catch (error) {
+        console.error(error);
       }
     }),
   }))

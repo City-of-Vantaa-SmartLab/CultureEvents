@@ -41,10 +41,13 @@ export const Wrapper = styled.div`
       margin-bottom: 0;
     }
   `};
+  & input {
+    font-size: 16px !important;
+  }
 `;
 
 export default class InputField extends React.Component {
-  getChildrenFromType = inputType => {
+  getChildrenFromType = () => {
     // @TODO: This is confusing. either inputType or type
     const {
       horizontal,
@@ -55,7 +58,7 @@ export default class InputField extends React.Component {
       ...inputProps
     } = this.props;
     // @TODO: consider using SWITCH statement
-    if (inputType === 'textarea')
+    if (type === 'textarea')
       return (
         <TextArea
           className={inputClassName}
@@ -63,23 +66,31 @@ export default class InputField extends React.Component {
           {...inputProps} // @TODO: explicit passage of props to make it easier to be understood
         />
       );
-    if (inputType === 'number')
+    if (type === 'number')
       return (
         <NumericInput
           className={inputClassName}
           style={inputStyle}
+          autoFocus={false}
+          autofocus={false}
           {...inputProps}
         />
       );
-    if (inputType === 'select')
+    if (type === 'select')
       return (
-        <Select className={inputClassName} style={inputStyle} {...inputProps} />
+        <Select
+          className={inputClassName}
+          style={inputStyle}
+          {...inputProps}
+          autoFocus={false}
+        />
       );
     else
       return (
         <Input
           className={inputClassName}
           style={inputStyle}
+          autoFocus={false}
           {...inputProps}
           type={type}
         />
@@ -104,9 +115,7 @@ export default class InputField extends React.Component {
         >
           {label}
         </Label>
-        {this.props.children
-          ? this.props.children
-          : this.getChildrenFromType(type)}
+        {this.props.children ? this.props.children : this.getChildrenFromType()}
       </Wrapper>
     );
   }
