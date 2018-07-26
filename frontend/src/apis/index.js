@@ -1,9 +1,6 @@
 import { parseTo } from '../utils';
 
-const BASE_PATH =
-  (window.location.protocol == 'https' ? 'https' : 'http') +
-  '://' +
-  window.location.host;
+const BASE_PATH = window.location.protocol + '//' + window.location.host;
 
 const customFetchFn = async (url, config = {}, authToken) => {
   const response = await window.fetch(BASE_PATH + url, {
