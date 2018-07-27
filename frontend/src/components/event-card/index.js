@@ -63,7 +63,7 @@ const Wrapper = styled(WrapperBase)`
   overflow-x: hidden;
   cursor: pointer;
   background-color: white;
-  will-change: transform;
+  will-change: transform, left, top;
   max-width: ${props => (props.expanded ? '100vw' : '30rem')};
 `;
 
@@ -84,7 +84,7 @@ const Decorator = styled.div`
   background-repeat: no-repeat;
   height: 100%;
   filter: blur(8px);
-  will-change: clip-path;
+  will-change: transform, clip-path;
   transition: clip-path 0.7s cubic-bezier(.94,.02,.33,1);
   clip-path: ${props =>
     !props.expanded
@@ -100,13 +100,14 @@ const Decorator = styled.div`
     left: 0;
     top: 0;
     opacity: 0.5;
-    z-index: 6; 
+    z-index: 10; 
     transform: scale(1.3);
   }
 `;
 
 const BackgroundImg = styled.div`
   background: url('${props => props.coverImage}');
+  will-change: transform;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
