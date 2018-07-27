@@ -72,7 +72,6 @@ export default class InputField extends React.Component {
           className={inputClassName}
           style={inputStyle}
           autoFocus={false}
-          autofocus={false}
           {...inputProps}
         />
       );

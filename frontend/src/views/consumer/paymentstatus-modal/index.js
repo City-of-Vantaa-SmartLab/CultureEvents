@@ -15,6 +15,7 @@ const EventCardWrapper = styled.div`
   border-radius: 0 0 8px 8px;
   width: 100%;
   display: flex;
+  padding: 1rem;
 `;
 
 export default withTheme(
