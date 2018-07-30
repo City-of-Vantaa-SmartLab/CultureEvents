@@ -114,7 +114,7 @@ export default connect('store')(
       return this.internalState.tickets.reduce(
         (acc, curr) => {
           const targetCatalog = this.props.event.ticketCatalog.find(
-            elem => elem.id == curr.value,
+            elem => elem.id === curr.value,
           );
           if (targetCatalog) {
             const singlePrice = targetCatalog.price;
@@ -131,7 +131,6 @@ export default connect('store')(
       );
     };
     submit = type => e => {
-      console.log('Hello');
       this.props.store.submitOrder({
         ...toJS(this.internalState),
         type,

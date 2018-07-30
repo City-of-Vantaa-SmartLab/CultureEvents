@@ -15,6 +15,7 @@ const WrapperBase = posed.div({
     transition: tween,
     top: 'initial',
     bottom: 'initial',
+    borderRadius: 12,
   },
   expanded: {
     height: '100%',
@@ -22,6 +23,7 @@ const WrapperBase = posed.div({
     left: 0,
     top: 0,
     flip: true,
+    borderRadius: 0,
   },
 });
 

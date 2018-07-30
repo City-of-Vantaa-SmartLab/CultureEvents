@@ -13,7 +13,7 @@ import {
 } from '../apis';
 import { removeIdRecursively } from '../utils';
 import FilterModel from './filter';
-import ReservationAndOrder from './bookingsAndOrders';
+import ReservationAndOrder from './reservationAndOrder';
 
 const transformToMap = (arr = []) => {
   const result = arr.reduce((accumulator, current) => {
@@ -84,7 +84,7 @@ const UI = types.model({
         };
         const clearReservationFlag = () => {
           self.reservationStatus = 0;
-          self.reservedEvent = null;
+          self.reservedEvent = undefined;
         };
 
         return { clearOrderPendingFlag, clearReservationFlag };
@@ -112,18 +112,22 @@ export const RootModel = types
       // } catch (error) {
       //   console.log('Failed to apply snapshot');
       // }
-      // self.selectedEvent = null;
+      // self.selectedEvent = undefined;
       // validate token access (only happen in Producer)
-      if (self.user.token) self.validateToken();
-      // fetch event list from remote
-      self.fetchEvents();
-      self.fetchReservationsAndOrders();
+      if (process.env.NODE_ENV !== 'test') {
+        // don't run async functions during test
+        if (self.user.token) self.validateToken();
+        // fetch event list from remote
+        self.fetchEvents();
+        self.fetchReservationsAndOrders();
+      }
     },
     // event actions
     selectEvent: id => (self.selectedEvent = id),
     deselectEvent: () => {
-      if (self.selectedEvent) self.selectedEvent = null;
+      if (self.selectedEvent) self.selectedEvent = undefined;
     },
+    findEvent: id => resolveIdentifier(EventModel, self.events, id),
     fetchEvents: flow(function*() {
       try {
         self.ui.eventList.fetching = true;
@@ -192,7 +196,7 @@ export const RootModel = types
       }
     }),
     logout: () => {
-      self.user.token = null;
+      self.user.token = undefined;
     },
     validateToken: flow(function*() {
       self.ui.auth.validateTokenInProgress = true;
@@ -202,7 +206,7 @@ export const RootModel = types
         self.ui.auth.validateTokenFailed = false;
         self.ui.auth.validateTokenInProgress = false;
       } catch (error) {
-        self.user.token = null;
+        self.user.token = undefined;
         self.ui.auth.validateTokenFailed = true;
         self.ui.auth.validateTokenInProgress = false;
         console.error('Token expired', error);
@@ -304,7 +308,7 @@ export const RootModel = types
         const result = yield getReservations();
         self.reservationsAndOrders = transformToMap(result);
       } catch (error) {
-        console.error(error);
+        console.error('Error in fetching orders and reservations', error);
       }
     }),
   }))

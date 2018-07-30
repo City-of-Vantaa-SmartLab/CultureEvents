@@ -63,6 +63,8 @@ export default withTheme(
         return 'Maksu epäonnistui tuntemattomasta syystä, eikä varausta voitu tehdä. Yritä uudelleen, kiitos.';
       };
       render() {
+        const { store } = this.props;
+
         return (
           <Route
             path="/consumer/payment"
@@ -70,7 +72,9 @@ export default withTheme(
               const query = parseQuery(location.search);
               const meaning = match && this.getMeaning(query.status);
               const longText = match && this.getMeaningLong(query.status);
-              const event = this.props.store.events.toJSON()[query.event_id];
+              const foundEvent = match && store.findEvent(query.event_id); // maybe undefined if not found
+              const event = foundEvent && foundEvent.toJSON();
+
               return (
                 <Modal
                   show={match && this.state.show}
