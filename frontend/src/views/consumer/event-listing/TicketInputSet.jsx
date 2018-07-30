@@ -7,8 +7,8 @@ import Form, { InputField } from '../../../components/form';
 export default observer(
   class TicketInputSet extends Component {
     findTicketCatalogMaxSeats = id => {
-      const catalog = this.props.ticketCatalog.find(elem => elem.id == id);
-      if (catalog == undefined) {
+      const catalog = this.props.ticketCatalog.find(elem => elem.id === id);
+      if (catalog === undefined) {
         return 0;
       }
       return catalog.maxSeats - catalog.occupiedSeats;

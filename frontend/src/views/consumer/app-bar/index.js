@@ -16,7 +16,6 @@ const Sliddable = posed.div({
   },
   enter: {
     y: '0%',
-    transition: tween,
     transition: props => tween({ ...props, duration: 600 }),
   },
 });
@@ -84,7 +83,7 @@ const FilterStrings = ({ filters }) => {
             if (key === 'months') value = `${value.length} kuukautta`;
             if (key === 'ageGroupLimits') value = value.join(', ');
             if (key === 'eventTypes') value = `${value.length} typpia`;
-          } else if (key == 'months') {
+          } else if (key === 'months') {
             value = format(new Date(2018, filters[key] - 1, 5), 'MMMM YYYY', {
               locale: fiLocale,
             });

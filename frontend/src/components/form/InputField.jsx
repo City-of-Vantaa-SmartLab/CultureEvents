@@ -103,7 +103,6 @@ export default class InputField extends React.Component {
       style,
       horizontal,
       lightMode,
-      type,
     } = this.props;
     return (
       <Wrapper className={className} style={style} horizontal={horizontal}>
