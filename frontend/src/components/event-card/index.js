@@ -6,6 +6,7 @@ import { toRgba } from '../../utils';
 import chroma from 'chroma-js';
 import posed from 'react-pose';
 import { tween, easing } from 'popmotion';
+import { format } from 'date-fns';
 
 const WrapperBase = posed.div({
   normal: {
@@ -237,10 +238,10 @@ export default class EventCard extends React.Component {
               {area} •{' '}
             </Typography>
             <Typography type="body" color="white">
-              {eventDate} |{' '}
+              {format(eventDate, 'DD.MM.YYYY')} |{' '}
             </Typography>
             <Typography type="body" color="white">
-              {eventTime}
+              {eventTime.replace(':', '.')}
             </Typography>
             <br />
             {ageGroupLimits && (

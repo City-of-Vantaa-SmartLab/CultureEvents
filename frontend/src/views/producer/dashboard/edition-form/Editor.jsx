@@ -87,6 +87,7 @@ const AREA = [
   'Korso',
   'Hakunila',
   'Koivukylä',
+  'Kivistö',
 ];
 
 const TicketCatalogInputGroup = props => {
@@ -411,7 +412,7 @@ class Editor extends React.Component {
           <Row fullsize>
             <InputField
               backgroundColor={inputBackgroundColor}
-              label="Yhteystiedot"
+              label="Lisätiedot"
               lightMode
               horizontal
               type="text"

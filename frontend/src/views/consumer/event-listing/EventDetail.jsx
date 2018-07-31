@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Typography from '../../../components/typography';
 import Icon from 'antd/lib/icon';
+import { format } from 'date-fns';
 
 const StyledList = styled.li`
   list-style: none;
@@ -59,7 +60,10 @@ export default class EventDetails extends Component {
         <ListItem
           color={themeColor}
           title="Milloin"
-          content={`${event.eventDate} klo ${event.eventTime}`}
+          content={`${format(
+            event.eventDate,
+            'DD.MM.YYYY',
+          )} klo ${event.eventTime.replace(':', '.')}`}
         />
         <ListItem
           color={themeColor}
