@@ -66,11 +66,9 @@ export default withTheme(
           <Wrapper show={thisEvent}>
             <Typography type="subheader">Reservation status</Typography>
             <ListWrapper>
-              <ListItem
-                title="Seats left"
-                content={thisEvent && thisEvent.totalAvailableTickets}
-                color={palette.primaryDeep}
-              />
+              <ListItem title="Seats left" color={palette.primaryDeep}>
+                {thisEvent && thisEvent.totalAvailableTickets}
+              </ListItem>
               <ListItem title="Reservations" color={palette.primaryDeep}>
                 {reservationList.map(elem => {
                   return (
