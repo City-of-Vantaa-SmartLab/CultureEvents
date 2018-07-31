@@ -15,7 +15,6 @@ export default withTheme(
       };
 
       clearLocalFlag = () => {
-        console.log('Clearing local flag');
         this.setState({ redirectingLocally: false });
       };
       componentDidUpdate() {

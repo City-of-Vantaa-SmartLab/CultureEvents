@@ -75,7 +75,6 @@ export default withTheme(
           <Wrapper hasOverlay={selectedEvent}>
             {displayableEvents.length > 0 ? (
               <ScrollContainer>
-                {' '}
                 {displayableEvents.map(event => (
                   <EventCard
                     expandable

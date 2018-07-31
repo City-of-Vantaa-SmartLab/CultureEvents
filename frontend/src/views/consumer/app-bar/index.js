@@ -61,7 +61,7 @@ const LogoBox = props => (
     <Logo noText />
     <div>
       <Typography type="subheader">Vantaa</Typography>
-      <Typography type="subheader">Kultuuri</Typography>
+      <Typography type="subheader">Kulttuuria</Typography>
     </div>
   </LeftBox>
 );

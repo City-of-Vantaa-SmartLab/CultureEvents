@@ -27,7 +27,7 @@ const StyledList = styled.li`
   }
 `;
 
-export const ListItem = ({ style, iconName, title, content, color }) => (
+export const ListItem = ({ style, iconName, title, children, color }) => (
   <StyledList style={style} color={color}>
     <div>
       {iconName && <Icon type={iconName} />}
@@ -35,10 +35,10 @@ export const ListItem = ({ style, iconName, title, content, color }) => (
         {title}
       </Typography>
     </div>
-    {React.isValidElement(content) ? (
-      <ul>{content}</ul>
+    {React.isValidElement(children) ? (
+      <ul>{children}</ul>
     ) : (
-      <Typography type="body">{content}</Typography>
+      <Typography type="body">{children}</Typography>
     )}
   </StyledList>
 );
@@ -61,6 +61,7 @@ export default withTheme(
             : [];
 
         const palette = this.props.theme.palette;
+        // @TODO: reduce nesting. Divide this component into smaller fragments for readability
         return (
           <Wrapper show={thisEvent}>
             <Typography type="subheader">Reservation status</Typography>
@@ -70,10 +71,8 @@ export default withTheme(
                 content={thisEvent && thisEvent.totalAvailableTickets}
                 color={palette.primaryDeep}
               />
-              <ListItem
-                title="Reservations"
-                color={palette.primaryDeep}
-                content={reservationList.map(elem => {
+              <ListItem title="Reservations" color={palette.primaryDeep}>
+                {reservationList.map(elem => {
                   return (
                     <div>
                       <ListItem
@@ -84,37 +83,36 @@ export default withTheme(
                             : palette.primary
                         }
                         iconName={elem.paymentCompleted && 'check'}
-                        content={
-                          <div>
-                            <Typography type="body">{elem.phone}</Typography>
-                            <br />
-                            {elem.tickets.map(ticket => {
-                              const ticketName = elem.eventId.ticketCatalog.find(
-                                c => c.id === ticket.priceId,
-                              ).ticketDescription;
-                              return (
-                                <React.Fragment>
-                                  <Typography type="largebody">
-                                    {ticketName}:{' '}
-                                  </Typography>
+                      >
+                        <div>
+                          <Typography type="body">{elem.phone}</Typography>
+                          <br />
+                          {elem.tickets.map(ticket => {
+                            const ticketName = elem.eventId.ticketCatalog.find(
+                              c => c.id === ticket.priceId,
+                            ).ticketDescription;
+                            return (
+                              <React.Fragment>
+                                <Typography type="largebody">
+                                  {ticketName}:{' '}
+                                </Typography>
+                                <Typography type="body">
+                                  {ticket.noOfTickets}
+                                </Typography>
+                                {elem.email && (
                                   <Typography type="body">
-                                    {ticket.noOfTickets}
+                                    {elem.email}
                                   </Typography>
-                                  {elem.email && (
-                                    <Typography type="body">
-                                      {elem.email}
-                                    </Typography>
-                                  )}
-                                </React.Fragment>
-                              );
-                            })}
-                          </div>
-                        }
-                      />
+                                )}
+                              </React.Fragment>
+                            );
+                          })}
+                        </div>
+                      </ListItem>
                     </div>
                   );
                 })}
-              />
+              </ListItem>
             </ListWrapper>
           </Wrapper>
         );
