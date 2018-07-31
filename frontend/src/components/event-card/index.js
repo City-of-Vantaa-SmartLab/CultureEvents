@@ -67,7 +67,7 @@ const Wrapper = styled(WrapperBase)`
   margin: 0;
   cursor: pointer;
   background-color: white;
-  will-change: transform, scroll-position;
+  ${props => props.expanded && 'will-change: transform, scroll-position'};
 `;
 
 const Shim = styled.div`
@@ -86,8 +86,6 @@ const Decorator = styled.div`
   background-position: center center;
   background-repeat: no-repeat;
   height: 100%;
-  filter: blur(4px);
-  will-change: clip-path, transform;
   transition: clip-path 0.7s cubic-bezier(.94,.02,.33,1);
   clip-path: ${props =>
     !props.expanded
@@ -102,7 +100,7 @@ const Decorator = styled.div`
     background-color: ${props => props.themeColor};
     left: 0;
     top: 0;
-    opacity: 0.5;
+    opacity: 0.7;
     z-index: 100; 
     transform: scale(1.3);
   }
