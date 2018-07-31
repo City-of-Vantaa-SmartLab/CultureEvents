@@ -5,25 +5,26 @@ import Button from '../button';
 import { toRgba } from '../../utils';
 import chroma from 'chroma-js';
 import posed from 'react-pose';
-import { tween } from 'popmotion';
+import { tween, easing } from 'popmotion';
 
 const WrapperBase = posed.div({
   normal: {
     height: props => (props.mini ? '13rem' : '20rem'),
-    width: '100%',
-    flip: true,
-    transition: tween,
+    width: true,
     top: 'initial',
     bottom: 'initial',
     borderRadius: 12,
+    flip: true,
+    transition: tween,
   },
   expanded: {
     height: '100%',
-    width: '100%',
+    width: true,
     left: 0,
     top: 0,
-    flip: true,
     borderRadius: 0,
+    flip: true,
+    transition: props => tween({ ...props, ease: easing.easeIn }),
   },
 });
 
@@ -56,17 +57,17 @@ const BoxImageAnimation = posed.div({
 });
 
 const Wrapper = styled(WrapperBase)`
-  transform: translateZ(0);
-  position: ${props => (props.expanded ? 'absolute' : 'relative')};
-  z-index: ${props => (props.expanded ? 100 : 1)};
   overflow-y: ${props => (props.expanded ? 'scroll' : 'hidden')};
+  overflow-x: hidden;
+  position: ${props => (props.expanded ? 'fixed' : 'relative')};
+  z-index: ${props => (props.expanded ? 1000 : 1)};
+  max-width: ${props => !props.expanded && '30rem'};
+  width: 100%;
   -webkit-overflow-scroll: touch;
   margin: 0;
-  overflow-x: hidden;
   cursor: pointer;
   background-color: white;
-  will-change: transform, left, top;
-  max-width: ${props => (props.expanded ? '100vw' : '30rem')};
+  will-change: transform, scroll-position;
 `;
 
 const Shim = styled.div`
@@ -74,7 +75,7 @@ const Shim = styled.div`
   z-index: 1;
   left: 0;
   top: 0;
-  transition: all 0.5s ease;
+  transition: background-color 1s ease;
   height: 100%;
 `;
 
@@ -85,8 +86,8 @@ const Decorator = styled.div`
   background-position: center center;
   background-repeat: no-repeat;
   height: 100%;
-  filter: blur(8px);
-  will-change: transform, clip-path;
+  filter: blur(4px);
+  will-change: clip-path, transform;
   transition: clip-path 0.7s cubic-bezier(.94,.02,.33,1);
   clip-path: ${props =>
     !props.expanded
@@ -102,14 +103,13 @@ const Decorator = styled.div`
     left: 0;
     top: 0;
     opacity: 0.5;
-    z-index: 10; 
+    z-index: 100; 
     transform: scale(1.3);
   }
 `;
 
 const BackgroundImg = styled.div`
   background: url('${props => props.coverImage}');
-  will-change: transform;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -120,9 +120,7 @@ const BackgroundImg = styled.div`
 `;
 
 const BackgroundImageGroup = styled(BoxImageAnimation)`
-  width: 100%;
   position: relative;
-  transform: translate3d(0, 0, 0);
   will-change: transform;
 
   & > * {

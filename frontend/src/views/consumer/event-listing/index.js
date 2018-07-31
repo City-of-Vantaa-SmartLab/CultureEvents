@@ -37,6 +37,7 @@ const Wrapper = styled.div`
 
 const ScrollContainer = styled.div`
   padding: 2rem 1rem;
+  min-height: 100%;
 `;
 const filterByAgeGroup = ages => events => {
   return events.filter(
