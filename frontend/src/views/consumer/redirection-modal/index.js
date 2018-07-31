@@ -13,14 +13,19 @@ export default withTheme(
       state = {
         countDown: 5,
       };
+
+      clearLocalFlag = () => {
+        console.log('Clearing local flag');
+        this.setState({ redirectingLocally: false });
+      };
       componentDidUpdate() {
-        // if the signal is handled, do nothing
         if (this.state.countDown < 1) {
           window.clearInterval(this.interval);
           window.location.assign(
             this.props.store.ui.orderAndPayment.redirectUrl,
           );
         }
+        // if the signal is handled, do nothing
         if (this.state.redirectingLocally) return;
         // when there is a redirecting signal from state, this components initiate a countdown
         // when the countdown hits 0, it will redirect
@@ -38,9 +43,7 @@ export default withTheme(
               }, 1000);
             },
           );
-        } else if (this.state.redirectingLocally) {
-          this.setState({ redirectingLocally: false });
-        } // signal has been cleared from modal. Stop redirection
+        }
       }
       componentWillUnmount() {
         window.clearInterval(this.interval);
@@ -55,6 +58,7 @@ export default withTheme(
             onClear={() => {
               orderAndPayment.clearOrderPendingFlag();
               window.clearInterval(this.interval);
+              this.clearLocalFlag();
             }}
           >
             {orderAndPayment.redirectStatus === 2 && (
