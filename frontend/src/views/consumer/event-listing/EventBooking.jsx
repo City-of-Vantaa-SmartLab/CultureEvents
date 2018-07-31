@@ -114,7 +114,7 @@ export default connect('store')(
       return this.internalState.tickets.reduce(
         (acc, curr) => {
           const targetCatalog = this.props.event.ticketCatalog.find(
-            elem => elem.id == curr.value,
+            elem => elem.id === curr.value,
           );
           if (targetCatalog) {
             const singlePrice = targetCatalog.price;
@@ -274,7 +274,7 @@ export default connect('store')(
                   style={{ alignSelf: 'flex-start' }}
                   disabled={!submittable}
                   icon={isReservationPending && 'loading'}
-                  onClick={this.submit}
+                  onClick={this.submit('reservation')}
                 >
                   VARAA LIPUT
                 </Button>
@@ -283,7 +283,7 @@ export default connect('store')(
                 style={{ alignSelf: 'flex-end' }}
                 backgroundColor={themeColor}
                 disabled={!submittable}
-                onClick={this.submit}
+                onClick={this.submit('payment')}
               >
                 OSTA LIPUT
               </Button>

@@ -2,10 +2,7 @@ import { types } from 'mobx-state-tree';
 
 const TicketCatalog = types
   .model({
-    id: types.optional(
-      types.identifier(types.union(types.number, types.string)),
-      989898,
-    ),
+    id: types.optional(types.identifierNumber, 989898),
     ticketDescription: types.optional(types.string, 'Single Ticket'),
     price: types.optional(
       types.refinement(

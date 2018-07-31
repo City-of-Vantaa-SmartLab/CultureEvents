@@ -16,13 +16,14 @@ const EventCardWrapper = styled.div`
   border-radius: 0 0 8px 8px;
   width: 100%;
   display: flex;
+  padding: 1rem;
 `;
 
 export default withTheme(
   connect('store')(
     class RedirectModal extends Component {
       componentDidUpdate() {
-        if (this.props.store.ui.orderAndPayment.reservationStatus == 2)
+        if (this.props.store.ui.orderAndPayment.reservationStatus === 2)
           this.props.store.deselectEvent();
       }
       render() {
@@ -33,7 +34,7 @@ export default withTheme(
             show={orderAndPayment.reservationStatus > 1}
             onClear={orderAndPayment.clearReservationFlag}
           >
-            {orderAndPayment.reservationStatus == 2 && (
+            {orderAndPayment.reservationStatus === 2 && (
               <React.Fragment>
                 <Content>
                   <Typography type="title" color={palette.deepGreen}>
@@ -60,7 +61,7 @@ export default withTheme(
                 )}
               </React.Fragment>
             )}
-            {orderAndPayment.reservationStatus == 3 && (
+            {orderAndPayment.reservationStatus === 3 && (
               <Content>
                 <Typography type="title" color={palette.red}>
                   Varaus epäonnistui

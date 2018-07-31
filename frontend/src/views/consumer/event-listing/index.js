@@ -8,27 +8,9 @@ import NotFoundIcon from '../../../assets/NotFoundIcon';
 import Typography from '../../../components/typography';
 import getMonth from 'date-fns/get_month';
 import { values } from 'mobx';
-import posed, { PoseGroup } from 'react-pose';
 import Button from '../../../components/button';
 
-const ContainerAnimation = posed.div({
-  enter: {
-    delay: 300,
-    scale: 1,
-    opacity: 1,
-  },
-  exit: {
-    delay: 300,
-    scale: 0,
-    opacity: 0,
-  },
-  preEnter: {
-    scale: 0,
-    y: '-5%',
-  },
-});
-const CardContainers = styled(ContainerAnimation)``;
-const EmptyStateContainer = styled(ContainerAnimation)`
+const EmptyStateContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -37,7 +19,6 @@ const EmptyStateContainer = styled(ContainerAnimation)`
   justify-content: center;
   color: rgba(0, 0, 0, 0.5);
   font-size: 2rem;
-
   svg {
     fill: ${props => props.theme.palette.primaryDeep};
     width: 5rem;
@@ -48,25 +29,14 @@ const EmptyStateContainer = styled(ContainerAnimation)`
 `;
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  padding: 1rem;
+  overflow-y: ${props => (props.hasOverlay ? 'hidden' : 'scroll')};
+  overflow-x: hidden;
   -webkit-overflow-scroll: touch;
+  height: 100%;
+`;
 
-  background-image: linear-gradient(
-    to top,
-    #d5d4d0 0%,
-    #d5d4d0 1%,
-    #eeeeec 31%,
-    #efeeec 75%,
-    #e9e9e7 100%
-  );
-
-  & > * {
-    flex-shrink: 0;
-    flex-grow: 0;
-  }
+const ScrollContainer = styled.div`
+  padding: 2rem 1rem;
 `;
 const filterByAgeGroup = ages => events => {
   return events.filter(
@@ -91,21 +61,24 @@ export default withTheme(
         // @TODO: beware of performance cost
         // This might not be the best for performance
         // See if we can memoize the filter function
-        const displayableEvents = pipeable(values(events)).pipe(
-          ageGroupLimits.length > 0 && filterByAgeGroup(ageGroupLimits),
-          areas.length > 0 && filterByArea(areas),
-          months.length > 0 && filterByDate(months),
-          eventTypes.length > 0 && filterByEventType(eventTypes),
-        );
+        const consumableEventList = values(events);
+        const displayableEvents = filters.hasActiveFilter
+          ? pipeable(consumableEventList).pipe(
+              ageGroupLimits.length > 0 && filterByAgeGroup(ageGroupLimits),
+              areas.length > 0 && filterByArea(areas),
+              months.length > 0 && filterByDate(months),
+              eventTypes.length > 0 && filterByEventType(eventTypes),
+            )
+          : consumableEventList;
 
         return (
-          <Wrapper>
-            <PoseGroup withParents={false} animateOnMount>
-              {displayableEvents.length > 0 ? (
-                displayableEvents.map((event, index) => (
+          <Wrapper hasOverlay={selectedEvent}>
+            {displayableEvents.length > 0 ? (
+              <ScrollContainer>
+                {displayableEvents.map(event => (
                   <EventCard
                     expandable
-                    active={selectedEvent && selectedEvent.id == event.id}
+                    active={selectedEvent && selectedEvent.id === event.id}
                     style={{ marginBottom: '0.7rem' }}
                     key={event.id}
                     event={event}
@@ -115,23 +88,23 @@ export default withTheme(
                     <EventDetail event={event} />
                     <EventBooking event={event} />
                   </EventCard>
-                ))
-              ) : (
-                <EmptyStateContainer key={'emptyState'}>
-                  <NotFoundIcon />
-                  <Typography type="body">
-                    Ei osumia!<br />
-                    Kokeile laajentaa hakuehtoja
-                  </Typography>
-                  <Button
-                    onClick={filters.clearAllFilters}
-                    backgroundColor={this.props.theme.palette.primaryDeep}
-                  >
-                    POISTA RAJAUKSET
-                  </Button>
-                </EmptyStateContainer>
-              )}
-            </PoseGroup>
+                ))}
+              </ScrollContainer>
+            ) : (
+              <EmptyStateContainer key={'emptyState'}>
+                <NotFoundIcon />
+                <Typography type="body">
+                  Ei osumia!<br />
+                  Kokeile laajentaa hakuehtoja
+                </Typography>
+                <Button
+                  onClick={filters.clearAllFilters}
+                  backgroundColor={this.props.theme.palette.primaryDeep}
+                >
+                  POISTA RAJAUKSET
+                </Button>
+              </EmptyStateContainer>
+            )}
           </Wrapper>
         );
       }

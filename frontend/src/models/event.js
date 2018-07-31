@@ -1,11 +1,10 @@
 import { types } from 'mobx-state-tree';
 import TicketCatalog from './ticketCatalog';
-import ReservationsAndOrder from './bookingsAndOrders';
 import { format } from 'date-fns';
 
 const Event = types
   .model({
-    id: types.identifier(types.union(types.string, types.number)),
+    id: types.identifierNumber,
     name: types.optional(types.string, ''),
     location: types.optional(types.string, ''),
     description: types.optional(types.string, ''),
@@ -42,7 +41,6 @@ const Event = types
       ]),
       'Tikkurila',
     ),
-    reservationsAndOrders: types.maybe(types.array(ReservationsAndOrder)),
   })
   .views(self => ({
     get totalAvailableTickets() {

@@ -69,12 +69,7 @@ class CoverImage extends React.Component {
   }
 
   render() {
-    const {
-      inputBackgroundColor,
-      value,
-      onChange,
-      updateCoverImage,
-    } = this.props;
+    const { inputBackgroundColor, value, onChange } = this.props;
     return (
       <Wrapper>
         {this.state.uploadInProgress ? (

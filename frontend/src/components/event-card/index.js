@@ -13,17 +13,17 @@ const WrapperBase = posed.div({
     width: '100%',
     flip: true,
     transition: tween,
-    borderRadius: 14,
     top: 'initial',
     bottom: 'initial',
+    borderRadius: 12,
   },
   expanded: {
     height: '100%',
     width: '100%',
     left: 0,
     top: 0,
-    borderRadius: 0,
     flip: true,
+    borderRadius: 0,
   },
 });
 
@@ -39,7 +39,8 @@ const MorphableText = posed.div({
     bottom: 0,
     top: 'initial',
     flip: true,
-    delay: 200,
+    delay: 500,
+    transition: tween,
   },
 });
 const BoxImageAnimation = posed.div({
@@ -55,21 +56,17 @@ const BoxImageAnimation = posed.div({
 });
 
 const Wrapper = styled(WrapperBase)`
+  transform: translateZ(0);
   position: ${props => (props.expanded ? 'absolute' : 'relative')};
   z-index: ${props => (props.expanded ? 100 : 1)};
-  overflow-y: ${props => (props.expanded ? 'auto' : 'hidden')};
+  overflow-y: ${props => (props.expanded ? 'scroll' : 'hidden')};
   -webkit-overflow-scroll: touch;
   margin: 0;
   overflow-x: hidden;
   cursor: pointer;
   background-color: white;
-  will-change: transform;
-  transition: box-shadow 0.5s ease;
+  will-change: transform, left, top;
   max-width: ${props => (props.expanded ? '100vw' : '30rem')};
-
-  &:hover {
-    box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.3);
-  }
 `;
 
 const Shim = styled.div`
@@ -87,10 +84,10 @@ const Decorator = styled.div`
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  max-height: 20rem;
-  filter: blur(7px);
   height: 100%;
-  transition: clip-path 0.4s cubic-bezier(.94,.02,.33,1);
+  filter: blur(8px);
+  will-change: transform, clip-path;
+  transition: clip-path 0.7s cubic-bezier(.94,.02,.33,1);
   clip-path: ${props =>
     !props.expanded
       ? 'polygon(0 0, 59% 0, 40% 41%, 0 32%)'
@@ -105,13 +102,14 @@ const Decorator = styled.div`
     left: 0;
     top: 0;
     opacity: 0.5;
-    z-index: 6; 
+    z-index: 10; 
     transform: scale(1.3);
   }
 `;
 
 const BackgroundImg = styled.div`
   background: url('${props => props.coverImage}');
+  will-change: transform;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -124,6 +122,7 @@ const BackgroundImg = styled.div`
 const BackgroundImageGroup = styled(BoxImageAnimation)`
   width: 100%;
   position: relative;
+  transform: translate3d(0, 0, 0);
   will-change: transform;
 
   & > * {
@@ -264,7 +263,6 @@ export default class EventCard extends React.Component {
               backgroundColor="rgba(0,0,0, .6)"
               icon="arrow-left"
               onClick={this.props.onDeselect}
-              onTouchEnd={this.props.onDeselect}
             >
               Takaisin
             </BackButton>

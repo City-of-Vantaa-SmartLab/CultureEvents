@@ -16,7 +16,6 @@ const Sliddable = posed.div({
   },
   enter: {
     y: '0%',
-    transition: tween,
     transition: props => tween({ ...props, duration: 600 }),
   },
 });
@@ -27,7 +26,7 @@ const Wrapper = styled(Sliddable)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.4);
   z-index: 100;
 `;
 const LeftBox = styled.div`
@@ -62,7 +61,7 @@ const LogoBox = props => (
     <Logo noText />
     <div>
       <Typography type="subheader">Vantaa</Typography>
-      <Typography type="subheader">Kultuuria</Typography>
+      <Typography type="subheader">Kulttuuria</Typography>
     </div>
   </LeftBox>
 );
@@ -84,7 +83,7 @@ const FilterStrings = ({ filters }) => {
             if (key === 'months') value = `${value.length} kuukautta`;
             if (key === 'ageGroupLimits') value = value.join(', ');
             if (key === 'eventTypes') value = `${value.length} typpia`;
-          } else if (key == 'months') {
+          } else if (key === 'months') {
             value = format(new Date(2018, filters[key] - 1, 5), 'MMMM YYYY', {
               locale: fiLocale,
             });

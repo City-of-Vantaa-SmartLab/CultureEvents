@@ -13,13 +13,15 @@ body {
   margin: 0;
   background-color: rgb(60, 143, 222);
   font-family: GT-Walsheim, sans-serif;
+  transform: translate3d(0, 0, 0); /* Force GPU acceleration */
+  position: fixed;
+  overflow: hidden;
 }
 
 #root {
   height: 100%;
   width: 100%;
   will-change: filter;
-  overflow: hidden;
 }
 
 /* */

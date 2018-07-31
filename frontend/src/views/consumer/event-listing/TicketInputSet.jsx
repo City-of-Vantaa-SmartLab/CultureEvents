@@ -7,8 +7,8 @@ import Form, { InputField } from '../../../components/form';
 export default observer(
   class TicketInputSet extends Component {
     findTicketCatalogMaxSeats = id => {
-      const catalog = this.props.ticketCatalog.find(elem => elem.id == id);
-      if (catalog == undefined) {
+      const catalog = this.props.ticketCatalog.find(elem => elem.id === id);
+      if (catalog === undefined) {
         return 0;
       }
       return catalog.maxSeats - catalog.occupiedSeats;
@@ -26,16 +26,13 @@ export default observer(
                   placeholder="Lipputyppi"
                   value={ticket.label}
                   onChange={value => {
-                    ticket.value = value + '';
+                    ticket.value = Number(value);
                     const origTicketTypeRef = ticketCatalog.find(
-                      elem => elem.id == value,
+                      elem => elem.id === Number(value),
                     );
                     if (!origTicketTypeRef)
                       console.error(
-                        'Cannot find original ticketType',
-                        origTicketTypeRef,
-                        'from id, ',
-                        value,
+                        `Cannot find original ticket type ${origTicketTypeRef} from id ${value}`,
                       );
                     else ticket.label = origTicketTypeRef.ticketDescription;
                   }}
@@ -43,14 +40,13 @@ export default observer(
                   type="select"
                   data={ticketCatalog.map(catalog => {
                     const correspondingCatalog = tickets.find(
-                      elem => elem.value === catalog.id,
+                      elem => Number(elem.value) === catalog.id,
                     );
                     return {
                       label: catalog.ticketDescription,
                       value: catalog.id,
                       // option is diabled if it is present in other input
                       // or there is no available seats
-                      // @TODO fix the no available seat issue
                       disabled: correspondingCatalog || !catalog.isAvailable,
                     };
                   })}
