@@ -105,14 +105,14 @@ export const RootModel = types
   .actions(self => ({
     // hooks
     afterCreate() {
-      // hydrate from localStorage
-      try {
-        if (window.localStorage.getItem('store'))
-          applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
-      } catch (error) {
-        console.log('Failed to apply snapshot');
-      }
-      self.selectedEvent = null;
+      // // hydrate from localStorage // disabled for now
+      // try {
+      //   if (window.localStorage.getItem('store'))
+      //     applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
+      // } catch (error) {
+      //   console.log('Failed to apply snapshot');
+      // }
+      // self.selectedEvent = null;
       // validate token access (only happen in Producer)
       if (self.user.token) self.validateToken();
       // fetch event list from remote

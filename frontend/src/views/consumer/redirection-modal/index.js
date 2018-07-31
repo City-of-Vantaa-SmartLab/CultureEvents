@@ -90,7 +90,7 @@ export default withTheme(
               </Content>
             )}
 
-            {orderAndPayment.redirectStatus == 1 && (
+            {orderAndPayment.redirectStatus === 1 && (
               <Content>
                 <Typography type="title" color={palette.primaryDark}>
                   Please wait
@@ -104,7 +104,7 @@ export default withTheme(
                 <Typography type="body">Käsittelemme tilaustasi</Typography>
               </Content>
             )}
-            {orderAndPayment.redirectStatus == 3 && (
+            {orderAndPayment.redirectStatus === 3 && (
               <Content>
                 <Typography type="title" color={palette.red}>
                   Varausta ei voitu tehdä

@@ -8,27 +8,9 @@ import NotFoundIcon from '../../../assets/NotFoundIcon';
 import Typography from '../../../components/typography';
 import getMonth from 'date-fns/get_month';
 import { values } from 'mobx';
-import posed, { PoseGroup } from 'react-pose';
 import Button from '../../../components/button';
 
-const ContainerAnimation = posed.div({
-  enter: {
-    delay: 300,
-    scale: 1,
-    opacity: 1,
-  },
-  exit: {
-    delay: 300,
-    scale: 0,
-    opacity: 0,
-  },
-  preEnter: {
-    scale: 0,
-    y: '-5%',
-  },
-});
-const CardContainers = styled(ContainerAnimation)``;
-const EmptyStateContainer = styled(ContainerAnimation)`
+const EmptyStateContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -48,9 +30,11 @@ const EmptyStateContainer = styled(ContainerAnimation)`
 `;
 
 const Wrapper = styled.div`
+  transform: translateZ(0);
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow-y: scroll;
+  will-change: transform;
   padding: 1rem;
   -webkit-overflow-scroll: touch;
 
@@ -100,38 +84,36 @@ export default withTheme(
 
         return (
           <Wrapper>
-            <PoseGroup withParents={false} animateOnMount>
-              {displayableEvents.length > 0 ? (
-                displayableEvents.map((event, index) => (
-                  <EventCard
-                    expandable
-                    active={selectedEvent && selectedEvent.id == event.id}
-                    style={{ marginBottom: '0.7rem' }}
-                    key={event.id}
-                    event={event}
-                    onSelect={() => this.props.store.selectEvent(event.id)}
-                    onDeselect={this.props.store.deselectEvent}
-                  >
-                    <EventDetail event={event} />
-                    <EventBooking event={event} />
-                  </EventCard>
-                ))
-              ) : (
-                <EmptyStateContainer key={'emptyState'}>
-                  <NotFoundIcon />
-                  <Typography type="body">
-                    Ei osumia!<br />
-                    Kokeile laajentaa hakuehtoja
-                  </Typography>
-                  <Button
-                    onClick={filters.clearAllFilters}
-                    backgroundColor={this.props.theme.palette.primaryDeep}
-                  >
-                    POISTA RAJAUKSET
-                  </Button>
-                </EmptyStateContainer>
-              )}
-            </PoseGroup>
+            {displayableEvents.length > 0 ? (
+              displayableEvents.map((event, index) => (
+                <EventCard
+                  expandable
+                  active={selectedEvent && selectedEvent.id === event.id}
+                  style={{ marginBottom: '0.7rem' }}
+                  key={event.id}
+                  event={event}
+                  onSelect={() => this.props.store.selectEvent(event.id)}
+                  onDeselect={this.props.store.deselectEvent}
+                >
+                  <EventDetail event={event} />
+                  <EventBooking event={event} />
+                </EventCard>
+              ))
+            ) : (
+              <EmptyStateContainer key={'emptyState'}>
+                <NotFoundIcon />
+                <Typography type="body">
+                  Ei osumia!<br />
+                  Kokeile laajentaa hakuehtoja
+                </Typography>
+                <Button
+                  onClick={filters.clearAllFilters}
+                  backgroundColor={this.props.theme.palette.primaryDeep}
+                >
+                  POISTA RAJAUKSET
+                </Button>
+              </EmptyStateContainer>
+            )}
           </Wrapper>
         );
       }

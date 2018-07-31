@@ -131,6 +131,7 @@ export default connect('store')(
       );
     };
     submit = type => e => {
+      console.log('Hello');
       this.props.store.submitOrder({
         ...toJS(this.internalState),
         type,
@@ -274,7 +275,7 @@ export default connect('store')(
                   style={{ alignSelf: 'flex-start' }}
                   disabled={!submittable}
                   icon={isReservationPending && 'loading'}
-                  onClick={this.submit}
+                  onClick={this.submit('reservation')}
                 >
                   VARAA LIPUT
                 </Button>
@@ -283,7 +284,7 @@ export default connect('store')(
                 style={{ alignSelf: 'flex-end' }}
                 backgroundColor={themeColor}
                 disabled={!submittable}
-                onClick={this.submit}
+                onClick={this.submit('payment')}
               >
                 OSTA LIPUT
               </Button>
