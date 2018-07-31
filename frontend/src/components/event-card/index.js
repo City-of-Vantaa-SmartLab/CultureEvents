@@ -100,7 +100,7 @@ const Decorator = styled.div`
     background-color: ${props => props.themeColor};
     left: 0;
     top: 0;
-    opacity: 0.7;
+    opacity: 0.65;
     z-index: 100; 
     transform: scale(1.3);
   }
