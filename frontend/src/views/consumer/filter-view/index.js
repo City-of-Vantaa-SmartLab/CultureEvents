@@ -35,15 +35,13 @@ const Wrapper = styled(Sliddable)`
   background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
 `;
 const ScrollContainer = styled.div`
-  overflow-y: auto;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   height: auto;
   min-height: 100%;
   width: 100%;
   padding: 2rem 1rem;
-  padding-top: 9rem;
+  padding-top: 7rem;
 
   & > div {
     margin: 0.5rem;

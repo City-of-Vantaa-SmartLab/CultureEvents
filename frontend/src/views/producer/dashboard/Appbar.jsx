@@ -37,13 +37,6 @@ const LogoSection = styled.div`
     font-size: 2rem;
   }
 `;
-const LogoutButton = styled(Button)`
-  && {
-    background-color: ${props => props.theme.palette.secondary};
-    color: black;
-    border-color: transparent;
-  }
-`;
 
 class Appbar extends React.Component {
   render() {
@@ -56,13 +49,17 @@ class Appbar extends React.Component {
             <Typography type="title" color="white">
               VANTAA
             </Typography>
-            <Typography type="title" color={theme.palette.primaryDeep}>
+            <Typography type="title" color={theme.palette.secondary}>
               KULTTUURIA
             </Typography>
           </LogoSection>
-          <LogoutButton icon="logout" onClick={this.props.store.logout}>
-            Logout
-          </LogoutButton>
+          <Button
+            icon="logout"
+            onClick={this.props.store.logout}
+            backgroundColor={theme.palette.secondary}
+          >
+            Kirjadu ulos
+          </Button>
         </Wrapper>
       </React.Fragment>
     );

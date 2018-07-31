@@ -26,7 +26,7 @@ const Wrapper = styled(Sliddable)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.4);
   z-index: 100;
 `;
 const LeftBox = styled.div`
