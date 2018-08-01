@@ -151,6 +151,7 @@ export default connect('store')(
         (isGroupConductorCustomer
           ? internalState.school &&
             internalState.classRoom &&
+            internalState.name &&
             isValidNumber(internalState.phoneNumber, 'FI')
           : internalState.name &&
             isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
@@ -241,6 +242,14 @@ export default connect('store')(
                     mandatory
                     value={internalState.classRoom}
                     onChange={e => (internalState.classRoom = e.target.value)}
+                  />
+                  <InputField
+                    lightMode
+                    type="text"
+                    label="Varaajan nimi"
+                    mandatory
+                    value={internalState.name}
+                    onChange={e => (internalState.name = e.target.value)}
                   />
                 </React.Fragment>
               )}
