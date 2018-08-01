@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import posed, { PoseGroup } from 'react-pose';
 import styled, { withTheme } from 'styled-components';
-import Typography from '../../../components/typography';
-import TagPillGroup from '../../../components/tag-pill';
-import Button from '../../../components/button';
-import { connect } from '../../../utils';
+import Typography from 'components/typography';
+import TagPillGroup from 'components/tag-pill';
+import Button from 'components/button';
+import { connect } from 'utils';
 import { tween, easing } from 'popmotion';
+import * as consts from 'const.json';
 
 const Sliddable = posed.div({
   exit: {
@@ -104,15 +105,6 @@ const MONTHS = [
     label: 'Joulukuu',
   },
 ];
-const EVENT_TYPES = ['Kurssit Ja Työpajat', 'Näyttelyt', 'Esitykset'];
-const AREA = [
-  'Tikkurila',
-  'Aviapolis',
-  'Myyrmäki',
-  'Korso',
-  'Hakunila',
-  'Koivukylä',
-];
 
 export default withTheme(
   connect('store')(
@@ -146,12 +138,7 @@ export default withTheme(
                   onChange={this.setAgeGroupFilter}
                   highlightColor={theme.palette.primaryDeep}
                   multiple
-                  tags={[
-                    { value: '0-3', label: '0-3' },
-                    { value: '3-6', label: '3-6' },
-                    { value: '6-12', label: '6-12' },
-                    { value: '13+', label: '13+' },
-                  ]}
+                  tags={consts.ageGroup.map(a => ({ value: a, label: a }))}
                 />
               </div>
               <div>
@@ -161,7 +148,7 @@ export default withTheme(
                   value={store.filters.areas}
                   onChange={this.setAreaFilter}
                   highlightColor={theme.palette.primaryDeep}
-                  tags={AREA.map(a => ({ value: a, label: a }))}
+                  tags={consts.area.map(a => ({ value: a, label: a }))}
                 />
               </div>
               <div>
@@ -181,7 +168,7 @@ export default withTheme(
                   value={store.filters.eventTypes}
                   onChange={this.setEventTypeFilter}
                   highlightColor={theme.palette.primaryDeep}
-                  tags={EVENT_TYPES.map(v => ({ value: v, label: v }))}
+                  tags={consts.eventType.map(v => ({ value: v, label: v }))}
                 />
               </div>
               <Button

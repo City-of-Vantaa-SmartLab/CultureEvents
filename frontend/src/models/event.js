@@ -1,6 +1,7 @@
 import { types } from 'mobx-state-tree';
 import TicketCatalog from './ticketCatalog';
 import { format } from 'date-fns';
+import * as consts from 'const';
 
 const Event = types
   .model({
@@ -18,11 +19,7 @@ const Event = types
     ]),
     contactInformation: types.optional(types.string, ''),
     eventType: types.optional(
-      types.enumeration('EventType', [
-        'Kurssit Ja Työpajat',
-        'Näyttelyt',
-        'Esitykset',
-      ]),
+      types.enumeration('EventType', consts.eventType),
       'Esitykset',
     ),
     ageGroupLimits: types.optional(types.array(types.string), ['0-3']),
@@ -30,17 +27,7 @@ const Event = types
     isBilingual: types.optional(types.boolean, false),
     coverImage: types.optional(types.string, ''),
     themeColor: types.optional(types.string, '#498DC7'),
-    area: types.optional(
-      types.enumeration('Area', [
-        'Tikkurila',
-        'Aviapolis',
-        'Myyrmäki',
-        'Korso',
-        'Hakunila',
-        'Koivukylä',
-      ]),
-      'Tikkurila',
-    ),
+    area: types.optional(types.enumeration('Area', consts.area), 'Tikkurila'),
   })
   .views(self => ({
     get totalAvailableTickets() {

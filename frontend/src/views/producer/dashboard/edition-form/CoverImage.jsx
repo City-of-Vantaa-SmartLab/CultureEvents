@@ -80,7 +80,7 @@ class CoverImage extends React.Component {
               style={{ transform: 'translateY(-1rem)' }}
               type="largebody"
             >
-              Kansikuva
+              Kansikuva (ja GIF)
             </Typography>
             <Image src={this.props.value} />
             <FlexBox>

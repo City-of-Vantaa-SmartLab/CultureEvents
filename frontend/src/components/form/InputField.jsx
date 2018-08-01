@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
 import Input, { TextArea, NumericInput, Select } from './Input';
+import chroma from 'chroma-js';
 
 const LabelText = styled(Typography)`
   && {
@@ -20,15 +21,22 @@ const LabelText = styled(Typography)`
     }
   }
 `;
-const Label = props => (
-  <LabelText
-    type="secondarybody"
-    color={props.lightMode ? 'black' : 'white'}
-    mandatory={props.mandatory}
-  >
-    {props.children}
-  </LabelText>
-);
+const Label = props => {
+  const originalTextColor = props.lightMode ? 'black' : 'white';
+  const textColor = chroma(originalTextColor)
+    .alpha(props.disabled ? 0.5 : 1)
+    .css();
+
+  return (
+    <LabelText
+      type="secondarybody"
+      color={textColor}
+      mandatory={props.mandatory}
+    >
+      {props.children}
+    </LabelText>
+  );
+};
 
 export const Wrapper = styled.div`
   ${props =>
@@ -103,6 +111,7 @@ export default class InputField extends React.Component {
       style,
       horizontal,
       lightMode,
+      disabled,
     } = this.props;
     return (
       <Wrapper className={className} style={style} horizontal={horizontal}>
@@ -110,6 +119,7 @@ export default class InputField extends React.Component {
           mandatory={mandatory}
           horizontal={horizontal}
           lightMode={lightMode}
+          disabled={disabled}
         >
           {label}
         </Label>

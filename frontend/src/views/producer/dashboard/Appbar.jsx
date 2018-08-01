@@ -24,7 +24,7 @@ const LogoSection = styled.div`
   display: flex;
   align-items: center;
   svg {
-    height: 3.5rem;
+    height: 3rem;
     margin-right: 1rem;
   }
   h1,
