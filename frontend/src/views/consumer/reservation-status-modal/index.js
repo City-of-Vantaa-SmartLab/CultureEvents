@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Modal, { Content } from '../../../components/modal';
-import Typography from '../../../components/typography';
-import { connect } from '../../../utils';
+import Modal, { Content } from 'components/modal';
+import Typography from 'components/typography';
+import { connect } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import Icon from 'antd/lib/icon';
-import EventCard from '../../../components/event-card';
+import EventCard from 'components/event-card';
 import chroma from 'chroma-js';
 import { Redirect } from 'react-router-dom';
 

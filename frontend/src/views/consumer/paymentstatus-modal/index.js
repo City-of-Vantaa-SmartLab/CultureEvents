@@ -1,8 +1,8 @@
 import React from 'react';
-import Modal, { Content } from '../../../components/modal';
-import Typography from '../../../components/typography';
-import EventCard from '../../../components/event-card';
-import { connect, parseQuery } from '../../../utils';
+import Modal, { Content } from 'components/modal';
+import Typography from 'components/typography';
+import EventCard from 'components/event-card';
+import { connect, parseQuery } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import { Route } from 'react-router-dom';
 import chroma from 'chroma-js';

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Typography from '../../../components/typography';
+import Typography from 'components/typography';
 import chroma from 'chroma-js';
 import { observable, toJS } from 'mobx';
-import { toRgba, genRandomKey, connect } from '../../../utils';
-import Button, { ButtonGroup } from '../../../components/button';
-import Icon from '../../../../node_modules/antd/lib/icon';
-import Form, { InputField } from '../../../components/form';
+import { toRgba, genRandomKey, connect } from 'utils';
+import Button, { ButtonGroup } from 'components/button';
+import Icon from 'antd/lib/icon';
+import Form, { InputField } from 'components/form';
 import TicketInputSet from './TicketInputSet';
-import posed from 'react-pose';
 import { AsYouType, isValidNumber } from 'libphonenumber-js';
 
 // styled componnents

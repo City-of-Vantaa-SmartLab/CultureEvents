@@ -12,7 +12,7 @@ import CoverImage from './CoverImage';
 import ThemeColorChooser from './ThemeColorChooser';
 import ButtonBar from './ButtonBar';
 import * as chroma from 'chroma-js';
-import { toRgba, genRandomKey } from '../../../../utils';
+import { toRgba, genRandomKey } from 'utils';
 import { observable, transaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import EventModel from 'models/event';

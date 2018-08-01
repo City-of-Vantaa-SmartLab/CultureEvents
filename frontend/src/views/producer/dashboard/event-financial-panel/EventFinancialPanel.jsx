@@ -1,8 +1,8 @@
 import React from 'react';
 import styled, { withTheme } from 'styled-components';
-import Typography from '../../../../components/typography';
+import Typography from 'components/typography';
 import Icon from 'antd/lib/icon';
-import { connect } from '../../../../utils';
+import { connect } from 'utils';
 import { values } from 'mobx';
 
 const Wrapper = styled.div`

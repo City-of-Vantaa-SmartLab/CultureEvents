@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '../typography';
 import Button from '../button';
-import { toRgba } from '../../utils';
+import { toRgba } from 'utils';
 import chroma from 'chroma-js';
 import posed from 'react-pose';
 import { tween, easing } from 'popmotion';

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import EventCard from '../../../../components/event-card';
-import Typography from '../../../../components/typography';
-import { connect } from '../../../../utils';
+import EventCard from 'components/event-card';
+import Typography from 'components/typography';
+import { connect } from 'utils';
 
 const Wrapper = styled.div`
   padding: 1rem;

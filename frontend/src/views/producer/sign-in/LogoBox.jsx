@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Logo from '../../../components/logo';
-import Text from '../../../components/typography';
+import Logo from 'components/logo';
+import Text from 'components/typography';
 
 const Wrapper = styled.div`
   display: flex;

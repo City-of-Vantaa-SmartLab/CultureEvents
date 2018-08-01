@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Editor from './Editor';
-import { connect } from '../../../../utils';
+import { connect } from 'utils';
 
 const Wrapper = styled.div`
   margin: 1rem;

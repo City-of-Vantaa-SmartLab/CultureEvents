@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Typography from '../../../components/typography';
+import Typography from 'components/typography';
 import Icon from 'antd/lib/icon';
 import { format } from 'date-fns';
 

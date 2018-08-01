@@ -11,7 +11,7 @@ import {
   postReservation,
   getReservations,
 } from '../apis';
-import { removeIdRecursively } from '../utils';
+import { removeIdRecursively } from 'utils';
 import FilterModel from './filter';
 import ReservationAndOrder from './reservationAndOrder';
 

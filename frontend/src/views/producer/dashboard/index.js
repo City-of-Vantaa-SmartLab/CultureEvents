@@ -5,7 +5,7 @@ import EditionForm from './edition-form';
 import EventFinancialPanel from './event-financial-panel';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
-import { connect } from '../../../utils';
+import { connect } from 'utils';
 
 const Wrapper = styled.div`
   width: 100%;

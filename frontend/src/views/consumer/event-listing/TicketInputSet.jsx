@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { FlexBoxHorizontal } from './EventBooking';
 import { observer } from 'mobx-react';
-import { clamp } from '../../../utils';
-import Form, { InputField } from '../../../components/form';
+import { clamp } from 'utils';
+import Form, { InputField } from 'components/form';
 
 export default observer(
   class TicketInputSet extends Component {
