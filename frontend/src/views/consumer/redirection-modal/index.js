@@ -63,7 +63,7 @@ export default withTheme(
             {orderAndPayment.redirectStatus === 2 && (
               <Content>
                 <Typography type="title" color={palette.primaryDark}>
-                  Redirecting{' '}
+                  Uudelleenohjaus{' '}
                   {
                     <Icon
                       type="loading"
@@ -82,7 +82,7 @@ export default withTheme(
                         {this.state.countDown}
                       </Typography>
                     }{' '}
-                    seconds
+                    sekuntia
                   </Typography>
                 ) : (
                   <Typography type="body">
@@ -96,7 +96,7 @@ export default withTheme(
             {orderAndPayment.redirectStatus === 1 && (
               <Content>
                 <Typography type="title" color={palette.primaryDark}>
-                  Please wait
+                  Odota, kiitos
                   {
                     <Icon
                       type="loading"

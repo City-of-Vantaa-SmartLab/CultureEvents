@@ -134,7 +134,7 @@ const BottomSection = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 1rem 1rem;
   background-color: ${props => props.themeColor};
 `;
 
@@ -238,7 +238,7 @@ export default class EventCard extends React.Component {
               {area} •{' '}
             </Typography>
             <Typography type="body" color="white">
-              {format(eventDate, 'DD.MM.YYYY')} |{' '}
+              {format(eventDate, 'DD.MM.YYYY')} kello{' '}
             </Typography>
             <Typography type="body" color="white">
               {eventTime.replace(':', '.')}

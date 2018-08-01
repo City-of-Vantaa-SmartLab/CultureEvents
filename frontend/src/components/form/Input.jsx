@@ -38,10 +38,10 @@ export const NumericInput = styled(AntNumericInput)`
     padding: 0;
     background-color: ${props => props.backgroundColor};
     border: white;
-    max-width: 5rem;
 
     input {
-      height: 2.5rem;
+      height: auto;
+      min-height: 2.5rem;
     }
   }
 `;
