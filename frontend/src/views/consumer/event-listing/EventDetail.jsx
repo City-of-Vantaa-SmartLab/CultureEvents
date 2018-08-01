@@ -43,13 +43,6 @@ export default class EventDetails extends Component {
     const themeColor = soldOut ? '#9B9B9B' : event.themeColor;
     return (
       <Wrapper>
-        {event.isWordless && (
-          <ListItem
-            style={{ marginBottom: 0 }}
-            color={themeColor}
-            title={'Sanaton / sopii kaikenkielisille'}
-          />
-        )}
         <ListItem
           style={{ marginBottom: '1rem' }}
           iconName="user"
