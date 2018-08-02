@@ -81,7 +81,7 @@ export class PaymentService {
     const ticketDetails = await Promise.all(reservation.tickets.map(async ticket => {
       const priceDetails = await this.priceService.getPriceDetails(ticket.price_id);
       return (
-        (`\n${priceDetails.ticket_description}  ${priceDetails.price} €  ${ticket.no_of_tickets} kpl`)
+        (`${priceDetails.ticket_description}  ${priceDetails.price} €  ${ticket.no_of_tickets} kpl`)
       )
     }));
     const ticketDetailString = ticketDetails.join('\n');
