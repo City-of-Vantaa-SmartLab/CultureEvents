@@ -185,25 +185,10 @@ export default connect('store')(
             disabled={!internalState.customerGroup || formDisabled}
           >
             <TicketInputSet
+              themeColor={themeColor}
               ticketCatalog={event.ticketCatalog}
               tickets={internalState.tickets}
             />
-            <Button
-              disabled={
-                internalState.tickets.length >= event.ticketCatalog.length
-              }
-              backgroundColor={themeColor}
-              icon="plus"
-              onClick={e =>
-                internalState.tickets.push({
-                  label: '',
-                  amount: 0,
-                  id: genRandomKey(),
-                })
-              }
-            >
-              Lisää Lipputyppi
-            </Button>
             <TotalAmountCalculated>
               <Typography type="subheader">Yhteissumma</Typography>
               <Typography type="subheader" color={themeColor}>
