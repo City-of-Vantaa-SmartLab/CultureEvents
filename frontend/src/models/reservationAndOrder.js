@@ -5,9 +5,9 @@ const ReservationAndOrder = types.model({
   id: types.identifierNumber,
   eventId: types.reference(types.late(() => EventModel)), // @TODO: Think of a way to make a collection of reservations as a field in event id
   name: types.string,
-  class: types.string,
-  schoolName: types.string,
-  email: types.string,
+  class: types.maybeNull(types.string),
+  schoolName: types.maybeNull(types.string),
+  email: types.maybeNull(types.string),
   phone: types.string,
   confirmed: types.boolean,
   paymentCompleted: types.boolean,
