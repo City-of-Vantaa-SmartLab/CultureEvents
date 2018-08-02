@@ -74,7 +74,7 @@ export class PaymentService {
   }
 
   async buildPaymentMessage(event: EventsDto, reservation: ReservationsDto) {
-    const time = this.getTime(event.event_date);
+    const time = event.event_time.replace(/:/g, '.')
     const date = this.getDate(event.event_date);
     const name = event.name;
     const location = event.location;
@@ -98,10 +98,6 @@ export class PaymentService {
       },
     );
     return message;
-  }
-
-  getTime(date) {
-    return format(date, this.i18Service.getContents().payments.timeFormat);
   }
 
   getDate(date) {

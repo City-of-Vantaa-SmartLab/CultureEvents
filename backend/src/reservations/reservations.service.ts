@@ -104,7 +104,7 @@ export class ReservationService {
   }
 
   async buildReservationMessage(event: EventsDto, reservation: ReservationsDto) {
-    const time = this.getTime(event.event_date);
+    const time = event.event_time.replace(/:/g, '.')
     const date = this.getDate(event.event_date);
     const name = event.name;
     const location = event.location;
@@ -183,10 +183,6 @@ export class ReservationService {
     );
 
     return reducedTickets;
-  }
-
-  getTime(date) {
-    return format(date, this.i18Service.getContents().reservations.timeFormat);
   }
 
   getDate(date) {
