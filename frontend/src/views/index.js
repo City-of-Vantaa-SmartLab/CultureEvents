@@ -4,15 +4,16 @@ import { ThemeProvider } from 'styled-components';
 import theme from './theme';
 import Loadable from 'react-loadable';
 import { Redirect } from 'react-router-dom';
-import Producer from './producer';
+import LoadingView from './intro';
 
 const LazyProducerUI = Loadable({
   loader: () => import('./producer'),
-  loading: () => <h1>Loading administration portal</h1>,
+  loading: LoadingView,
+  delay: 200,
 });
 const LazyConsumerUI = Loadable({
   loader: () => import('./consumer'),
-  loading: () => <h1>Loading your beautiful UI</h1>,
+  loading: LoadingView,
 });
 
 export default class App extends React.Component {
