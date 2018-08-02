@@ -37,6 +37,7 @@ const Wrapper = styled.div`
 
 const ScrollContainer = styled.div`
   padding: 2rem 1rem;
+  min-height: 100%;
 `;
 const filterByAgeGroup = ages => events => {
   return events.filter(
@@ -49,8 +50,8 @@ const filterByArea = areas => events => {
 const filterByDate = months => events => {
   return events.filter(event => months.includes(getMonth(event.eventDate) + 1));
 };
-const filterByEventType = eventType => events =>
-  events.filter(event => event.eventType === eventType);
+const filterByEventType = eventTypes => events =>
+  events.filter(event => eventTypes.includes(event.eventType));
 
 export default withTheme(
   connect('store')(

@@ -21,6 +21,7 @@ const FilterModel = types
             'Korso',
             'Hakunila',
             'Koivukylä',
+            'Kivistö',
           ]),
         ),
       ),
