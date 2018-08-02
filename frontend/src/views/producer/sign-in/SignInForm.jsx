@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import Form, { InputField } from '../../../components/form';
-import Button from '../../../components/button';
-import { connect } from '../../../utils';
+import Form, { InputField } from 'components/form';
+import Button from 'components/button';
+import { connect } from 'utils';
 import { Redirect } from 'react-router-dom';
 
 const Wrapper = styled.div`

@@ -1,30 +1,17 @@
 import { types, getSnapshot, getMembers } from 'mobx-state-tree';
 import { values } from 'mobx';
+import * as consts from 'const.json';
 
 const FilterModel = types
   .model('FilterModel', {
     ageGroupLimits: types.optional(
       types.array(
-        types.maybe(
-          types.enumeration('ageGroupLimits', ['0-3', '3-6', '6-12', '13+']),
-        ),
+        types.maybe(types.enumeration('ageGroupLimits', consts.ageGroup)),
       ),
       [],
     ),
     areas: types.optional(
-      types.array(
-        types.maybe(
-          types.enumeration('Area', [
-            'Tikkurila',
-            'Aviapolis',
-            'Myyrmäki',
-            'Korso',
-            'Hakunila',
-            'Koivukylä',
-            'Kivistö',
-          ]),
-        ),
-      ),
+      types.array(types.maybe(types.enumeration('Area', consts.area))),
       [],
     ),
     months: types.optional(
@@ -35,13 +22,7 @@ const FilterModel = types
     ),
     eventTypes: types.optional(
       types.array(
-        types.maybe(
-          types.enumeration('EventType', [
-            'Kurssit Ja Työpajat',
-            'Näyttelyt',
-            'Esitykset',
-          ]),
-        ),
+        types.maybe(types.enumeration('EventType', consts.eventType)),
       ),
       [],
     ),

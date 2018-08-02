@@ -1,4 +1,4 @@
-import RootModel from '../../models/';
+import RootModel from 'models/';
 import { onSnapshot } from 'mobx-state-tree';
 
 const rootStore = RootModel.create();

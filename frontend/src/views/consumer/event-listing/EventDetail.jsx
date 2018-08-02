@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Typography from '../../../components/typography';
+import Typography from 'components/typography';
 import Icon from 'antd/lib/icon';
 import { format } from 'date-fns';
 
@@ -43,13 +43,6 @@ export default class EventDetails extends Component {
     const themeColor = soldOut ? '#9B9B9B' : event.themeColor;
     return (
       <Wrapper>
-        {event.isWordless && (
-          <ListItem
-            style={{ marginBottom: 0 }}
-            color={themeColor}
-            title={'Sanaton / sopii kaikenkielisille'}
-          />
-        )}
         <ListItem
           style={{ marginBottom: '1rem' }}
           iconName="user"

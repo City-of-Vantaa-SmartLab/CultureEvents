@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
-import EventCard from '../../../components/event-card';
+import EventCard from 'components/event-card';
 import EventDetail from './EventDetail';
 import EventBooking from './EventBooking';
-import { connect, pipeable } from '../../../utils';
-import NotFoundIcon from '../../../assets/NotFoundIcon';
-import Typography from '../../../components/typography';
+import { connect, pipeable } from 'utils';
+import NotFoundIcon from 'assets/NotFoundIcon';
+import Typography from 'components/typography';
 import getMonth from 'date-fns/get_month';
 import { values } from 'mobx';
-import Button from '../../../components/button';
+import Button from 'components/button';
 
 const EmptyStateContainer = styled.div`
   width: 100%;

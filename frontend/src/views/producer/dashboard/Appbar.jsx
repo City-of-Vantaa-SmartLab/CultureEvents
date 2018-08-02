@@ -1,9 +1,9 @@
 import React from 'react';
 import styled, { withTheme } from 'styled-components';
-import Logo from '../../../components/logo';
-import Typography from '../../../components/typography';
-import Button from '../../../components/button';
-import { connect } from '../../../utils';
+import Logo from 'components/logo';
+import Typography from 'components/typography';
+import Button from 'components/button';
+import { connect } from 'utils';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -24,7 +24,7 @@ const LogoSection = styled.div`
   display: flex;
   align-items: center;
   svg {
-    height: 3.5rem;
+    height: 3rem;
     margin-right: 1rem;
   }
   h1,

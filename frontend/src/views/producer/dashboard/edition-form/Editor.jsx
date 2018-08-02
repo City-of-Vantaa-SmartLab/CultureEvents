@@ -1,25 +1,25 @@
 // @TODO: Reafactor to make this component less gigantic
+// @TODO: Editor is a whole view. Find a way to break up the data into smaller parts
 
 import React from 'react';
 import styled, { withTheme, injectGlobal } from 'styled-components';
-import RawForm, { InputField } from '../../../../components/form';
-import Typography from '../../../../components/typography';
-import Button, { ButtonGroup } from '../../../../components/button';
-import TagPillGroup from '../../../../components/tag-pill';
-import AntCheckbox from 'antd/lib/checkbox';
+import RawForm, { InputField } from 'components/form';
+import Typography from 'components/typography';
+import TagPillGroup from 'components/tag-pill';
 import 'antd/lib/icon/style';
 import 'antd/lib/checkbox/style/css';
 import CoverImage from './CoverImage';
 import ThemeColorChooser from './ThemeColorChooser';
 import ButtonBar from './ButtonBar';
-import Icon from 'antd/lib/icon';
 import * as chroma from 'chroma-js';
-import { toRgba, genRandomKey } from '../../../../utils';
+import { toRgba, genRandomKey } from 'utils';
 import { observable, transaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
-import EventModel from '../../../../models/event';
-import TicketCatalog from '../../../../models/ticketCatalog';
+import EventModel from 'models/event';
+import TicketCatalog from 'models/ticketCatalog';
+import TicketCatalogInputGroup from './TicketCatalogInputGroup';
 import isEqual from 'lodash.isequal';
+import * as consts from 'const.json';
 
 const Form = styled(RawForm)`
   & {
@@ -43,133 +43,6 @@ const Row = styled.div`
     margin-right: 0;
   }
 `;
-
-const Checkbox = styled(AntCheckbox)`
-  &&& {
-    div {
-      align-items: center;
-    }
-  }
-`;
-
-const GreenButton = styled(Button)`
-  &&& {
-    border-radius: 8px;
-    border-color: ${props => props.theme.palette.deepGreen};
-    color: ${props => props.theme.palette.deepGreen} !important;
-    background-color: transparent;
-
-    &:hover {
-      background-color: ${props => props.theme.palette.deepGreen};
-      color: white !important;
-    }
-  }
-`;
-const RedButton = styled(GreenButton)`
-  &&& {
-    border-color: ${props => props.theme.palette.red};
-    color: ${props => props.theme.palette.red} !important;
-    &: hover {
-      background-color: ${props => props.theme.palette.red};
-    }
-  }
-`;
-
-const HighlightedArea = styled.div`
-  border-left: 3px ${props => props.themeColor} solid;
-  width: 100%;
-`;
-
-const AREA = [
-  'Tikkurila',
-  'Aviapolis',
-  'Myyrmäki',
-  'Korso',
-  'Hakunila',
-  'Koivukylä',
-  'Kivistö',
-];
-
-const TicketCatalogInputGroup = props => {
-  if (props.ticketCatalog.length === 0) {
-    return (
-      <Row>
-        <GreenButton
-          onClick={props.addTicketType}
-          onTouchEnd={props.addTicketType}
-          icon="plus"
-        >
-          Lisää uusi lipputyyppi
-        </GreenButton>
-      </Row>
-    );
-  }
-  return (
-    <HighlightedArea themeColor={props.themeColor}>
-      {props.ticketCatalog.map((ticketType, index, arr) => (
-        <Row key={ticketType.id}>
-          <InputField
-            backgroundColor={props.inputBackgroundColor}
-            label="Hinta"
-            formatter={value =>
-              value == 0 ? `${value} €` : `${value} €`.replace(/^0/g, '')
-            }
-            lightMode
-            horizontal
-            type="number"
-            onChange={props.updateTicketCatalogField(ticketType.id, 'price')}
-            value={Number(ticketType.price)}
-            disabled={props.disabled}
-          />
-          <InputField
-            backgroundColor={props.inputBackgroundColor}
-            style={{
-              width: '100%',
-            }}
-            label="Lipun tyyppi"
-            lightMode
-            horizontal
-            type="text"
-            onChange={props.updateTicketCatalogField(
-              ticketType.id,
-              'ticketDescription',
-            )}
-            value={ticketType.ticketDescription}
-            disabled={props.disabled}
-          />
-          <InputField
-            backgroundColor={props.inputBackgroundColor}
-            label="Paikkojen määrä"
-            lightMode
-            horizontal
-            type="number"
-            onChange={props.updateTicketCatalogField(ticketType.id, 'maxSeats')}
-            value={Number(ticketType.maxSeats)}
-            disabled={props.disabled}
-          />
-          <ButtonGroup style={{ flexShrink: 0 }}>
-            <RedButton
-              onClick={props.removeTicketType(ticketType.id)}
-              disabled={props.disabled}
-            >
-              <Icon type="close" />
-            </RedButton>
-            {index === arr.length - 1 && (
-              <GreenButton
-                disabled={props.disabled}
-                onClick={props.addTicketType}
-                onTouchEnd={props.addTicketType}
-                icon="plus"
-              >
-                Lisää lipun tyyppi
-              </GreenButton>
-            )}
-          </ButtonGroup>
-        </Row>
-      ))}
-    </HighlightedArea>
-  );
-};
 
 class Editor extends React.Component {
   internalData = observable({
@@ -200,20 +73,6 @@ class Editor extends React.Component {
         this.internalData.creationMode = true;
       });
     }
-  }
-  componentDidMount() {
-    const { palette } = this.props.theme;
-    // override specific class name from ant-design
-    // THIS IS A HACK
-    injectGlobal`
-    .ant-checkbox-checked .ant-checkbox-inner, .ant-checkbox-indeterminate .ant-checkbox-inner {
-      background-color: ${palette.primaryDeep} !important;
-      border-color: ${palette.primaryDeep} !important;
-    }
-    .ant-checkbox-wrapper:hover .ant-checkbox-inner, .ant-checkbox:hover .ant-checkbox-inner, .ant-checkbox-input:focus + .ant-checkbox-inner {
-      border-color: ${palette.primaryDeep} !important;
-    }
-`;
   }
   onChange = fieldName => e => {
     this.internalData.eventDraft[fieldName] = e.target.value;
@@ -334,7 +193,7 @@ class Editor extends React.Component {
               lightMode
               horizontal
               type="select"
-              data={AREA.map(value => ({ value, label: value }))}
+              data={consts.area.map(value => ({ value, label: value }))}
               onChange={value => (this.internalData.eventDraft.area = value)}
               value={this.internalData.eventDraft.area}
             />
@@ -425,14 +284,7 @@ class Editor extends React.Component {
               <TagPillGroup
                 highlightColor={this.internalData.eventDraft.themeColor}
                 value={this.internalData.eventDraft.eventType}
-                tags={[
-                  {
-                    value: 'Kurssit Ja Työpajat',
-                    label: 'Kurssit ja työpajat',
-                  },
-                  { value: 'Näyttelyt', label: 'Näyttelyt' },
-                  { value: 'Esitykset', label: 'Esitykset' },
-                ]}
+                tags={consts.eventType.map(a => ({ value: a, label: a }))}
                 onChange={this.onPillChange('eventType')}
               />
             </InputField>
@@ -440,17 +292,11 @@ class Editor extends React.Component {
           <Row>
             <InputField label="Ikäsuositus" lightMode horizontal>
               <TagPillGroup
-                //multiple //@TODO: toogle this once EventModal gets updated
                 highlightColor={this.internalData.eventDraft.themeColor}
                 onChange={this.onAgeGroupChange}
                 value={this.internalData.eventDraft.ageGroupLimits}
                 multiple
-                tags={[
-                  { value: '0-3', label: '0-3' },
-                  { value: '3-6', label: '3-6' },
-                  { value: '6-12', label: '6-12' },
-                  { value: '13+', label: '13+' },
-                ]}
+                tags={consts.ageGroup.map(a => ({ value: a, label: a }))}
               />
             </InputField>
           </Row>
@@ -461,27 +307,6 @@ class Editor extends React.Component {
                 (this.internalData.eventDraft.themeColor = color)
               }
             />
-          </Row>
-          <Row>
-            <Checkbox
-              checked={this.internalData.eventDraft.isWordless}
-              onChange={() =>
-                (this.internalData.eventDraft.isWordless = !this.internalData
-                  .eventDraft.isWordless)
-              }
-            >
-              Sanaton / sopii kaikenkielisille
-            </Checkbox>
-            <Checkbox
-              style={{ marginRight: '1rem' }}
-              checked={this.internalData.eventDraft.isBilingual}
-              onChange={() =>
-                (this.internalData.eventDraft.isBilingual = !this.internalData
-                  .eventDraft.isBilingual)
-              }
-            >
-              Esitys on kaksikielinen
-            </Checkbox>
           </Row>
         </Form>
       </React.Fragment>

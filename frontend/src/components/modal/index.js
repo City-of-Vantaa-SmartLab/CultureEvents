@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import posed, { PoseGroup } from 'react-pose';
-import { tween, chain, delay } from 'popmotion';
+import { tween } from 'popmotion';
 import { createPortal } from 'react-dom';
 import Icon from 'antd/lib/icon';
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Modal, { Content } from '../../../components/modal';
-import Typography from '../../../components/typography';
-import { connect } from '../../../utils';
+import Modal, { Content } from 'components/modal';
+import Typography from 'components/typography';
+import { connect } from 'utils';
 import { withTheme } from 'styled-components';
 import Icon from 'antd/lib/icon';
 

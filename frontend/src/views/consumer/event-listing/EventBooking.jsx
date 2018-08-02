@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Typography from '../../../components/typography';
+import Typography from 'components/typography';
 import chroma from 'chroma-js';
 import { observable, toJS } from 'mobx';
-import { toRgba, genRandomKey, connect } from '../../../utils';
-import Button, { ButtonGroup } from '../../../components/button';
-import Icon from '../../../../node_modules/antd/lib/icon';
-import Form, { InputField } from '../../../components/form';
+import { toRgba, genRandomKey, connect } from 'utils';
+import Button, { ButtonGroup } from 'components/button';
+import Icon from 'antd/lib/icon';
+import Form, { InputField } from 'components/form';
 import TicketInputSet from './TicketInputSet';
-import posed from 'react-pose';
 import { AsYouType, isValidNumber } from 'libphonenumber-js';
 
 // styled componnents
@@ -152,6 +151,7 @@ export default connect('store')(
         (isGroupConductorCustomer
           ? internalState.school &&
             internalState.classRoom &&
+            internalState.name &&
             isValidNumber(internalState.phoneNumber, 'FI')
           : internalState.name &&
             isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
@@ -242,6 +242,14 @@ export default connect('store')(
                     mandatory
                     value={internalState.classRoom}
                     onChange={e => (internalState.classRoom = e.target.value)}
+                  />
+                  <InputField
+                    lightMode
+                    type="text"
+                    label="Varaajan nimi"
+                    mandatory
+                    value={internalState.name}
+                    onChange={e => (internalState.name = e.target.value)}
                   />
                 </React.Fragment>
               )}

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { withTheme } from 'styled-components';
-import { InputField } from '../../../../components/form';
+import { InputField } from 'components/form';
 
 const Box = styled.div`
   background-color: ${props => props.color};

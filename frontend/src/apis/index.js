@@ -1,4 +1,4 @@
-import { parseTo } from '../utils';
+import { parseTo } from 'utils';
 
 const BASE_PATH = window.location.protocol + '//' + window.location.host;
 

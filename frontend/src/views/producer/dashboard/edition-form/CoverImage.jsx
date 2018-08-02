@@ -1,8 +1,8 @@
 import React from 'react';
 import styled, { withTheme } from 'styled-components';
-import { InputField } from '../../../../components/form';
-import Typography from '../../../../components/typography';
-import { connect } from '../../../../utils';
+import { InputField } from 'components/form';
+import Typography from 'components/typography';
+import { connect } from 'utils';
 import Spin from 'antd/lib/spin';
 import 'antd/dist/antd.css';
 
@@ -80,7 +80,7 @@ class CoverImage extends React.Component {
               style={{ transform: 'translateY(-1rem)' }}
               type="largebody"
             >
-              Kansikuva
+              Kansikuva (ja GIF)
             </Typography>
             <Image src={this.props.value} />
             <FlexBox>

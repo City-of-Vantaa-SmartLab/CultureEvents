@@ -1,6 +1,6 @@
 import React from 'react';
 import Appbar from './app-bar';
-import RootStore from '../../models';
+import RootStore from 'models';
 import styled from 'styled-components';
 import { Provider } from 'mobx-react';
 import EventListing from './event-listing';
