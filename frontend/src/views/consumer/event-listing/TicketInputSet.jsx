@@ -8,7 +8,6 @@ import Form, { InputField } from 'components/form';
 export default observer(
   class TicketInputSet extends Component {
     onChange = (catalog, correspondingTicket) => amount => {
-      console.log(amount);
       if (correspondingTicket) {
         correspondingTicket.amount = clamp(0, catalog.maxSeats)(amount);
       } else {
