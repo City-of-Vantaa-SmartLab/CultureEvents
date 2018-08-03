@@ -34,7 +34,6 @@ export default connect('store')(
           <EventExplorer />
           <InnerWrapper>
             <EditionForm />
-            <EventFinancialPanel />
           </InnerWrapper>
         </Wrapper>
       );
