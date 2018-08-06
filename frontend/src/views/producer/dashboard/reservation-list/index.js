@@ -18,6 +18,7 @@ const FullScreenModal = styled.article`
   display: flex;
   justify-content: center;
   display: ${({ shown }) => (shown ? 'block' : 'none')};
+  overflow: scroll;
 
   button {
     margin-bottom: 1rem;
@@ -34,7 +35,7 @@ const FullScreenModal = styled.article`
 const ScrollContainer = styled.div`
   margin: 3rem;
   max-width: 1600px;
-  width: 100%;
+  width: auto;
   & > ul {
     margin-top: 2rem;
   }
