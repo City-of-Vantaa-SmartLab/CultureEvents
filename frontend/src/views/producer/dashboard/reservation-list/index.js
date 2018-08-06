@@ -2,6 +2,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import styled, { withTheme } from 'styled-components';
 import './print.css';
+import Button from 'components/button';
 import { connect } from 'utils';
 import Typography from 'components/typography';
 import { values } from 'mobx';
@@ -16,12 +17,24 @@ const FullScreenModal = styled.article`
   background-color: white;
   display: flex;
   justify-content: center;
+  display: ${({ shown }) => (shown ? 'block' : 'none')};
+
+  button {
+    margin-bottom: 1rem;
+    @media print {
+      display: none;
+    }
+  }
+  & > button {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+  }
 `;
 const ScrollContainer = styled.div`
   margin: 3rem;
   max-width: 1600px;
   width: 100%;
-
   & > ul {
     margin-top: 2rem;
   }
@@ -69,14 +82,14 @@ const ReservationListItem = ({ reservation, event }) => {
             style={{ margin: 0, fontSize: '1.5rem' }}
             type="largebody"
           >
-            {reservation.name}
+            {name}
           </Typography>
         ) : (
           <Typography
             style={{ margin: 0, fontSize: '1.5rem' }}
             type="largebody"
           >
-            {reservation.name}, {schoolName}, {className}
+            {name}, {schoolName}, {className}
           </Typography>
         )}
         <br />
@@ -111,7 +124,7 @@ const ReservationListItem = ({ reservation, event }) => {
 class ReservationList extends React.Component {
   render() {
     const { palette } = this.props.theme;
-    const { reservationsAndOrders, selectedEvent } = this.props.store;
+    const { reservationsAndOrders, selectedEvent, ui } = this.props.store;
     if (!reservationsAndOrders || !selectedEvent) return null;
     const reservations = values(reservationsAndOrders).filter(
       r => r.eventId.id === selectedEvent.id,
@@ -120,13 +133,23 @@ class ReservationList extends React.Component {
     if (!reservations) return null;
 
     return createPortal(
-      <FullScreenModal>
+      <FullScreenModal shown={ui.orderAndPayment.listingShown}>
+        <Button
+          icon="close"
+          backgroundColor={palette.red}
+          onClick={ui.orderAndPayment.toggleShowListing}
+        >
+          Takaisin
+        </Button>
         <ScrollContainer>
           <p>
             <Typography type="headline" color={palette.primaryDeep}>
-              Vantaa Kulttuuria
+              Vantaa Kulttuuria{' '}
               <Typography type="title">Varauslista</Typography>
             </Typography>
+            <Button icon={'printer'} onClick={window.print}>
+              Tulosta
+            </Button>
             <hr />
           </p>
           <ul>

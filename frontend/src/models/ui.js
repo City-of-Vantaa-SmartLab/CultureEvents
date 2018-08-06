@@ -54,6 +54,7 @@ const UI = types.model({
           0,
         ),
         reservedEvent: types.maybe(types.reference(EventModel)),
+        listingShown: types.optional(types.boolean, false),
       })
       .actions(self => {
         const clearOrderPendingFlag = () => {
@@ -64,8 +65,15 @@ const UI = types.model({
           self.reservationStatus = 0;
           self.reservedEvent = undefined;
         };
-
-        return { clearOrderPendingFlag, clearReservationFlag };
+        const toggleShowListing = () => {
+          console.log('something happened');
+          self.listingShown = !self.listingShown;
+        };
+        return {
+          clearOrderPendingFlag,
+          clearReservationFlag,
+          toggleShowListing,
+        };
       }),
     {},
   ),
