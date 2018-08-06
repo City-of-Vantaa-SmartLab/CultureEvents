@@ -12,12 +12,14 @@ import { SMSService } from 'notifications/sms/sms.service';
 import { EventsService } from 'event/events.service';
 import { ReservationsModule } from 'reservations/reservations.module';
 import { EventsModule } from 'event/events.module';
+import { PriceModule } from 'price/price.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Payments]),
     ReservationsModule,
     EventsModule,
+    PriceModule
   ],
   controllers: [PaymentController],
   providers: [
@@ -29,4 +31,4 @@ import { EventsModule } from 'event/events.module';
   ],
   exports: [PaymentService],
 })
-export class PaymentModule {}
+export class PaymentModule { }

@@ -23,7 +23,7 @@ export class ReservationService {
     private readonly i18Service: I18Service,
     private readonly eventService: EventsService,
     private readonly priceService: PriceService,
-  ) {}
+  ) { }
 
   async createReservation(reservation: ReservationsDto, sendSms: boolean) {
     const response = await this.reservationsRepository.save(reservation);
@@ -95,7 +95,7 @@ export class ReservationService {
 
   async sendSmsToUser(reservation: ReservationsDto) {
     const event = await this.eventService.findOneById(reservation.event_id);
-    const reservationMessage = await this.buildReservationMessage(event);
+    const reservationMessage = await this.buildReservationMessage(event, reservation);
     return await this.smsService.sendMessageToUser(
       reservation.phone,
       reservation.name,
@@ -103,18 +103,28 @@ export class ReservationService {
     );
   }
 
-  async buildReservationMessage(event: EventsDto) {
-    const time = this.getTime(event.event_date);
+  async buildReservationMessage(event: EventsDto, reservation: ReservationsDto) {
+    const time = event.event_time.replace(/:/g, '.')
     const date = this.getDate(event.event_date);
     const name = event.name;
     const location = event.location;
+    let ticketDetails = await Promise.all(reservation.tickets.map(async ticket => {
+      const priceDetails = await this.priceService.getPriceDetails(ticket.price_id);
+      return (
+        (`${priceDetails.ticket_description}  ${priceDetails.price} €  ${ticket.no_of_tickets} kpl `)
+      )
+    }));
+    const ticketDetailString = ticketDetails.join('\n');
+    const personName = reservation.name;
     const message = stringInterpolator(
       this.i18Service.getContents().reservations.confirmation,
       {
+        personName,
         name,
         location,
         date,
         time,
+        ticketDetailString
       },
     );
     return message;
@@ -126,7 +136,7 @@ export class ReservationService {
       amount =
         amount +
         Number(ticket.no_of_tickets) *
-          Number(this.getTicketPrice(event.ticket_catalog, ticket.price_id));
+        Number(this.getTicketPrice(event.ticket_catalog, ticket.price_id));
       return amount;
     }, 0);
 
@@ -173,10 +183,6 @@ export class ReservationService {
     );
 
     return reducedTickets;
-  }
-
-  getTime(date) {
-    return format(date, this.i18Service.getContents().reservations.timeFormat);
   }
 
   getDate(date) {

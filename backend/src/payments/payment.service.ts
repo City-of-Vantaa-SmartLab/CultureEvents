@@ -12,6 +12,8 @@ import { format } from 'date-fns';
 import { EventsDto } from 'event/events.dto';
 import { SMSService } from 'notifications/sms/sms.service';
 import * as stringInterpolator from 'interpolate';
+import { ReservationsDto } from 'reservations/reservations.dto';
+import { PriceService } from 'price/price.service';
 
 const TOKEN_URL = 'https://payform.bambora.com/pbwapi/auth_payment';
 const BAMBORA_API_URL = 'https://payform.bambora.com/pbwapi/token/';
@@ -26,7 +28,8 @@ export class PaymentService {
     private readonly eventService: EventsService,
     private readonly i18Service: I18Service,
     private readonly smsService: SMSService,
-  ) {}
+    private readonly priceService: PriceService,
+  ) { }
 
   async getPaymentRedirectUrl(paymentObj) {
     try {
@@ -62,7 +65,7 @@ export class PaymentService {
   async sendSmsToUser(id: number, amount: number) {
     const reservation = await this.reservationService.findOneById(id);
     const event = await this.eventService.findOneById(reservation.event_id);
-    const reservationMessage = await this.buildPaymentMessage(event, amount);
+    const reservationMessage = await this.buildPaymentMessage(event, reservation);
     return await this.smsService.sendMessageToUser(
       reservation.phone,
       reservation.name,
@@ -70,26 +73,31 @@ export class PaymentService {
     );
   }
 
-  async buildPaymentMessage(event: EventsDto, amount: number) {
-    const time = this.getTime(event.event_date);
+  async buildPaymentMessage(event: EventsDto, reservation: ReservationsDto) {
+    const time = event.event_time.replace(/:/g, '.')
     const date = this.getDate(event.event_date);
     const name = event.name;
     const location = event.location;
+    const ticketDetails = await Promise.all(reservation.tickets.map(async ticket => {
+      const priceDetails = await this.priceService.getPriceDetails(ticket.price_id);
+      return (
+        (`${priceDetails.ticket_description}  ${priceDetails.price} €  ${ticket.no_of_tickets} kpl`)
+      )
+    }));
+    const ticketDetailString = ticketDetails.join('\n');
+    const personName = reservation.name;
     const message = stringInterpolator(
       this.i18Service.getContents().payments.confirmation,
       {
-        amount,
+        personName,
         name,
         location,
         date,
         time,
+        ticketDetailString
       },
     );
     return message;
-  }
-
-  getTime(date) {
-    return format(date, this.i18Service.getContents().payments.timeFormat);
   }
 
   getDate(date) {

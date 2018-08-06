@@ -1,4 +1,4 @@
-import { Middleware, NestMiddleware, MiddlewareFunction } from '@nestjs/common';
+import { NestMiddleware, MiddlewareFunction, Injectable } from '@nestjs/common';
 import { MiddlewareBuilder } from '@nestjs/core';
 
 const path = require('path');
@@ -18,7 +18,7 @@ const allowedExt = [
 const resolvePath = (file: string) =>
   path.resolve(__dirname, `../../public/${file}`);
 
-@Middleware()
+@Injectable()
 export class FrontendMiddleware implements NestMiddleware {
   resolve(...args: any[]): MiddlewareFunction {
     return (req, res, next) => {
