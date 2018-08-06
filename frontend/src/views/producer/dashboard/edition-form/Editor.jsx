@@ -130,6 +130,7 @@ class Editor extends React.Component {
   submitForm = () => {
     this.props.onSubmit(this.internalData.eventDraft);
   };
+
   render() {
     const inputBackgroundColor = toRgba(
       chroma(this.internalData.eventDraft.themeColor)
@@ -155,6 +156,9 @@ class Editor extends React.Component {
           canConfirm={canConfirm}
           canDiscard={canConfirm && !this.internalData.creationMode}
           canAddNew={!this.internalData.creationMode}
+          canSeeReservation={
+            !this.internalData.creationMode && this.props.selectedEvent
+          }
         />
         <Form>
           {this.internalData.creationMode && (

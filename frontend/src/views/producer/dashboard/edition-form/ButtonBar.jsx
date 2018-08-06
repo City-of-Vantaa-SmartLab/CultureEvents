@@ -31,6 +31,7 @@ class ButtonBar extends React.Component {
       discardChangeCB,
       canConfirm,
       canAddNew,
+      canSeeReservation,
     } = this.props;
     return (
       <Wrapper>
@@ -62,6 +63,11 @@ class ButtonBar extends React.Component {
           >
             Hylkää muutokset
           </Button>
+          {canSeeReservation && (
+            <Button bgColor={palette.purple} icon="solution">
+              Katso varauslista
+            </Button>
+          )}
         </AntButton.Group>
       </Wrapper>
     );

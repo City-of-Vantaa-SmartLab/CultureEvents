@@ -39,13 +39,13 @@ export const RootModel = types
     // hooks
     afterCreate() {
       // // hydrate from localStorage // disabled for now
-      // try {
-      //   if (window.localStorage.getItem('store'))
-      //     applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
-      // } catch (error) {
-      //   console.log('Failed to apply snapshot');
-      // }
-      // self.selectedEvent = undefined;
+      try {
+        if (window.localStorage.getItem('store'))
+          applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
+      } catch (error) {
+        console.log('Failed to apply snapshot');
+      }
+      self.selectedEvent = undefined;
       // validate token access (only happen in Producer)
       if (process.env.NODE_ENV !== 'test') {
         // don't run async functions during test
@@ -244,6 +244,13 @@ export const RootModel = types
         console.error('Error in fetching orders and reservations', error);
       }
     }),
+    getReservationsAndOrders: id => {
+      return resolveIdentifier(
+        ReservationAndOrder,
+        self.reservationsAndOrders,
+        id,
+      );
+    },
   }))
   .views(self => ({
     get isEmpty() {

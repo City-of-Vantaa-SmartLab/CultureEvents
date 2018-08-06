@@ -16,7 +16,7 @@ const Sliddable = posed.div({
   },
   enter: {
     y: '0%',
-    transition: props => tween({ ...props, duration: 600 }),
+    transition: props => tween({ ...props, duration: 60 }),
   },
 });
 const Wrapper = styled(Sliddable)`

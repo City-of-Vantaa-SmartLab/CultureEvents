@@ -2,7 +2,7 @@ import React from 'react';
 import Appbar from './Appbar';
 import EventExplorer from './event-explore';
 import EditionForm from './edition-form';
-import EventFinancialPanel from './event-financial-panel';
+import ReservationList from './reservation-list';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'utils';
@@ -35,6 +35,7 @@ export default connect('store')(
           <InnerWrapper>
             <EditionForm />
           </InnerWrapper>
+          <ReservationList />
         </Wrapper>
       );
     }

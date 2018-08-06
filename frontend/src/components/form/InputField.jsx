@@ -5,10 +5,11 @@ import Input, { TextArea, NumericInput, Select } from './Input';
 import chroma from 'chroma-js';
 
 const LabelText = styled(Typography)`
-  && {
+  &&& {
     margin-bottom: 4px;
     white-space: nowrap;
     position: relative;
+    align-self: flex-start;
 
     &::after {
       content: ${props => (props.mandatory ? ' "*"' : 'none')};
@@ -24,7 +25,7 @@ const LabelText = styled(Typography)`
 const Label = props => {
   const originalTextColor = props.lightMode ? 'black' : 'white';
   const textColor = chroma(originalTextColor)
-    .alpha(props.disabled ? 0.5 : 1)
+    .alpha(props.disabled ? 0.4 : 1)
     .css();
 
   return (
@@ -59,7 +60,7 @@ export default class InputField extends React.Component {
         <TextArea
           className={inputClassName}
           style={inputStyle}
-          {...inputProps} // @TODO: explicit passage of props to make it easier to be understood
+          {...inputProps}
         />
       );
     if (type === 'number')
