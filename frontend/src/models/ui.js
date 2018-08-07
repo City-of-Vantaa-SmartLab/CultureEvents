@@ -66,7 +66,6 @@ const UI = types.model({
           self.reservedEvent = undefined;
         };
         const toggleShowListing = () => {
-          console.log('something happened');
           self.listingShown = !self.listingShown;
         };
         return {

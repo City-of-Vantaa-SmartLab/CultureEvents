@@ -10,13 +10,12 @@ import { format } from 'date-fns';
 
 const WrapperBase = posed.div({
   normal: {
-    height: props => (props.mini ? '13rem' : '20rem'),
+    height: 250,
     width: true,
-    top: 'initial',
-    bottom: 'initial',
+    top: 0,
+    bottom: 0,
     borderRadius: 12,
     flip: true,
-    transition: tween,
   },
   expanded: {
     height: '100%',
@@ -58,11 +57,12 @@ const BoxImageAnimation = posed.div({
 });
 
 const Wrapper = styled(WrapperBase)`
-  overflow-y: ${props => (props.expanded ? 'scroll' : 'hidden')};
+  overflow-y: auto;
   overflow-x: hidden;
   position: ${props => (props.expanded ? 'fixed' : 'relative')};
   z-index: ${props => (props.expanded ? 1000 : 1)};
   max-width: ${props => !props.expanded && '30rem'};
+  max-height: ${props => props.mini && '15rem'};
   width: 100%;
   -webkit-overflow-scroll: touch;
   margin: 0;
@@ -72,40 +72,41 @@ const Wrapper = styled(WrapperBase)`
 `;
 
 const Shim = styled.div`
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: ${({ expanded }) =>
+    `rgba(0, 0, 0, ${expanded ? 0.2 : 0.5})`};
   z-index: 1;
   left: 0;
   top: 0;
-  transition: background-color 1s ease;
+  transition: all 1s ease;
   height: 100%;
 `;
 
-const Decorator = styled.div`
-  z-index: 5;
-  background-image: url('${props => props.coverImage}');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  height: 100%;
-  transition: clip-path 0.7s cubic-bezier(.94,.02,.33,1);
-  clip-path: ${props =>
-    !props.expanded
-      ? 'polygon(0 0, 59% 0, 40% 41%, 0 32%)'
-      : 'polygon(0 72%, 45% 61%, 55% 100%, 0% 100%)'};
+// const Decorator = styled.div`
+//   z-index: 5;
+//   background-image: url('${props => props.coverImage}');
+//   background-size: cover;
+//   background-position: center center;
+//   background-repeat: no-repeat;
+//   height: 100%;
+//   transition: clip-path 0.7s cubic-bezier(.94,.02,.33,1);
+//   clip-path: ${props =>
+//     !props.expanded
+//       ? 'polygon(0 0, 59% 0, 40% 41%, 0 32%)'
+//       : 'polygon(0 72%, 45% 61%, 55% 100%, 0% 100%)'};
 
-  &:after {
-    content: '';
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background-color: ${props => props.themeColor};
-    left: 0;
-    top: 0;
-    opacity: 0.65;
-    z-index: 100; 
-    transform: scale(1.3);
-  }
-`;
+//   &:after {
+//     content: '';
+//     width: 100%;
+//     height: 100%;
+//     position: absolute;
+//     background-color: ${props => props.themeColor};
+//     left: 0;
+//     top: 0;
+//     opacity: 0.65;
+//     z-index: 100;
+//     transform: scale(1.3);
+//   }
+// `;
 
 const BackgroundImg = styled.div`
   background: url('${props => props.coverImage}');
@@ -121,6 +122,7 @@ const BackgroundImg = styled.div`
 const BackgroundImageGroup = styled(BoxImageAnimation)`
   position: relative;
   will-change: transform;
+  margin: 0;
 
   & > * {
     width: 100%;
@@ -134,7 +136,7 @@ const BottomSection = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 1rem;
+  padding: 0.8rem 1rem;
   background-color: ${props => props.themeColor};
 `;
 
@@ -156,7 +158,7 @@ const BackButton = styled(Button)`
 `;
 
 const EventTypeLabel = styled(Typography)`
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   position: absolute;
   top: 0;
   right: 1rem;
@@ -192,15 +194,18 @@ export default class EventCard extends React.Component {
         }}
         mini={mini}
         pose={active && expandable ? 'expanded' : 'normal'}
+        innerRef={comp => {
+          this.card = comp;
+        }}
       >
         <BackgroundImageGroup>
           <BackgroundImg coverImage={coverImage} />
-          <Shim />
-          <Decorator
+          <Shim expanded={active && expandable && !mini} />
+          {/* <Decorator
             coverImage={coverImage}
             themeColor={themeColor}
             expanded={active && expandable}
-          />
+          /> */}
           <Content>
             <Typography
               type="largebody"
@@ -218,7 +223,11 @@ export default class EventCard extends React.Component {
             >
               {performer}
             </Typography>
-            <Typography style={{ margin: 0 }} type="title" color="white">
+            <Typography
+              style={{ margin: 0, fontWeight: 700 }}
+              type="subheader"
+              color="white"
+            >
               {name}
             </Typography>
             {soldOut && (

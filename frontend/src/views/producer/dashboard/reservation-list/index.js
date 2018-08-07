@@ -9,7 +9,7 @@ import { values } from 'mobx';
 import CheckBox from 'antd/lib/checkbox';
 
 const FullScreenModal = styled.article`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -18,7 +18,7 @@ const FullScreenModal = styled.article`
   display: flex;
   justify-content: center;
   display: ${({ shown }) => (shown ? 'block' : 'none')};
-  overflow: scroll;
+  overflow: auto;
 
   button {
     margin-bottom: 1rem;
@@ -57,7 +57,7 @@ const LiStyled = styled.li`
   }
 `;
 
-const ReservationListItem = ({ reservation, event }) => {
+const ReservationListItem = ({ reservation, event, key }) => {
   const {
     customerType,
     name,
@@ -101,7 +101,7 @@ const ReservationListItem = ({ reservation, event }) => {
           {tickets.map(ticket => {
             const catalog = event.catalogById(ticket.priceId);
             return (
-              <li key={ticket.id}>
+              <li key={ticket.priceId}>
                 <Typography type="body">
                   {catalog.ticketDescription} {ticket.noOfTickets} kpl{' '}
                   {catalog.price * ticket.noOfTickets} €
@@ -130,7 +130,6 @@ class ReservationList extends React.Component {
     const reservations = values(reservationsAndOrders).filter(
       r => r.eventId.id === selectedEvent.id,
     );
-    console.log(reservations);
     if (!reservations) return null;
 
     return createPortal(
@@ -143,7 +142,7 @@ class ReservationList extends React.Component {
           Takaisin
         </Button>
         <ScrollContainer>
-          <p>
+          <div>
             <Typography type="headline" color={palette.primaryDeep}>
               Vantaa Kulttuuria{' '}
               <Typography type="title">Varauslista</Typography>
@@ -152,14 +151,21 @@ class ReservationList extends React.Component {
               Tulosta
             </Button>
             <hr />
-          </p>
+          </div>
           <ul>
             {reservations
               .sort((a, b) => {
                 return a.name[0] < b.name[0];
               })
-              .map(r => (
-                <ReservationListItem reservation={r} event={selectedEvent} />
+              .map((r, index) => (
+                <div>
+                  <div className="page-break" />
+                  <ReservationListItem
+                    key={index}
+                    reservation={r}
+                    event={selectedEvent}
+                  />
+                </div>
               ))}
           </ul>
         </ScrollContainer>
