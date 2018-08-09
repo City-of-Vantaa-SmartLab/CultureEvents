@@ -45,7 +45,6 @@ const LiStyled = styled.li`
   list-style: none;
   margin: 1rem;
   display: flex;
-
   & > div {
     display: inline-block;
     margin-left: 1rem;
@@ -81,19 +80,20 @@ const ReservationListItem = ({ reservation, event, key }) => {
         {isPrivateCustomer ? (
           <Typography
             style={{ margin: 0, fontSize: '1.5rem' }}
-            type="largebody"
+            type="paragraph"
+            show={true}
           >
             {name}
           </Typography>
         ) : (
-          <Typography
-            style={{ margin: 0, fontSize: '1.5rem' }}
-            type="largebody"
-          >
-            {name}, {schoolName}, {className}
-          </Typography>
-        )}
-        <br />
+            <Typography
+              style={{ margin: 0, fontSize: '1.5rem' }}
+              type="paragraph"
+              show={true}
+            >
+              {name}, {schoolName}, {className}
+            </Typography>
+          )}
         <Typography type="body">
           {phone} {email && '· ' + email}
         </Typography>
@@ -143,10 +143,8 @@ class ReservationList extends React.Component {
         </Button>
         <ScrollContainer>
           <div>
-            <Typography type="headline" color={palette.primaryDeep}>
-              Vantaa Kulttuuria{' '}
-              <Typography type="title">Varauslista</Typography>
-            </Typography>
+            <Typography type="headline" color={palette.primaryDeep}>Vantaa Kulttuuria{' '}</Typography>
+            <Typography type="title">Varauslista</Typography>
             <Button icon={'printer'} onClick={window.print}>
               Tulosta
             </Button>
