@@ -43,7 +43,7 @@ export class ReservationService {
           this.updateReservationStatus(reservation.id, true);
           return response;
         } else {
-          throw new Error('Sms Funtionality failed!.');
+          console.error('Sms Funtionality failed!.');
         }
       } else {
         return response;

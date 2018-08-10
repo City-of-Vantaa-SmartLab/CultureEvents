@@ -61,7 +61,7 @@ export const RootModel = types
       if (self.selectedEvent) self.selectedEvent = undefined;
     },
     findEvent: id => resolveIdentifier(EventModel, self.events, id),
-    fetchEvents: flow(function*() {
+    fetchEvents: flow(function* () {
       try {
         self.ui.eventList.fetching = true;
 
@@ -76,7 +76,7 @@ export const RootModel = types
         self.ui.eventList.fetchError = 'Could not fetch events';
       }
     }),
-    patchEvent: flow(function*(event) {
+    patchEvent: flow(function* (event) {
       if (!resolveIdentifier(EventModel, self.events, event.id)) {
         // new event. POST
         try {
@@ -110,7 +110,7 @@ export const RootModel = types
       }
     }),
     // auth actions
-    login: flow(function*(username, password) {
+    login: flow(function* (username, password) {
       self.ui.auth.authInProgress = true;
       self.ui.authError = false;
       try {
@@ -123,15 +123,15 @@ export const RootModel = types
         self.ui.auth.authInProgress = false;
         self.ui.authError = false;
       } catch (error) {
-        self.ui.authInProgress = false;
-        self.ui.authError = true;
+        self.ui.auth.authInProgress = false;
+        self.ui.auth.authError = true;
         console.error(error);
       }
     }),
     logout: () => {
       self.user.token = undefined;
     },
-    validateToken: flow(function*() {
+    validateToken: flow(function* () {
       self.ui.auth.validateTokenInProgress = true;
       self.ui.auth.validateTokenFailed = false;
       try {
@@ -162,15 +162,15 @@ export const RootModel = types
       if (resolveTicketType.maxSeats < resolveTicketType.occupiedSeats + amount)
         throw new Error(
           `Invalid amount of seat. There are max ${
-            resolveTicketType.maxSeats
+          resolveTicketType.maxSeats
           }, and there are ${
-            resolveTicketType.occupiedSeats
+          resolveTicketType.occupiedSeats
           } while you try to occupy ${amount} seats`,
         );
       resolveTicketType.occupiedSeats += amount;
     },
     // order related actions
-    submitOrder: flow(function*(orderInfo) {
+    submitOrder: flow(function* (orderInfo) {
       // setting UI
       if (orderInfo.type == 'payment') {
         self.ui.orderAndPayment.redirectStatus = 1;
@@ -235,7 +235,7 @@ export const RootModel = types
         }
       }
     }),
-    fetchReservationsAndOrders: flow(function*() {
+    fetchReservationsAndOrders: flow(function* () {
       try {
         // @TODO: UI state for fetching reservations
         const result = yield getReservations();
