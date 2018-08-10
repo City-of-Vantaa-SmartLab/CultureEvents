@@ -64,20 +64,7 @@ const TicketCatalogInputGroup = props => {
   return (
     <HighlightedArea themeColor={props.themeColor}>
       {props.ticketCatalog.map((ticketType, index, arr) => (
-        <Row key={ticketType.id}>
-          <InputField
-            backgroundColor={props.inputBackgroundColor}
-            label="Hinta"
-            formatter={value =>
-              value == 0 ? `${value} €` : `${value} €`.replace(/^0/g, '')
-            }
-            lightMode
-            horizontal
-            type="number"
-            onChange={props.updateTicketCatalogField(ticketType.id, 'price')}
-            value={Number(ticketType.price)}
-            disabled={props.disabled}
-          />
+        <Row key={ticketType.id} style={{ alignItems: 'flex-end' }}>
           <InputField
             backgroundColor={props.inputBackgroundColor}
             style={{
@@ -85,7 +72,6 @@ const TicketCatalogInputGroup = props => {
             }}
             label="Lipun tyyppi"
             lightMode
-            horizontal
             type="text"
             onChange={props.updateTicketCatalogField(
               ticketType.id,
@@ -96,9 +82,20 @@ const TicketCatalogInputGroup = props => {
           />
           <InputField
             backgroundColor={props.inputBackgroundColor}
+            label="Hinta"
+            formatter={value =>
+              value == 0 ? `${value} €` : `${value} €`.replace(/^0/g, '')
+            }
+            lightMode
+            type="number"
+            onChange={props.updateTicketCatalogField(ticketType.id, 'price')}
+            value={Number(ticketType.price)}
+            disabled={props.disabled}
+          />
+          <InputField
+            backgroundColor={props.inputBackgroundColor}
             label="Paikkojen määrä"
             lightMode
-            horizontal
             type="number"
             onChange={props.updateTicketCatalogField(ticketType.id, 'maxSeats')}
             value={Number(ticketType.maxSeats)}
@@ -118,7 +115,7 @@ const TicketCatalogInputGroup = props => {
                 onTouchEnd={props.addTicketType}
                 icon="plus"
               >
-                Lisää lipun tyyppi
+                Lisää
               </GreenButton>
             )}
           </ButtonGroup>

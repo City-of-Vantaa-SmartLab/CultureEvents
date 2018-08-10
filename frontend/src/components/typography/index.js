@@ -43,9 +43,15 @@ const ErrorMessage = styled.span`
   color: ${props => props.color};
   display: ${props => (props.show ? 'flex' : 'none')};
 `;
+const Paragraph = styled.p`
+  font-size: 1rem;
+  color: ${props => props.color};
+  display: ${props => (props.show ? 'flex' : 'none')};
+`;
 
 export default class Typography extends React.Component {
   render() {
+
     const { color, type, children, show, ...props } = this.props;
     switch (type) {
       case 'headline':
@@ -95,6 +101,12 @@ export default class Typography extends React.Component {
           <ErrorMessage {...props} color={color} show={show}>
             {children}
           </ErrorMessage>
+        );
+      case 'paragraph':
+        return (
+          <Paragraph {...props} color={color} show={show}>
+            {children}
+          </Paragraph>
         );
       default:
         throw new Error('You provide a wrong type for typography');

@@ -25,7 +25,7 @@ class ThemeColorChooser extends React.Component {
     const { theme, value, onChange } = this.props;
     const { primary, secondary, ...colors } = theme.palette;
     return (
-      <InputField label="Teemaväri" lightMode type="text" horizontal>
+      <InputField label="Teemaväri" lightMode type="text">
         <FlexBox>
           {Object.values(colors).map(color => (
             <Box

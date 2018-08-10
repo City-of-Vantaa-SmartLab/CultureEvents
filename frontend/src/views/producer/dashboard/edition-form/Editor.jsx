@@ -130,6 +130,7 @@ class Editor extends React.Component {
   submitForm = () => {
     this.props.onSubmit(this.internalData.eventDraft);
   };
+
   render() {
     const inputBackgroundColor = toRgba(
       chroma(this.internalData.eventDraft.themeColor)
@@ -155,6 +156,9 @@ class Editor extends React.Component {
           canConfirm={canConfirm}
           canDiscard={canConfirm && !this.internalData.creationMode}
           canAddNew={!this.internalData.creationMode}
+          canSeeReservation={
+            !this.internalData.creationMode && this.props.selectedEvent
+          }
         />
         <Form>
           {this.internalData.creationMode && (
@@ -172,7 +176,6 @@ class Editor extends React.Component {
               backgroundColor={inputBackgroundColor}
               label="Tapahtuman nimi"
               lightMode
-              horizontal
               onChange={this.onChange('name')}
               value={this.internalData.eventDraft.name}
             />
@@ -182,7 +185,6 @@ class Editor extends React.Component {
               backgroundColor={inputBackgroundColor}
               label="Tapahtuman paikka"
               lightMode
-              horizontal
               onChange={this.onChange('location')}
               value={this.internalData.eventDraft.location}
             />
@@ -191,7 +193,6 @@ class Editor extends React.Component {
               backgroundColor={inputBackgroundColor}
               label="Alue"
               lightMode
-              horizontal
               type="select"
               data={consts.area.map(value => ({ value, label: value }))}
               onChange={value => (this.internalData.eventDraft.area = value)}
@@ -234,7 +235,6 @@ class Editor extends React.Component {
               backgroundColor={inputBackgroundColor}
               label="Päivämäärä"
               lightMode
-              horizontal
               type="date"
               onChange={this.onChange('eventDate')}
               value={this.internalData.eventDraft.eventDate}
@@ -243,7 +243,6 @@ class Editor extends React.Component {
               backgroundColor={inputBackgroundColor}
               label="Aika"
               lightMode
-              horizontal
               type="time"
               onChange={this.onChange('eventTime')}
               value={this.internalData.eventDraft.eventTime}
@@ -253,7 +252,6 @@ class Editor extends React.Component {
               backgroundColor={inputBackgroundColor}
               label="Esittäjä tai järjestäjä"
               lightMode
-              horizontal
               type="text"
               onChange={this.onChange('performer')}
               value={this.internalData.eventDraft.performer}
@@ -273,14 +271,13 @@ class Editor extends React.Component {
               backgroundColor={inputBackgroundColor}
               label="Lisätiedot"
               lightMode
-              horizontal
               type="text"
               value={this.internalData.eventDraft.contactInformation}
               onChange={this.onChange('contactInformation')}
             />
           </Row>
           <Row>
-            <InputField label="Tapahtuman tyyppi" lightMode horizontal>
+            <InputField label="Tapahtuman tyyppi" lightMode>
               <TagPillGroup
                 highlightColor={this.internalData.eventDraft.themeColor}
                 value={this.internalData.eventDraft.eventType}
@@ -290,7 +287,7 @@ class Editor extends React.Component {
             </InputField>
           </Row>
           <Row>
-            <InputField label="Ikäsuositus" lightMode horizontal>
+            <InputField label="Ikäsuositus" lightMode>
               <TagPillGroup
                 highlightColor={this.internalData.eventDraft.themeColor}
                 onChange={this.onAgeGroupChange}

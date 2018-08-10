@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { withTheme } from 'styled-components';
 import AntButton from 'antd/lib/button';
+import { connect } from 'utils';
 
 const Wrapper = styled.div`
   margin-bottom: 1rem;
@@ -31,7 +32,9 @@ class ButtonBar extends React.Component {
       discardChangeCB,
       canConfirm,
       canAddNew,
+      canSeeReservation,
     } = this.props;
+
     return (
       <Wrapper>
         <AntButton.Group>
@@ -62,10 +65,21 @@ class ButtonBar extends React.Component {
           >
             Hylkää muutokset
           </Button>
+          {canSeeReservation && (
+            <Button
+              bgColor={palette.purple}
+              icon="solution"
+              onClick={() =>
+                this.props.store.ui.orderAndPayment.toggleShowListing()
+              }
+            >
+              Katso varauslista
+            </Button>
+          )}
         </AntButton.Group>
       </Wrapper>
     );
   }
 }
 
-export default withTheme(ButtonBar);
+export default withTheme(connect('store')(ButtonBar));

@@ -36,5 +36,8 @@ const Event = types
         return acc;
       }, 0);
     },
+    catalogById(id) {
+      return self.ticketCatalog.find(c => c.id === id);
+    },
   }));
 export default Event;
