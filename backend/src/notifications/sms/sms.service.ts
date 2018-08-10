@@ -24,7 +24,6 @@ export class SMSService {
       }
     } catch (error) {
       console.log(`Failed to send sms to the user: ${error.message}`);
-      throw new Error(`Sms functionality failed: ${error.message}`);
     }
   }
 
