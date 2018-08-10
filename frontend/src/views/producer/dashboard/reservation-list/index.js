@@ -156,8 +156,7 @@ class ReservationList extends React.Component {
                 return a.name[0] < b.name[0];
               })
               .map((r, index) => (
-                <div>
-                  <div className="page-break" />
+                <div className="page-break" >
                   <ReservationListItem
                     key={index}
                     reservation={r}
