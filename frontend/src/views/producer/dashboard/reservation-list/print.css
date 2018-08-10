@@ -2,16 +2,13 @@
   size: A4 portrait;
 }
 
-@page:right {
-  margin: 0;
-  @top-right {
-    content: 'DEMO';
-  }
+body {
+  height: auto;
+  position: absolute;
+  overflow: auto;
 }
 
-@media all {
-  .page-break {
-    display: block;
-    page-break-before: always;
-  }
+.page-break {
+  page-break-before: always;
+  page-break-inside: avoid;
 }
