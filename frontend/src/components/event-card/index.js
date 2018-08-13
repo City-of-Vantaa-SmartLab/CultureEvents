@@ -209,7 +209,6 @@ export default class EventCard extends React.Component {
           <Content>
             <Typography
               type="largebody"
-              style={{ fontWeight: 700 }}
               color={
                 soldOut
                   ? '#DEDEDE'
@@ -231,12 +230,8 @@ export default class EventCard extends React.Component {
               {name}
             </Typography>
             {soldOut && (
-              <Typography
-                type="body"
-                color="#FF4B4B"
-                style={{ fontWeight: 700 }}
-              >
-                LOPPUUNMYYTY
+              <Typography type="largebody" color="#FF4B4B">
+                Loppuunmyyty
               </Typography>
             )}
           </Content>

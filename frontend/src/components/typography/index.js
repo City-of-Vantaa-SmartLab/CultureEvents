@@ -4,12 +4,12 @@ import styled from 'styled-components';
 const Headline = styled.h1`
   color: ${props => props.color};
   font-size: 2.85rem;
-  font-weight: 900;
+  font-weight: 700;
 `;
 const Title = styled.h4`
   color: ${props => props.color};
   font-size: 2.14rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
 `;
 const Subheader = styled.h6`
@@ -51,7 +51,6 @@ const Paragraph = styled.p`
 
 export default class Typography extends React.Component {
   render() {
-
     const { color, type, children, show, ...props } = this.props;
     switch (type) {
       case 'headline':

@@ -38,14 +38,19 @@ export const RootModel = types
   .actions(self => ({
     // hooks
     afterCreate() {
-      // // hydrate from localStorage // disabled for now
+      // hydrate from localStorage.
+      // only hydrates data, not state
       try {
-        if (window.localStorage.getItem('store'))
+        if (window.localStorage.getItem('store')) {
           applySnapshot(self, JSON.parse(window.localStorage.getItem('store')));
+        }
       } catch (error) {
         console.log('Failed to apply snapshot');
       }
+      // since whole store is hydrated, override these fields with default values
       self.selectedEvent = undefined;
+      self.ui = UI.create({});
+      self.filters = FilterModel.create({});
       // validate token access (only happen in Producer)
       if (process.env.NODE_ENV !== 'test') {
         // don't run async functions during test
@@ -61,7 +66,7 @@ export const RootModel = types
       if (self.selectedEvent) self.selectedEvent = undefined;
     },
     findEvent: id => resolveIdentifier(EventModel, self.events, id),
-    fetchEvents: flow(function* () {
+    fetchEvents: flow(function*() {
       try {
         self.ui.eventList.fetching = true;
 
@@ -76,7 +81,7 @@ export const RootModel = types
         self.ui.eventList.fetchError = 'Could not fetch events';
       }
     }),
-    patchEvent: flow(function* (event) {
+    patchEvent: flow(function*(event) {
       if (!resolveIdentifier(EventModel, self.events, event.id)) {
         // new event. POST
         try {
@@ -110,7 +115,7 @@ export const RootModel = types
       }
     }),
     // auth actions
-    login: flow(function* (username, password) {
+    login: flow(function*(username, password) {
       self.ui.auth.authInProgress = true;
       self.ui.authError = false;
       try {
@@ -131,7 +136,7 @@ export const RootModel = types
     logout: () => {
       self.user.token = undefined;
     },
-    validateToken: flow(function* () {
+    validateToken: flow(function*() {
       self.ui.auth.validateTokenInProgress = true;
       self.ui.auth.validateTokenFailed = false;
       try {
@@ -162,15 +167,15 @@ export const RootModel = types
       if (resolveTicketType.maxSeats < resolveTicketType.occupiedSeats + amount)
         throw new Error(
           `Invalid amount of seat. There are max ${
-          resolveTicketType.maxSeats
+            resolveTicketType.maxSeats
           }, and there are ${
-          resolveTicketType.occupiedSeats
+            resolveTicketType.occupiedSeats
           } while you try to occupy ${amount} seats`,
         );
       resolveTicketType.occupiedSeats += amount;
     },
     // order related actions
-    submitOrder: flow(function* (orderInfo) {
+    submitOrder: flow(function*(orderInfo) {
       // setting UI
       if (orderInfo.type == 'payment') {
         self.ui.orderAndPayment.redirectStatus = 1;
@@ -235,7 +240,7 @@ export const RootModel = types
         }
       }
     }),
-    fetchReservationsAndOrders: flow(function* () {
+    fetchReservationsAndOrders: flow(function*() {
       try {
         // @TODO: UI state for fetching reservations
         const result = yield getReservations();

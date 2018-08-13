@@ -16,7 +16,7 @@ const Sliddable = posed.div({
   },
   enter: {
     y: '0%',
-    transition: props => tween({ ...props, duration: 60 }),
+    transition: props => tween({ ...props, duration: 600 }),
   },
 });
 const Wrapper = styled(Sliddable)`
@@ -43,6 +43,7 @@ const LeftBox = styled.div`
     margin: 0;
     font-weight: 700;
     line-height: 1;
+    font-size: 1.6rem;
   }
   * {
     flex-shrink: 0;
