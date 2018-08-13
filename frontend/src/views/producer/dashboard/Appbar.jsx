@@ -46,10 +46,10 @@ class Appbar extends React.Component {
         <Wrapper>
           <LogoSection>
             <Logo noText />
-            <Typography type="title" color="white">
+            <Typography type="headline" color="white">
               VANTAA
             </Typography>
-            <Typography type="title" color={theme.palette.secondary}>
+            <Typography type="headline" color={theme.palette.secondary}>
               KULTTUURIA
             </Typography>
           </LogoSection>

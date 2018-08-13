@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 
 const WrapperBase = posed.div({
   normal: {
-    height: 250,
+    height: 300,
     width: true,
     top: 0,
     bottom: 0,
@@ -62,7 +62,7 @@ const Wrapper = styled(WrapperBase)`
   position: ${props => (props.expanded ? 'fixed' : 'relative')};
   z-index: ${props => (props.expanded ? 1000 : 1)};
   max-width: ${props => !props.expanded && '30rem'};
-  max-height: ${props => props.mini && '15rem'};
+  max-height: ${props => props.mini && '20rem'};
   width: 100%;
   -webkit-overflow-scroll: touch;
   margin: 0;
