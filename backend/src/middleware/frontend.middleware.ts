@@ -12,6 +12,7 @@ const allowedExt = [
   '.woff2',
   '.woff',
   '.ttf',
+  '.otf',
   '.svg',
 ];
 
