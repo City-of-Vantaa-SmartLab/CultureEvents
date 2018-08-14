@@ -9,13 +9,13 @@ export class Events {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100 })
+  @Column({ length: 300 })
   name: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 500 })
   location: string;
 
-  @Column({ length: 500 })
+  @Column({ length: 3000 })
   description: string;
 
   @Column({ length: 500 })
@@ -30,13 +30,13 @@ export class Events {
   })
   ticket_catalog: PriceDto[];
 
-  @Column({ length: 30 })
+  @Column({ length: 300 })
   contact_information: string;
 
-  @Column({ length: 30 })
+  @Column({ length: 300 })
   event_type: string;
 
-  @Column({ length: 15, nullable: true })
+  @Column({ length: 300, nullable: true })
   age_group_limits: string;
 
   @Column() is_wordless: boolean;
@@ -46,12 +46,12 @@ export class Events {
   @Column({ nullable: true })
   area: string;
 
-  @Column({ length: 500 })
+  @Column({ length: 1000 })
   cover_image: string;
 
-  @Column({ length: 30 })
+  @Column({ length: 300 })
   theme_color: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 100 })
   performer: string;
 }
