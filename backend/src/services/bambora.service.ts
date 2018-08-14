@@ -9,7 +9,7 @@ const apiKey = process.env.BAMBORA_API_KEY;
 const bamboraProductID = process.env.BAMBORA_PRODUCT_ID;
 const bamboraProductTitle = process.env.BAMBORA_PRODUCT_TITLE;
 
-const BAMBORA_TAX = process.env.BAMBORA_TAX || 10;
+const BAMBORA_TAX = process.env.BAMBORA_TAX || 0;
 
 const VANTA_ORDER_PREFIX = process.env.VANTA_ORDER_PREFIX || 'vantaa-order-';
 
@@ -32,12 +32,15 @@ export class BamboraService {
 
   createBamboraPaymentRequest(paymentModel) {
     const amount = paymentModel.amount * 100;
-    const preTaxAmount = Math.round(
-      Number(
-        ((amount * Number(BAMBORA_TAX)) / (Number(BAMBORA_TAX) + 1)).toFixed(2),
-      ),
-    );
-    const taxAmount = BAMBORA_TAX;
+    const bamboraTax = Number(BAMBORA_TAX);
+    let preTaxAmount = amount;
+    if (bamboraTax) {
+      preTaxAmount = Math.round(
+        Number(
+          ((amount * Number(BAMBORA_TAX)) / (Number(BAMBORA_TAX) + 1)).toFixed(2),
+        ),
+      );
+    }
     return {
       version: 'w3.1',
       api_key: apiKey,
@@ -61,7 +64,7 @@ export class BamboraService {
           title: bamboraProductTitle,
           count: 1,
           pretax_price: preTaxAmount,
-          tax: taxAmount,
+          tax: bamboraTax,
           price: amount,
           type: 1,
         },
