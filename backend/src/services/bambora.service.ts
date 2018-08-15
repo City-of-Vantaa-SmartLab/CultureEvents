@@ -9,7 +9,7 @@ const apiKey = process.env.BAMBORA_API_KEY;
 const bamboraProductID = process.env.BAMBORA_PRODUCT_ID;
 const bamboraProductTitle = process.env.BAMBORA_PRODUCT_TITLE;
 
-const BAMBORA_TAX = process.env.BAMBORA_TAX || 10;
+const BAMBORA_TAX = Number(process.env.BAMBORA_TAX) || 0;
 
 const VANTA_ORDER_PREFIX = process.env.VANTA_ORDER_PREFIX || 'vantaa-order-';
 
@@ -32,40 +32,47 @@ export class BamboraService {
 
   createBamboraPaymentRequest(paymentModel) {
     const amount = paymentModel.amount * 100;
-    const preTaxAmount = Math.round(
-      Number(
-        ((amount * Number(BAMBORA_TAX)) / (Number(BAMBORA_TAX) + 1)).toFixed(2),
-      ),
-    );
-    const taxAmount = BAMBORA_TAX;
-    return {
-      version: 'w3.1',
-      api_key: apiKey,
-      order_number: paymentModel.order_number,
-      amount: amount,
-      currency: 'EUR',
-      payment_method: {
-        type: 'e-payment',
-        return_url: payment_return_url,
-        notify_url: payemnt_notify_url,
-        lang: 'fi',
-        selected: ['banks', 'creditcards'],
-      },
-      authcode: paymentModel.auth_code,
-      customer: {
-        firstname: paymentModel.username,
-      },
-      products: [
-        {
-          id: bamboraProductID,
-          title: bamboraProductTitle,
-          count: 1,
-          pretax_price: preTaxAmount,
-          tax: taxAmount,
-          price: amount,
-          type: 1,
+    let preTaxAmount = amount;
+    try {
+      if (BAMBORA_TAX) {
+        preTaxAmount = Math.round(
+          Number(
+            ((amount * BAMBORA_TAX) / (BAMBORA_TAX + 1)).toFixed(2),
+          ),
+        );
+      }
+      return {
+        version: 'w3.1',
+        api_key: apiKey,
+        order_number: paymentModel.order_number,
+        amount: amount,
+        currency: 'EUR',
+        payment_method: {
+          type: 'e-payment',
+          return_url: payment_return_url,
+          notify_url: payemnt_notify_url,
+          lang: 'fi',
+          selected: ['banks', 'creditcards'],
         },
-      ],
-    };
+        authcode: paymentModel.auth_code,
+        customer: {
+          firstname: paymentModel.username,
+        },
+        products: [
+          {
+            id: bamboraProductID,
+            title: bamboraProductTitle,
+            count: 1,
+            pretax_price: preTaxAmount,
+            tax: BAMBORA_TAX,
+            price: amount,
+            type: 1,
+          },
+        ],
+      };
+    } catch (error) {
+      console.log('failed to create Bambora Payment Request', error);
+    }
+
   }
 }
