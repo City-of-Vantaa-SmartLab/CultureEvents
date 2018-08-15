@@ -1,5 +1,14 @@
 @page {
   size: A4 portrait;
+  margin: 36pt;
+}
+
+@page:right {
+  @bottom-left {
+    border-top: 0.25pt solid #666;
+    content: counter(page);
+    color: #0b5ba5;
+  }
 }
 
 body {

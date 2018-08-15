@@ -6,14 +6,14 @@ import Button from 'components/button';
 import { connect } from 'utils';
 import Typography from 'components/typography';
 import { values } from 'mobx';
-import CheckBox from 'antd/lib/checkbox';
+import Icon from 'antd/lib/icon';
 
 const FullScreenModal = styled.article`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  min-height:100%;
+  min-height: 100%;
   height: auto;
   background-color: white;
   display: flex;
@@ -34,7 +34,9 @@ const FullScreenModal = styled.article`
   }
 `;
 const ScrollContainer = styled.div`
-  margin: 3rem;
+  @media only screen {
+    margin: 3rem;
+  }
   max-width: 1600px;
   width: auto;
   & > ul {
@@ -42,10 +44,21 @@ const ScrollContainer = styled.div`
   }
 `;
 
+const HeadSectionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const LiStyled = styled.li`
   list-style: none;
   margin: 1rem;
   display: flex;
+
+  li {
+    list-style: disc;
+  }
+
   & > div {
     display: inline-block;
     margin-left: 1rem;
@@ -57,7 +70,14 @@ const LiStyled = styled.li`
   }
 `;
 
-const ReservationListItem = ({ reservation, event, key }) => {
+const CheckBoxDecorative = styled.div`
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 2px;
+  border: 1px ${props => props.color} solid;
+`;
+
+const ReservationListItem = ({ reservation, event }) => {
   const {
     customerType,
     name,
@@ -76,28 +96,21 @@ const ReservationListItem = ({ reservation, event, key }) => {
 
   return (
     <LiStyled key={reservation.id}>
-      <CheckBox checked={paymentCompleted} />
+      {paymentCompleted ? (
+        <Icon type="check-circle-o" style={{ color: event.themeColor }} />
+      ) : (
+        <CheckBoxDecorative color={event.themeColor} />
+      )}
       <div>
         {isPrivateCustomer ? (
-          <Typography
-            style={{ margin: 0, fontSize: '1.5rem' }}
-            type="paragraph"
-            show={true}
-          >
+          <Typography style={{ margin: 0 }} type="paragraph" show={true}>
             {name}
           </Typography>
         ) : (
-            <Typography
-              style={{ margin: 0, fontSize: '1.5rem' }}
-              type="paragraph"
-              show={true}
-            >
-              {name}, {schoolName}, {className}
-            </Typography>
-          )}
-        <Typography type="body">
-          {phone} {email && '· ' + email}
-        </Typography>
+          <Typography style={{ margin: 0 }} type="paragraph" show={true}>
+            {name}, {schoolName}, {className}, {phone}, {email}
+          </Typography>
+        )}
         <ul>
           {tickets.map(ticket => {
             const catalog = event.catalogById(ticket.priceId);
@@ -111,11 +124,7 @@ const ReservationListItem = ({ reservation, event, key }) => {
             );
           })}
         </ul>
-        <Typography
-          type="largebody"
-          color={event.themeColor}
-          style={{ fontSize: '1.2rem' }}
-        >
+        <Typography type="largebody" color={event.themeColor}>
           Yhteensa: {totalCost} €
         </Typography>
       </div>
@@ -143,21 +152,37 @@ class ReservationList extends React.Component {
           Takaisin
         </Button>
         <ScrollContainer>
-          <div>
-            <Typography type="headline" color={palette.primaryDeep}>Vantaa Kulttuuria{' '}</Typography>
-            <Typography type="title">Varauslista</Typography>
-            <Button icon={'printer'} onClick={window.print}>
-              Tulosta
-            </Button>
-            <hr />
-          </div>
-          <ul>
+          <HeadSectionContainer>
+            <div>
+              <Typography
+                type="headline"
+                color={palette.primaryDeep}
+                style={{ margin: 0 }}
+              >
+                Vantaa Kulttuuria{' '}
+              </Typography>
+              <Typography type="subheader">Varauslista</Typography>
+              <Button onClick={window.print}>Tulosta</Button>
+            </div>
+            <div>
+              <Typography type="body">Tapahtuma</Typography>
+              <Typography type="subheader" color={selectedEvent.themeColor}>
+                {selectedEvent.name}
+              </Typography>
+              <Typography type="body">
+                {selectedEvent.area} - {selectedEvent.eventDate} kello{' '}
+                {selectedEvent.eventTime}
+              </Typography>
+            </div>
+          </HeadSectionContainer>
+          <hr />
+          <ul style={{ padding: 0 }}>
             {reservations
               .sort((a, b) => {
                 return a.name[0] < b.name[0];
               })
               .map((r, index) => (
-                <div className="page-break" >
+                <div className="page-break">
                   <ReservationListItem
                     key={index}
                     reservation={r}
