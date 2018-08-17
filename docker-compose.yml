@@ -33,7 +33,7 @@ services:
       TELIA_USERNAME: vantaa-zylinc
       TELIA_PASSWORD:
       TELIA_USER: Vantaa
-      SEED_DB: 1
+      SEED_DB: 0
       AWS_S3_BUCKET_NAME: vantaa
       AWS_ACCESS_KEY_ID:
       AWS_SECRET_ACCESS_KEY:

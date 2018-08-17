@@ -5,6 +5,7 @@ import {
   IsArray,
   ArrayNotEmpty,
   ValidateNested,
+  IsBoolean,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -45,4 +46,16 @@ export class ReservationsDto {
   @ValidateNested()
   @Type(type => TicketsDto)
   tickets: Tickets[];
+
+  @IsOptional()
+  @IsBoolean()
+  payment_completed: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  sms_sent: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  cancelled: boolean;
 }
