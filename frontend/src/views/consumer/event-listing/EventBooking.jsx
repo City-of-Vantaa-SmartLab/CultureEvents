@@ -23,6 +23,17 @@ const Wrapper = styled.div`
         .rgba(),
     )};
 `;
+const TitleBox = styled.div`
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+  }
+
+  margin-bottom: 1rem;
+`;
+
 const FormListItemWrapper = styled.div`
   width: 100%;
   margin-bottom: 0.5rem;
@@ -157,7 +168,12 @@ export default connect('store')(
             isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
       return (
         <Wrapper bgColor={themeColor}>
-          <Typography type="title">Varaa/osta lippu</Typography>
+          <TitleBox>
+            <Typography type="title">Varaa/osta lippu</Typography>
+            <Typography type="secondarybody">
+              Varaaminen on mahdollista vain ryhmille
+            </Typography>
+          </TitleBox>
           <FormListItem title="1 - Olen">
             <ButtonGroup style={{ display: 'flex' }}>
               <CustomerGroupButton
