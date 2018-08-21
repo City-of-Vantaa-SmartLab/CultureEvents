@@ -22,7 +22,7 @@ const Event = types
       types.enumeration('EventType', consts.eventType),
       'Esitykset',
     ),
-    ageGroupLimits: types.optional(types.array(types.string), ['0-3']),
+    ageGroupLimits: types.optional(types.array(types.string), ['0-2']),
     isWordless: types.optional(types.boolean, false),
     isBilingual: types.optional(types.boolean, false),
     coverImage: types.optional(types.string, ''),
