@@ -23,6 +23,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
   async create(@Res() response, @Body() user: UserDto) {
     try {
