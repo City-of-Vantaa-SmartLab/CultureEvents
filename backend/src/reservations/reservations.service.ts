@@ -36,8 +36,8 @@ export class ReservationService {
       }
       await Promise.all(
         reservation.tickets.map(
-          async ticket =>
-            await this.priceService.updateSeats(
+          ticket =>
+            this.priceService.updateSeats(
               ticket.price_id,
               ticket.no_of_tickets,
             ),
