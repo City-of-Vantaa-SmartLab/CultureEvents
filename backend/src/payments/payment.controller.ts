@@ -113,7 +113,7 @@ export class PaymentController {
         return res.redirect(`${APP_REDIRECT_URL}?status=2&event_id=${reservation.event_id}`);
       }
 
-      await this.reservationService.updateReservation(reservation.id, { payment_completed: true });
+      await this.reservationService.updateReservation(reservation.id, { confirmed: true });
       await this.paymentService.updatePayment(payment.order_number, { payment_status: true })
 
       const smsResponse = await this.paymentService.sendSmsToUser(

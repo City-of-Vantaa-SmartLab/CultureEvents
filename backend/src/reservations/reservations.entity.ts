@@ -43,7 +43,7 @@ export class Reservations {
   tickets: Tickets[];
 
   @Column({ default: false })
-  payment_completed: boolean;
+  confirmed: boolean;
 
   @Column({ default: false })
   sms_sent: boolean;

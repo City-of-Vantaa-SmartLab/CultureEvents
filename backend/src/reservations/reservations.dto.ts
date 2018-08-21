@@ -49,7 +49,7 @@ export class ReservationsDto {
 
   @IsOptional()
   @IsBoolean()
-  payment_completed: boolean;
+  confirmed: boolean;
 
   @IsOptional()
   @IsBoolean()
