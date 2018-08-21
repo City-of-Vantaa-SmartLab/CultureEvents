@@ -82,16 +82,16 @@ export class PaymentController {
   @UsePipes(new ValidationPipe())
   async payment_return(@Req() req, @Res() res) {
     try {
-      const response = req.query.RETURN_CODE;
+      const bamboraReturnCode = req.query.RETURN_CODE;
       const orderNumber = req.query.ORDER_NUMBER;
       const payment = await this.paymentService.getPaymentByOrderNumber(
         orderNumber,
       );
-      if (response !== this.BamboraReturnCodes.SUCCESS) {
+      if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
         //delete reservation since payment failed
         await this.reservationService.deleteReservation(payment.reservation_id);
         console.error(
-          `Payment failed with error code: ${response}. Please try again later`,
+          `Payment failed with error code: ${bamboraReturnCode}. Please try again later`,
         );
         return res.redirect(`${APP_REDIRECT_URL}?status=3`);
       }
@@ -113,13 +113,11 @@ export class PaymentController {
         return res.redirect(`${APP_REDIRECT_URL}?status=2&event_id=${reservation.event_id}`);
       }
 
-      await this.reservationService.updateReservation(reservation.id, { confirmed: true });
-      await this.paymentService.updatePayment(payment.order_number, { payment_status: true })
-
-      const smsResponse = await this.paymentService.sendSmsToUser(
-        payment.reservation_id,
-        payment.amount,
-      );
+      const [, , smsResponse] = await Promise.all([
+        await this.reservationService.updateReservation(reservation.id, { confirmed: true }),
+        await this.paymentService.updatePayment(payment.order_number, { payment_status: true }),
+        await this.paymentService.sendSmsToUser(payment.reservation_id, payment.amount)
+      ]);
 
       if (smsResponse) {
         await this.reservationService.updateReservation(reservation.id, { sms_sent: true });
