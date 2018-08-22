@@ -3,16 +3,17 @@ import Logo from 'components/logo';
 import TextArt from 'components/logo/textart';
 import { createPortal } from 'react-dom';
 import posed, { PoseGroup } from 'react-pose';
-import { tween, physics } from 'popmotion';
+import { tween } from 'popmotion';
 import Typography from 'components/typography';
 
 const AnimatedElement = posed.div({
   preEnter: {
-    x: '150%',
+    x: '130%',
     scale: 1.5,
     opacity: 0,
   },
   enter: {
+    delay: 500,
     x: 0,
     scale: 1,
     opacity: 1,
@@ -29,7 +30,7 @@ const AnimatedText = posed.div({
     opacity: 0,
   },
   enter: {
-    delay: 500,
+    delay: 900,
     opacity: 1,
     transition: props => tween({ duration: 1000, ...props }),
   },
@@ -42,8 +43,6 @@ const AnimatedContainer = posed.div({
   enter: {
     opacity: 1,
     transition: props => tween({ duration: 1000, ...props }),
-    staggerChildren: 100,
-    delayChildren: 100,
   },
   exit: {
     delay: 500,
@@ -56,7 +55,7 @@ class LoadingComponent extends React.Component {
     return (
       <PoseGroup>
         {this.props.show && (
-          <AnimatedContainer className="loading-background">
+          <AnimatedContainer key="main-wrapper" className="loading-background">
             <div className="loading-aligner">
               <PoseGroup animateOnMount preEnterPose="preEnter">
                 <AnimatedElement
@@ -73,14 +72,19 @@ class LoadingComponent extends React.Component {
               </PoseGroup>
             </div>
             <PoseGroup animateOnMount preEnterPose="preEnter">
-              <AnimatedText className="loading-aligner">
+              <AnimatedText key="info-text-spinner" className="loading-aligner">
                 <div
                   className="rotating-square"
                   pose="rotating"
                   style={{ marginRight: '2rem' }}
                 />
-                <Typography type="largebody" color="white">
-                  Loading the application...
+                <Typography
+                  className="pulsating-text"
+                  key="info-text-details"
+                  type="largebody"
+                  color="white"
+                >
+                  Ohjelman lataaminen...
                 </Typography>
               </AnimatedText>
             </PoseGroup>
@@ -102,7 +106,7 @@ class LoadingScreen extends React.Component {
   componentDidMount() {
     window.setTimeout(() => {
       this.setState({ done: true });
-    }, 4000);
+    }, 3500);
   }
   render() {
     return createPortal(

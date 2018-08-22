@@ -51,14 +51,27 @@ body {
     transform: rotate(360deg);
   }
 }
+@keyframes pulse {
+  0% {
+    opacity: 0.3;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
 .rotating-square {
   width: 2rem;
   height: 2rem;
   margin: 1rem;
   background-color: rgba(255, 255, 255, 0.8);
-  animation: spin 2s infinite;
+  animation: spin 1.5s infinite;
 }
-
+.pulsating-text {
+  animation: pulse 1.5s infinite;
+}
 /* */
 @font-face {
   font-family: 'GT-Walsheim';
