@@ -14,6 +14,7 @@ import { SMSService } from 'notifications/sms/sms.service';
 import * as stringInterpolator from 'interpolate';
 import { ReservationsDto } from 'reservations/reservations.dto';
 import { PriceService } from 'price/price.service';
+import { PaymentsDto } from './payment.dto';
 
 const TOKEN_URL = 'https://payform.bambora.com/pbwapi/auth_payment';
 const BAMBORA_API_URL = 'https://payform.bambora.com/pbwapi/token/';
@@ -56,10 +57,13 @@ export class PaymentService {
     });
   }
 
-  async updatePaymentStatus(orderNumber: string, payment_status: boolean) {
-    const payment = await this.getPaymentByOrderNumber(orderNumber);
-    payment.payment_status = payment_status;
-    this.paymentRepository.save(payment);
+  async updatePayment(orderNumber: string, payment: Partial<PaymentsDto>) {
+    const paymentFromDb = await this.getPaymentByOrderNumber(orderNumber);
+    const paymentToUpdate = {
+      ...paymentFromDb,
+      ...payment
+    }
+    await this.paymentRepository.update(paymentFromDb.id, paymentToUpdate);
   }
 
   async sendSmsToUser(id: number, amount: number) {

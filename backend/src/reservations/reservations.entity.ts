@@ -46,5 +46,8 @@ export class Reservations {
   confirmed: boolean;
 
   @Column({ default: false })
-  payment_completed: boolean;
+  sms_sent: boolean;
+
+  @Column({ default: false })
+  cancelled: boolean;
 }

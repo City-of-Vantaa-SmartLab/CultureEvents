@@ -22,7 +22,8 @@ export class ReservationsController {
   constructor(
     private readonly reservationsService: ReservationService,
     private readonly validationService: ValidationService,
-  ) {}
+  ) { }
+
   @Get()
   async findAll(@Res() response): Promise<Reservations[]> {
     try {
@@ -69,11 +70,8 @@ export class ReservationsController {
   @UsePipes(new ValidationPipe())
   async mark_complete(@Res() response, @Body() id: number) {
     try {
-      const reservation = await this.reservationsService.updatePaymentStatus(
-        id,
-        true,
-      );
-      if (!reservation.payment_completed) {
+      const reservation = await this.reservationsService.updateReservation(id, { confirmed: true });
+      if (!reservation.confirmed) {
         return response
           .status(422)
           .json(`Failed to update reservation as completed`);

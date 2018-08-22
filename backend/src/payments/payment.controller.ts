@@ -31,7 +31,7 @@ export class PaymentController {
     private readonly paymentService: PaymentService,
     private readonly validationService: ValidationService,
     private readonly reservationService: ReservationService,
-  ) {}
+  ) { }
 
   BamboraReturnCodes = {
     SUCCESS: '0',
@@ -82,76 +82,56 @@ export class PaymentController {
   @UsePipes(new ValidationPipe())
   async payment_return(@Req() req, @Res() res) {
     try {
-      const response = req.query.RETURN_CODE;
-      if (response === this.BamboraReturnCodes.SUCCESS) {
-        const orderNumber = req.query.ORDER_NUMBER;
-        const payment = await this.paymentService.getPaymentByOrderNumber(
-          orderNumber,
-        );
-        if (!payment) {
-          console.error(
-            `Payment details not available in the system. Payment Order: ${
-              payment.order_number
-            }`,
-          );
-          return res.redirect(`${APP_REDIRECT_URL}?status=1`);
-        }
-
-        const reservation_details = await this.reservationService.findOneById(
-          payment.reservation_id,
-        );
-        // Checking if the payment has already been done.
-        if (payment.payment_status) {
-          console.error(
-            `This payment was already processed!. Payment Order: ${
-              payment.order_number
-            }`,
-          );
-          return res.redirect(
-            `${APP_REDIRECT_URL}?status=2&event_id=${reservation_details.id}`,
-          );
-        } else {
-          // Updating payment as completed.
-          payment.payment_status = true;
-          await this.paymentService.updatePaymentStatus(
-            payment.order_number,
-            true,
-          );
-        }
-        await this.reservationService.updatePaymentStatus(
-          payment.reservation_id,
-          true,
-        );
-
-        const smsResponse = await this.paymentService.sendSmsToUser(
-          payment.reservation_id,
-          payment.amount,
-        );
-        if (smsResponse) {
-          res.redirect(
-            `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
-              payment.amount
-            }&status=0&event_id=${reservation_details.id}`,
-          );
-        } else {
-          res.redirect(
-            `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${
-              payment.amount
-            }&status=5&event_id=${reservation_details.id}`,
-          );
-        }
-      } else {
+      const bamboraReturnCode = req.query.RETURN_CODE;
+      const orderNumber = req.query.ORDER_NUMBER;
+      const payment = await this.paymentService.getPaymentByOrderNumber(
+        orderNumber,
+      );
+      if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
+        //delete reservation since payment failed
+        await this.reservationService.deleteReservation(payment.reservation_id);
         console.error(
-          `Payment failed with error code: ${response}. Please try again later`,
+          `Payment failed with error code: ${bamboraReturnCode}. Please try again later`,
         );
         return res.redirect(`${APP_REDIRECT_URL}?status=3`);
       }
+
+      if (!payment) {
+        console.error(
+          `Payment details not available in the system. Payment Order: ${
+          payment.order_number
+          }`,
+        );
+        return res.redirect(`${APP_REDIRECT_URL}?status=1`);
+      }
+
+      const reservation = await this.reservationService.findOneById(payment.reservation_id, );
+
+      // Checking if the payment has already been done.
+      if (payment.payment_status) {
+        console.error(`This payment was already processed!. Payment Order: ${payment.order_number}`);
+        return res.redirect(`${APP_REDIRECT_URL}?status=2&event_id=${reservation.event_id}`);
+      }
+
+      const [, , smsResponse] = await Promise.all([
+        await this.reservationService.updateReservation(reservation.id, { confirmed: true }),
+        await this.paymentService.updatePayment(payment.order_number, { payment_status: true }),
+        await this.paymentService.sendSmsToUser(payment.reservation_id, payment.amount)
+      ]);
+
+      if (smsResponse) {
+        await this.reservationService.updateReservation(reservation.id, { sms_sent: true });
+        return res.redirect(
+          `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}
+          &status=0&event_id=${reservation.event_id}`);
+      }
+
+      return res.redirect(
+        `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}
+        &status=5&event_id=${reservation.event_id}`);
+
     } catch (err) {
-      console.error(
-        `Payment failed with error code: ${
-          err.message
-        }. Please try again later`,
-      );
+      console.error(`Payment failed with error code: ${err.message}. Please try again later`);
       return res.redirect(`${APP_REDIRECT_URL}?status=4`);
     }
   }
@@ -234,7 +214,7 @@ export class PaymentController {
           .status(422)
           .json(
             `Failed to make payment for the request: Could not make payment request with Bambora`,
-          );
+        );
       }
       response.status(200).json({ redirect_url: redirectUrl });
     } catch (error) {

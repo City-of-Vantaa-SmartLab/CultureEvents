@@ -31,46 +31,48 @@ export class ReservationService {
       if (sendSms) {
         const smsResponse = await this.sendSmsToUser(reservation);
         if (smsResponse) {
-          await Promise.all(
-            reservation.tickets.map(
-              async ticket =>
-                await this.priceService.increaseOccupiedSeats(
-                  ticket.price_id,
-                  ticket.no_of_tickets,
-                ),
-            ),
-          );
-          this.updateReservationStatus(reservation.id, true);
-          return response;
-        } else {
-          console.error('Sms Funtionality failed!.');
+          await this.updateReservation(reservation.id, { sms_sent: true })
         }
-      } else {
-        return response;
       }
+      await Promise.all(
+        reservation.tickets.map(
+          ticket =>
+            this.priceService.updateSeats(
+              ticket.price_id,
+              ticket.no_of_tickets,
+            ),
+        ),
+      );
+      return response;
+
     } else {
       throw new Error('Failed to create reservation!.');
     }
   }
 
   async deleteReservation(id: number) {
+    const reservation = await this.findOneById(id);
+    await Promise.all(
+      reservation.tickets.map(
+        ticket =>
+          this.priceService.updateSeats(
+            ticket.price_id,
+            -ticket.no_of_tickets,
+          ),
+      ),
+    );
+
     await this.reservationsRepository.delete(id);
     return id;
   }
 
-  async updateReservation(id: number, reservation: ReservationsDto) {
-    //TODO - Increate/decrease seats based on the reservation status.
-    await this.reservationsRepository.update(id, reservation);
-    return await this.reservationsRepository.findOne(id);
-  }
-
-  async updateReservationStatus(id: number, status: boolean) {
-    await this.reservationsRepository.update(id, { confirmed: status });
-    return await this.reservationsRepository.findOne(id);
-  }
-
-  async updatePaymentStatus(id: number, status: boolean) {
-    await this.reservationsRepository.update(id, { payment_completed: status });
+  async updateReservation(id: number, reservation: Partial<ReservationsDto>) {
+    const reservationFromDb = await this.findOneById(id);
+    const reservationToUpdate = {
+      ...reservationFromDb,
+      ...reservation
+    }
+    await this.reservationsRepository.update(id, reservationToUpdate);
     return await this.reservationsRepository.findOne(id);
   }
 
@@ -78,6 +80,7 @@ export class ReservationService {
     return await this.reservationsRepository.find({
       relations: ['tickets'],
     });
+
   }
 
   async findOneById(id: number) {
