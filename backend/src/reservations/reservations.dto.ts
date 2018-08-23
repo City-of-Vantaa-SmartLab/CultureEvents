@@ -58,4 +58,8 @@ export class ReservationsDto {
   @IsOptional()
   @IsBoolean()
   cancelled: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  payment_completed: boolean;
 }

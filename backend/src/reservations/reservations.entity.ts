@@ -39,6 +39,7 @@ export class Reservations {
 
   @OneToMany(type => Tickets, tickets => tickets.tickets, {
     cascade: true,
+    onDelete: 'CASCADE'
   })
   tickets: Tickets[];
 
@@ -50,4 +51,7 @@ export class Reservations {
 
   @Column({ default: false })
   cancelled: boolean;
+
+  @Column({ default: false })
+  payment_completed: boolean;
 }

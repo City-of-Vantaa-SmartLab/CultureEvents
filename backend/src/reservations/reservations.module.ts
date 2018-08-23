@@ -14,7 +14,7 @@ import { PriceModule } from 'price/price.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Reservations]),
+    TypeOrmModule.forFeature([Reservations, Tickets]),
     TypeOrmModule.forFeature([Events]),
     PriceModule,
   ],
@@ -25,7 +25,8 @@ import { PriceModule } from 'price/price.module';
     SMSService,
     EventsService,
     I18Service,
+    TicketService
   ],
   exports: [ReservationService],
 })
-export class ReservationsModule {}
+export class ReservationsModule { }
