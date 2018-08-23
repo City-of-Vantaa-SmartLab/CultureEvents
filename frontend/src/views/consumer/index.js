@@ -9,6 +9,7 @@ import { onSnapshot } from 'mobx-state-tree';
 import RedirectModal from './redirection-modal';
 import ReservationStatusModal from './reservation-status-modal';
 import PaymentStatusModal from './paymentstatus-modal';
+import WelcomeModal from './welcome-modal';
 
 const store = RootStore.create();
 onSnapshot(store, console.log);
@@ -27,6 +28,7 @@ export default class ConsumerUI extends React.Component {
     return (
       <Provider store={store}>
         <Wrapper>
+          <WelcomeModal />
           <Appbar />
           <EventListing />
           <FilterView />

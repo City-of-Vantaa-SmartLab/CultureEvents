@@ -1,4 +1,4 @@
-import EventModel, { TicketCatalog } from './event';
+import EventModel from './event';
 
 test('event model has correct default', () => {
   const defaultEventCreated = EventModel.create({ id: '1' }).toJSON();

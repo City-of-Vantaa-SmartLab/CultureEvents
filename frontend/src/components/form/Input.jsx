@@ -18,18 +18,12 @@ const TextInput = styled(AntInput)`
   }
 `;
 
-export const TextArea = styled(AntTextArea)`
+export const TextArea = styled.textarea`
   &&& {
     border-radius: 8px;
     padding: 0.5rem 1rem;
     border: white;
-
-    &,
-    div,
-    textarea,
-    input {
-      background-color: ${props => props.backgroundColor};
-    }
+    background-color: ${props => props.backgroundColor};
   }
 `;
 export const NumericInput = styled(AntNumericInput)`
