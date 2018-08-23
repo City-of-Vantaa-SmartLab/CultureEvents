@@ -70,7 +70,7 @@ export class ReservationsController {
   @UsePipes(new ValidationPipe())
   async mark_complete(@Res() response, @Body() id: number) {
     try {
-      const reservation = await this.reservationsService.updateReservation(id, { confirmed: true });
+      const reservation = await this.reservationsService.updateReservation(id, { payment_completed: true });
       if (!reservation.confirmed) {
         return response
           .status(422)

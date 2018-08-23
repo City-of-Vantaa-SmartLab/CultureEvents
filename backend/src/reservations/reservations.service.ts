@@ -13,6 +13,7 @@ import { Tickets } from 'tickets/tickets.entity';
 import { PriceDto } from 'price/price.dto';
 import { PriceService } from 'price/price.service';
 import * as stringInterpolator from 'interpolate';
+import { TicketService } from 'tickets/tickets.service';
 
 @Injectable()
 export class ReservationService {
@@ -23,6 +24,7 @@ export class ReservationService {
     private readonly i18Service: I18Service,
     private readonly eventService: EventsService,
     private readonly priceService: PriceService,
+    private readonly ticketService: TicketService
   ) { }
 
   async createReservation(reservation: ReservationsDto, sendSms: boolean) {
@@ -37,10 +39,7 @@ export class ReservationService {
       await Promise.all(
         reservation.tickets.map(
           ticket =>
-            this.priceService.updateSeats(
-              ticket.price_id,
-              ticket.no_of_tickets,
-            ),
+            this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets),
         ),
       );
       return response;
@@ -54,11 +53,10 @@ export class ReservationService {
     const reservation = await this.findOneById(id);
     await Promise.all(
       reservation.tickets.map(
-        ticket =>
-          this.priceService.updateSeats(
-            ticket.price_id,
-            -ticket.no_of_tickets,
-          ),
+        async ticket => {
+          await this.priceService.updateSeats(ticket.price_id, -ticket.no_of_tickets);
+          await this.ticketService.delete(ticket.id);
+        }
       ),
     );
 

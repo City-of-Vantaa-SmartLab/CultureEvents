@@ -89,6 +89,7 @@ export class PaymentController {
       );
       if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
         //delete reservation since payment failed
+        await this.paymentService.delete(payment.id);
         await this.reservationService.deleteReservation(payment.reservation_id);
         console.error(
           `Payment failed with error code: ${bamboraReturnCode}. Please try again later`,
@@ -114,7 +115,7 @@ export class PaymentController {
       }
 
       const [, , smsResponse] = await Promise.all([
-        await this.reservationService.updateReservation(reservation.id, { confirmed: true }),
+        await this.reservationService.updateReservation(reservation.id, { confirmed: true, payment_completed: true }),
         await this.paymentService.updatePayment(payment.order_number, { payment_status: true }),
         await this.paymentService.sendSmsToUser(payment.reservation_id, payment.amount)
       ]);

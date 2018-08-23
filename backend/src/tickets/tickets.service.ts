@@ -7,7 +7,7 @@ export class TicketService {
   constructor(
     @InjectRepository(Tickets)
     private readonly ticketsRepository: Repository<Tickets>,
-  ) {}
+  ) { }
 
   async getTicketDetails(id: number) {
     const response = await this.ticketsRepository.findOne(id);
@@ -16,5 +16,9 @@ export class TicketService {
     } else {
       throw new Error('Failed to get ticket details!.');
     }
+  }
+
+  async delete(id: number) {
+    await this.ticketsRepository.delete(id);
   }
 }

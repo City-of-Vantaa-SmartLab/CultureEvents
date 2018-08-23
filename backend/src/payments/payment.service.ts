@@ -57,6 +57,10 @@ export class PaymentService {
     });
   }
 
+  async delete(id: number) {
+    return await this.paymentRepository.delete(id);
+  }
+
   async updatePayment(orderNumber: string, payment: Partial<PaymentsDto>) {
     const paymentFromDb = await this.getPaymentByOrderNumber(orderNumber);
     const paymentToUpdate = {
