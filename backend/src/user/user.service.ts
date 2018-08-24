@@ -12,7 +12,7 @@ const SALT_ROUNDS = 10;
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
   async loginUser(user: User) {
     user.logged_in = true;
     const loginResponse = await this.userRepository.update(user.id, user);
@@ -31,6 +31,10 @@ export class UserService {
     user.password = hashedPassword;
     const response = await this.userRepository.update(id, user);
     return response;
+  }
+
+  async deleteUser(id: number) {
+    return await this.userRepository.delete(id);
   }
 
   async getUsers() {

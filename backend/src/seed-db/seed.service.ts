@@ -12,7 +12,7 @@ export class SeedService implements OnModuleInit {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly connection: Connection,
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   async onModuleInit() {
     await this.seedUsers();
@@ -21,6 +21,13 @@ export class SeedService implements OnModuleInit {
   async seedUsers() {
     try {
       if (SEED_DB) {
+        const dbUsers = await this.userService.getUsers();
+        await Promise.all(
+          dbUsers.map(async user => {
+            await this.userService.deleteUser(user.id);
+          }),
+        );
+
         await Promise.all(
           seed_users.map(async user => {
             user.password = await this.userService.hashPassword(user.password);

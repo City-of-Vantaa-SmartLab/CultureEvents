@@ -6,7 +6,7 @@ import { connect } from 'utils';
 import Spin from 'antd/lib/spin';
 import 'antd/dist/antd.css';
 
-const BASE_URL = 'https://' + window.location.host;
+const BASE_URL = window.location.protocol + '//' + window.location.host;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -75,43 +75,43 @@ class CoverImage extends React.Component {
         {this.state.uploadInProgress ? (
           <Spin spinning={true}>Ladataan kuvaa.. Odota hetki, kiitos.</Spin>
         ) : (
-          <React.Fragment>
-            <Typography
-              style={{ transform: 'translateY(-1rem)' }}
-              type="largebody"
-            >
-              Kansikuva (ja GIF)
-            </Typography>
-            <Image src={this.props.value} />
-            <FlexBox>
-              <InputField
-                style={{ width: '100%', marginRight: '1rem' }}
-                label="Kuvan verkko-osoite (URL)"
-                lightMode
-                backgroundColor={inputBackgroundColor}
-                type="text"
-                onChange={onChange}
-                value={value}
-              />
-            </FlexBox>
-            <FlexBox>
-              <InputField
-                label="Tai lataa tiedosto"
-                lightMode
-                type="file"
-                onChange={this.handleUploadImage}
-              />
+            <React.Fragment>
               <Typography
                 style={{ transform: 'translateY(-1rem)' }}
-                type="errorMessage"
-                show={this.state.uploadFailed}
-                color="red"
+                type="largebody"
               >
-                <p>Kuvan lataaminen epäonnistui. Yritä uudelleen, kiitos.</p>
-              </Typography>
-            </FlexBox>
-          </React.Fragment>
-        )}
+                Kansikuva (ja GIF)
+            </Typography>
+              <Image src={this.props.value} />
+              <FlexBox>
+                <InputField
+                  style={{ width: '100%', marginRight: '1rem' }}
+                  label="Kuvan verkko-osoite (URL)"
+                  lightMode
+                  backgroundColor={inputBackgroundColor}
+                  type="text"
+                  onChange={onChange}
+                  value={value}
+                />
+              </FlexBox>
+              <FlexBox>
+                <InputField
+                  label="Tai lataa tiedosto"
+                  lightMode
+                  type="file"
+                  onChange={this.handleUploadImage}
+                />
+                <Typography
+                  style={{ transform: 'translateY(-1rem)' }}
+                  type="errorMessage"
+                  show={this.state.uploadFailed}
+                  color="red"
+                >
+                  <p>Kuvan lataaminen epäonnistui. Yritä uudelleen, kiitos.</p>
+                </Typography>
+              </FlexBox>
+            </React.Fragment>
+          )}
       </Wrapper>
     );
   }
