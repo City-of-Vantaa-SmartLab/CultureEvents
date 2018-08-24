@@ -84,7 +84,7 @@ class LoadingComponent extends React.Component {
                   type="largebody"
                   color="white"
                 >
-                  Ohjelman lataaminen...
+                  Sovellusta ladataan...
                 </Typography>
               </AnimatedText>
             </PoseGroup>
