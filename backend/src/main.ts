@@ -7,13 +7,8 @@ const bodyParser = require('body-parser');
 dotenv.config();
 const path = require('path');
 const PORT = process.env.PORT;
-const FILE_SIZE_LIMIT = process.env.FILE_SIZE_LIMIT || '5mb';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(bodyParser.urlencoded({
-    extended: true,
-    limit: FILE_SIZE_LIMIT
-  }));
   app.use(/^\/$/, (req, res) => {
     res.redirect('/app/');
   });
@@ -31,7 +26,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
-  console.log('BODY_PARSER_UPDATED');
   await app.listen(PORT);
 }
 bootstrap();
