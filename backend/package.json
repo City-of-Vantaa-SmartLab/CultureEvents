@@ -6,6 +6,8 @@
   "license": "MIT",
   "scripts": {
     "format": "prettier --write \"**/*.ts\"",
+    "db:start": "docker run --rm --name culture-events-database -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -d postgres",
+    "db:stop": "docker kill culture-events-database",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "dev": "./node_modules/.bin/nodemon",
     "prestart:prod": "rm -rf dist && tsc",
