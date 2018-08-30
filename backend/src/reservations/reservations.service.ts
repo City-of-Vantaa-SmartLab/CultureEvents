@@ -14,6 +14,7 @@ import { PriceDto } from 'price/price.dto';
 import { PriceService } from 'price/price.service';
 import * as stringInterpolator from 'interpolate';
 import { TicketService } from 'tickets/tickets.service';
+import * as dateFns from 'date-fns';
 
 @Injectable()
 export class ReservationService {
@@ -75,10 +76,32 @@ export class ReservationService {
   }
 
   async findAll(): Promise<Reservations[]> {
-    return await this.reservationsRepository.find({
+    let failedReservations = await this.reservationsRepository.find({
+      where: {
+        payment_required: true,
+        payment_completed: false,
+      },
       relations: ['tickets'],
     });
 
+    //Find failed reservations
+    failedReservations = failedReservations.filter(reservation =>
+      dateFns.differenceInMinutes(new Date(), reservation.created) > 5);
+
+    //Delete failed reservations
+    failedReservations.forEach(async reservation =>
+      await this.deleteReservation(reservation.id))
+
+    let reservations = await this.reservationsRepository.find({
+      relations: ['tickets'],
+    });
+
+    reservations = reservations.filter(reservations => (
+      (reservations.payment_completed && reservations.payment_required)
+      || !reservations.payment_required)
+    );
+
+    return reservations;
   }
 
   async findOneById(id: number) {

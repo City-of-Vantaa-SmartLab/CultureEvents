@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Events } from 'event/events.entity';
 import { Tickets } from 'tickets/tickets.entity';
+import * as dateFns from 'date-fns';
 
 @Entity()
 export class Reservations {
@@ -54,4 +55,11 @@ export class Reservations {
 
   @Column({ default: false })
   payment_completed: boolean;
+
+  @Column({ type: 'timestamp without time zone', default: dateFns.format(new Date(), 'YYYY-MM-DD HH:mm') })
+  created: string;
+
+  @Column({ default: false })
+  payment_required: boolean;
+
 }

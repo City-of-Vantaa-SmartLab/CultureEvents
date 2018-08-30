@@ -192,6 +192,7 @@ export class PaymentController {
           .json(`There are not enough seats available for this event`);
       }
 
+      reservation.payment_required = true;
       const reservationDto = await this.reservationService.createReservation(
         reservation,
         false,
