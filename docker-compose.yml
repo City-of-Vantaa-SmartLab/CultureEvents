@@ -19,7 +19,6 @@ services:
     command: npm run dev
     volumes:
       - ./backend:/backend
-      - /backend/node_modules
     depends_on:
       - postgres-dev-db
     environment:
@@ -37,6 +36,7 @@ services:
       AWS_S3_BUCKET_NAME: vantaa
       AWS_ACCESS_KEY_ID:
       AWS_SECRET_ACCESS_KEY:
+      DATABASE_HOST: postgres-dev-db
 
   postgres-dev-db:
     image: postgres:10.3
