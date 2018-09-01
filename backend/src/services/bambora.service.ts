@@ -3,8 +3,8 @@ import * as crypto from 'crypto';
 const payment_return_url = process.env.PAYMENT_RETURN_URL;
 const payemnt_notify_url = process.env.PAYMENT_NOTIFY_URL;
 
-const secret = process.env.BAMBORA_SECRET_KEY;
-const apiKey = process.env.BAMBORA_API_KEY;
+const secret = process.env.BAMBORA_SECRET_KEY || 'SECRET_KEY';
+const apiKey = process.env.BAMBORA_API_KEY || 'API_KEY';
 
 const bamboraProductID = process.env.BAMBORA_PRODUCT_ID;
 const bamboraProductTitle = process.env.BAMBORA_PRODUCT_TITLE;
@@ -71,7 +71,7 @@ export class BamboraService {
         ],
       };
     } catch (error) {
-      console.log('failed to create Bambora Payment Request', error);
+      console.error('failed to create Bambora Payment Request', error);
     }
 
   }

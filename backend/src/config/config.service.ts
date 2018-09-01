@@ -48,6 +48,10 @@ export class ConfigService {
     return this.envConfig.DATABASE_PASSWORD;
   }
 
+  get dropDatabaseSchema(): boolean {
+    return Boolean(this.envConfig.DROP_DATABASE_SCHEMA);
+  }
+
   get s3BucketForPictures(): string {
     return this.envConfig.AWS_S3_BUCKET_FOR_PICTURES;
   }
@@ -76,6 +80,7 @@ export class ConfigService {
       DATABASE_NAME: Joi.string().default('postgres'),
       DATABASE_USERNAME: Joi.string().default('postgres'),
       DATABASE_PASSWORD: Joi.string().default('password'),
+      DROP_DATABASE_SCHEMA: Joi.boolean().default(false),
       NODE_ENV: Joi.string().allow('local', 'dev', 'test', 'production').default('local'),
       AWS_S3_BUCKET_NAME: Joi.string(),
     });

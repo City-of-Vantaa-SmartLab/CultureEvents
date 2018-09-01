@@ -2,18 +2,15 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Req,
-  Param,
   Body,
   UsePipes,
   Res,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { ValidationPipe } from 'validations/validation.pipe';
+import { ValidationPipe } from '../validations/validation.pipe';
 import { ValidationService } from '../utils/validations/validations.service';
-import { ReservationService } from 'reservations/reservations.service';
-import { BamboraService } from 'services/bambora.service';
+import { ReservationService } from '../reservations/reservations.service';
 import {
   ApiUseTags,
   ApiImplicitQuery,
@@ -87,9 +84,9 @@ export class PaymentController {
       const payment = await this.paymentService.getPaymentByOrderNumber(
         orderNumber,
       );
+
       if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
         //delete reservation since payment failed
-        await this.paymentService.delete(payment.id);
         await this.reservationService.deleteReservation(payment.reservation_id);
         console.error(
           `Payment failed with error code: ${bamboraReturnCode}. Please try again later`,
@@ -117,19 +114,19 @@ export class PaymentController {
       const [, , smsResponse] = await Promise.all([
         await this.reservationService.updateReservation(reservation.id, { confirmed: true, payment_completed: true }),
         await this.paymentService.updatePayment(payment.order_number, { payment_status: true }),
-        await this.paymentService.sendSmsToUser(payment.reservation_id, payment.amount)
+        await this.paymentService.sendSmsToUser(payment.reservation_id)
       ]);
 
       if (smsResponse) {
         await this.reservationService.updateReservation(reservation.id, { sms_sent: true });
         return res.redirect(
-          `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}
-          &status=0&event_id=${reservation.event_id}`);
+          `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}` +
+          `&status=0&event_id=${reservation.event_id}`);
       }
 
       return res.redirect(
-        `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}
-        &status=5&event_id=${reservation.event_id}`);
+        `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}` +
+        `&status=5&event_id=${reservation.event_id}`);
 
     } catch (err) {
       console.error(`Payment failed with error code: ${err.message}. Please try again later`);

@@ -3,11 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { Events } from 'event/events.entity';
-import { Tickets } from 'tickets/tickets.entity';
+import { Events } from '../event/events.entity';
+import { Tickets } from '../tickets/tickets.entity';
 import * as dateFns from 'date-fns';
 
 @Entity()
@@ -15,30 +14,30 @@ export class Reservations {
   @PrimaryGeneratedColumn() id: number;
 
   @Column('int')
-  @ManyToOne(type => Events, event => event.id, {
+  @ManyToOne(_ => Events, event => event.id, {
     cascade: true,
   })
   event_id: number;
 
-  @Column({ length: 30, nullable: true })
+  @Column({ length: 300, nullable: true })
   name: string;
 
-  @Column({ length: 15 })
+  @Column({ length: 100 })
   customer_type: string;
 
-  @Column({ length: 100, nullable: true })
+  @Column({ length: 300, nullable: true })
   school_name: string;
 
-  @Column({ length: 100, nullable: true })
+  @Column({ length: 300, nullable: true })
   class: string;
 
-  @Column({ length: 15 })
+  @Column({ length: 20 })
   phone: string;
 
   @Column({ length: 100, nullable: true })
   email: string;
 
-  @OneToMany(type => Tickets, tickets => tickets.tickets, {
+  @OneToMany(_ => Tickets, tickets => tickets.tickets, {
     cascade: true,
     onDelete: 'CASCADE'
   })

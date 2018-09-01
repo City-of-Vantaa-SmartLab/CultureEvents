@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Price } from 'price/price.entity';
-import { PriceDto } from './price.dto';
+import { Price } from './price.entity';
+
 @Injectable()
 export class PriceService {
   constructor(
@@ -17,6 +17,10 @@ export class PriceService {
     } else {
       throw new Error('Failed to get Price details!.');
     }
+  }
+
+  async deletePrice(id: number) {
+    await this.priceRepository.delete(id);
   }
 
   async updateSeats(id: number, seats_booked: number) {

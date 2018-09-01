@@ -2,10 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-const bodyParser = require('body-parser');
+const path = require('path');
 
 dotenv.config();
-const path = require('path');
 const PORT = process.env.PORT;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

@@ -2,7 +2,6 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 import { ConfigService } from './config/config.service';
 
 const configService = new ConfigService();
-
 export const connectionDetails: PostgresConnectionOptions = {
   type: "postgres",
   host: configService.databaseHost,
@@ -10,6 +9,7 @@ export const connectionDetails: PostgresConnectionOptions = {
   username: configService.databaseUsername,
   password: configService.databasePassword,
   database: configService.databaseName,
-  entities: [`src/**/**.entity{.ts,.js}`],
-  synchronize: true
+  dropSchema: configService.dropDatabaseSchema,
+  entities: [`${configService.environment === 'prod' ? 'dist' : 'src'}/**/**.entity{.ts,.js}`],
+  synchronize: true,
 };

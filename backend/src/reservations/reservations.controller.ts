@@ -3,18 +3,20 @@ import {
   Get,
   Post,
   Put,
-  Req,
   Param,
   Body,
   UsePipes,
   Res,
+  Delete,
+  UseGuards
 } from '@nestjs/common';
 import { ReservationsDto } from './reservations.dto';
 import { ReservationService } from './reservations.service';
-import { ValidationPipe } from 'validations/validation.pipe';
+import { ValidationPipe } from '../validations/validation.pipe';
 import { Reservations } from './reservations.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('reservations')
 @Controller('/api/reservations')
@@ -66,12 +68,12 @@ export class ReservationsController {
     }
   }
 
-  @Post('/mark-complete')
+  @Post('/:id/mark-complete')
   @UsePipes(new ValidationPipe())
-  async mark_complete(@Res() response, @Body() id: number) {
+  async mark_complete(@Res() response, @Param() id: number) {
     try {
       const reservation = await this.reservationsService.updateReservation(id, { payment_completed: true });
-      if (!reservation.confirmed) {
+      if (!reservation.payment_completed) {
         return response
           .status(422)
           .json(`Failed to update reservation as completed`);
@@ -148,6 +150,38 @@ export class ReservationsController {
       return response
         .status(500)
         .json(`Failed to update reservation: ${error.message}`);
+    }
+  }
+
+  @Delete(':id')
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description:
+      'Reservation Id, of the reservations which needs to be deleted',
+    type: String,
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(new ValidationPipe())
+  async delete(@Res() response, @Param('id') id: number) {
+    try {
+      if (this.validationService.validateId(+id)) {
+        return response.status(400).json(`Invalid reservation Id: ${id}`);
+      }
+      const deletedReservation = await this.reservationsService.deleteReservation(id);
+
+      if (!deletedReservation) {
+        return response
+          .status(404)
+          .json(`Could not find any reservations with id: ${id}`);
+      }
+
+      return response.status(200).json(deletedReservation);
+
+    } catch (error) {
+      return response
+        .status(500)
+        .json(`Failed to delete reservation: ${error.message}`);
     }
   }
 }

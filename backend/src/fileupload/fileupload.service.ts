@@ -2,7 +2,6 @@ import { Req, Res, Injectable } from '@nestjs/common';
 import * as multer from 'multer';
 import * as AWS from 'aws-sdk';
 import * as multerS3 from 'multer-s3';
-import { EventsService } from 'event/events.service';
 
 const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || 'vantaa-culture-events';
 const s3 = new AWS.S3();
@@ -18,7 +17,7 @@ export class FileUploadService {
         });
       }
     } catch (error) {
-      console.log(`Failed in constructor, AWS Config ${error}`);
+      console.error(`Failed to set AWS Config ${error}`);
     }
   }
 
@@ -40,7 +39,7 @@ export class FileUploadService {
       s3: s3,
       bucket: AWS_S3_BUCKET_NAME,
       acl: 'public-read',
-      key: function (request, file, cb) {
+      key: function (_, file, cb) {
         cb(null, `${Date.now().toString()} - ${file.originalname}`);
       },
     }),

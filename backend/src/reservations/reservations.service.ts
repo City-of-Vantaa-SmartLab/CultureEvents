@@ -3,19 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Reservations } from './reservations.entity';
 import { ReservationsDto } from './reservations.dto';
-import { Price } from 'price/price.entity';
-import { SMSService } from 'notifications/sms/sms.service';
-import { EventsDto } from 'event/events.dto';
+import { SMSService } from '../notifications/sms/sms.service';
+import { EventsDto } from '../event/events.dto';
 import { format } from 'date-fns';
 import { I18Service } from '../i18/i18.service';
-import { EventsService } from 'event/events.service';
-import { Tickets } from 'tickets/tickets.entity';
-import { PriceDto } from 'price/price.dto';
-import { PriceService } from 'price/price.service';
-import * as stringInterpolator from 'interpolate';
-import { TicketService } from 'tickets/tickets.service';
+import { EventsService } from '../event/events.service';
+import { PriceDto } from '../price/price.dto';
+import { PriceService } from '../price/price.service';
+const stringInterpolator = require('interpolate');
+import { TicketService } from '../tickets/tickets.service';
 import * as dateFns from 'date-fns';
-
 @Injectable()
 export class ReservationService {
   constructor(
@@ -25,7 +22,7 @@ export class ReservationService {
     private readonly i18Service: I18Service,
     private readonly eventService: EventsService,
     private readonly priceService: PriceService,
-    private readonly ticketService: TicketService
+    private readonly ticketService: TicketService,
   ) { }
 
   async createReservation(reservation: ReservationsDto, sendSms: boolean) {
@@ -51,18 +48,24 @@ export class ReservationService {
   }
 
   async deleteReservation(id: number) {
-    const reservation = await this.findOneById(id);
-    await Promise.all(
-      reservation.tickets.map(
-        async ticket => {
-          await this.priceService.updateSeats(ticket.price_id, -ticket.no_of_tickets);
-          await this.ticketService.delete(ticket.id);
-        }
-      ),
-    );
+    try {
 
-    await this.reservationsRepository.delete(id);
-    return id;
+      const reservation = await this.findOneById(id);
+
+      await Promise.all(
+        reservation.tickets.map(
+          async ticket => {
+            await this.priceService.updateSeats(ticket.price_id, -ticket.no_of_tickets);
+            await this.ticketService.delete(ticket.id);
+          }
+        ),
+      );
+      await this.reservationsRepository.delete(id);
+      return id;
+    } catch (error) {
+      console.error('failed to delete reservation', error);
+      return null;
+    }
   }
 
   async updateReservation(id: number, reservation: Partial<ReservationsDto>) {
@@ -72,7 +75,7 @@ export class ReservationService {
       ...reservation
     }
     await this.reservationsRepository.update(id, reservationToUpdate);
-    return await this.reservationsRepository.findOne(id);
+    return await this.reservationsRepository.findOne(id, { relations: ['tickets'] });
   }
 
   async findAll(): Promise<Reservations[]> {
@@ -89,8 +92,9 @@ export class ReservationService {
       dateFns.differenceInMinutes(new Date(), reservation.created) > 5);
 
     //Delete failed reservations
-    failedReservations.forEach(async reservation =>
-      await this.deleteReservation(reservation.id))
+    failedReservations.forEach(async reservation => {
+      await this.deleteReservation(reservation.id)
+    });
 
     let reservations = await this.reservationsRepository.find({
       relations: ['tickets'],
@@ -182,10 +186,6 @@ export class ReservationService {
     } else {
       return false;
     }
-  }
-
-  async getSeatAvailabilityDetails(eventId: number) {
-    const eventDetails = await this.eventService.findOneById(eventId);
   }
 
   async checkTicketDetails(reservationReq: ReservationsDto) {

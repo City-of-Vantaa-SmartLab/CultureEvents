@@ -2,20 +2,17 @@ import {
   Controller,
   Post,
   Req,
-  UsePipes,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { FileUploadService } from './fileupload.service';
-import { ValidationPipe } from 'validations/validation.pipe';
-import { ValidationService } from '../utils/validations/validations.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags, ApiImplicitParam, ApiResponse } from '@nestjs/swagger';
 
 @ApiUseTags('fileupload')
 @Controller('/api/fileupload')
 export class FileUploadController {
-  constructor(private readonly fileUploadService: FileUploadService) {}
+  constructor(private readonly fileUploadService: FileUploadService) { }
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @ApiImplicitParam({
