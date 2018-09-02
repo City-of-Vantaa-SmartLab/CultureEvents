@@ -8,7 +8,7 @@ import { PriceModule } from '../src/price/price.module';
 import { ValidationService } from '../src/utils/validations/validations.service';
 import { Events } from '../src/event/events.entity';
 import { Reservations } from '../src/reservations/reservations.entity';
-import { newReservation, updateReservation } from './data/reservations.data';
+import { newReservation } from './data/reservations.data';
 import { ReservationsController } from '../src/reservations/reservations.controller';
 import { SMSService } from '../src/notifications/sms/sms.service';
 import { I18Service } from '../src/i18/i18.service';

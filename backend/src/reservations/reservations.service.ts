@@ -74,6 +74,13 @@ export class ReservationService {
       ...reservationFromDb,
       ...reservation
     }
+    if (reservation.tickets) {
+      for (let ticket of reservation.tickets) {
+        const ticketFromDb = await this.ticketService.getTicketDetails(ticket.id);
+        await this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets - ticketFromDb.no_of_tickets);
+        await this.ticketService.update(ticket.id, ticket);
+      }
+    }
     await this.reservationsRepository.update(id, reservationToUpdate);
     return await this.reservationsRepository.findOne(id, { relations: ['tickets'] });
   }

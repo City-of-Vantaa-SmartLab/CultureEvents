@@ -18,11 +18,13 @@ import { I18Service } from '../src/i18/i18.service';
 import { TicketService } from '../src/tickets/tickets.service';
 import { newEvent } from './data/events.data';
 import { EventsController } from '../src/event/events.controller';
+import * as dateFns from 'date-fns';
+import { PriceService } from '../src/price/price.service';
 
 describe('ReservationsController (e2e)', () => {
     let app: INestApplication;
     let createdReservation: Reservations;
-    let updatedReservation: Reservations;
+    let priceService: PriceService;
     let createdEvent: Events;
 
     beforeAll(async () => {
@@ -46,10 +48,11 @@ describe('ReservationsController (e2e)', () => {
         app.use(/^\/$/, (_, res) => {
             res.redirect('/app/');
         });
+        priceService = app.get<PriceService>(PriceService);
         await app.init();
     });
 
-    it('/POST /', async () => {
+    it('/POST /api/events', async () => {
         const response = await request(app.getHttpServer())
             .post('/api/events')
             .send(newEvent);
@@ -58,7 +61,7 @@ describe('ReservationsController (e2e)', () => {
         expect(response.body.name).toBe(createdEvent.name);
     });
 
-    it('/POST /', async () => {
+    it('/POST /api/reservations', async () => {
         const response = await request(app.getHttpServer())
             .post('/api/reservations')
             .send(newReservation);
@@ -67,44 +70,72 @@ describe('ReservationsController (e2e)', () => {
         expect(response.body.name).toBe(newReservation.name);
     });
 
-    it('/GET /', () => {
+    it('/GET /api/reservations', () => {
         return request(app.getHttpServer())
             .get('/api/reservations')
             .expect(200)
             .expect([createdReservation]);
     });
 
-    it('/GET /:id', () => {
+    it('/GET /:id /api/reservations/1', () => {
         return request(app.getHttpServer())
             .get('/api/reservations/1')
             .expect(200)
             .expect(createdReservation);
     });
 
-    it('/PUT /:id', async () => {
-        updatedReservation = {
-            ...createdReservation,
-            name: updateReservation.name,
-            school_name: updateReservation.school_name
-        }
-        const response = await request(app.getHttpServer())
-            .put('/api/reservations/1')
-            .send(updatedReservation);
-        expect(response.body).toEqual(updatedReservation);
+    it('Confirm the number of tickets available', async () => {
+        const ticketDetails1 = await priceService.getPriceDetails(1);
+        expect(ticketDetails1.max_seats).toBe(10);
+        expect(ticketDetails1.occupied_seats).toBe(1);
+        expect(ticketDetails1.price).toBe(10);
+        const ticketDetails2 = await priceService.getPriceDetails(2);
+        expect(ticketDetails2.max_seats).toBe(10);
+        expect(ticketDetails2.occupied_seats).toBe(1);
+        expect(ticketDetails2.price).toBe(10);
     });
 
-    it('/GET /:id', () => {
-        return request(app.getHttpServer())
-            .get('/api/reservations/1')
-            .expect(200)
-            .expect(updatedReservation);
+    it('/PUT /:id /api/reservations/1', async () => {
+        const response = await request(app.getHttpServer())
+            .put('/api/reservations/1')
+            .send(updateReservation);
+        expect(response.status).toBe(200);
+        expect({
+            ...response.body,
+            created: dateFns.format(response.body.created, 'YYYY-MM-DDTHH:mm:ss.SSS')
+        }).toEqual(updateReservation);
+    });
+
+    it('Confirm the number of tickets available after update', async () => {
+        const ticketDetails1 = await priceService.getPriceDetails(1);
+        expect(ticketDetails1.max_seats).toBe(10);
+        expect(ticketDetails1.occupied_seats).toBe(2);
+        expect(ticketDetails1.price).toBe(10);
+        const ticketDetails2 = await priceService.getPriceDetails(2);
+        expect(ticketDetails2.max_seats).toBe(10);
+        expect(ticketDetails2.occupied_seats).toBe(0);
+        expect(ticketDetails2.price).toBe(10);
+    });
+
+    // Confirm that the reservation is updated properly
+    it('/GET /:id /api/reservations/1', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/api/reservations/1');
+        expect(response.status).toBe(200);
+        expect({
+            ...response.body,
+            created: dateFns.format(response.body.created, 'YYYY-MM-DDTHH:mm:ss.SSS')
+        }).toEqual(updateReservation);
     });
 
     it('/POST mark-complete /:id', async () => {
-        return await request(app.getHttpServer())
-            .post('/api/reservations/1/mark-complete')
-            .expect(200)
-            .expect({ ...updatedReservation, payment_completed: true });
+        const response = await request(app.getHttpServer())
+            .post('/api/reservations/1/mark-complete');
+        expect(response.status).toBe(200);
+        expect({
+            ...response.body,
+            created: dateFns.format(response.body.created, 'YYYY-MM-DDTHH:mm:ss.SSS')
+        }).toEqual({ ...updateReservation, payment_completed: true });
     });
 
     afterAll(async () => {
