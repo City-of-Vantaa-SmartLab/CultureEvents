@@ -3,14 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Events } from './events.entity';
 import { EventsDto } from './events.dto';
-import { PriceService } from '../price/price.service';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Events)
-    private readonly eventRepository: Repository<Events>,
-    private readonly priceService: PriceService
+    private readonly eventRepository: Repository<Events>
   ) { }
 
   async createEvent(event: EventsDto) {
@@ -23,8 +21,10 @@ export class EventsService {
   }
 
   async deleteEvent(id: number) {
-    const event = await this.eventRepository.findOne(id, { relations: ['ticket_catalog'], });
-    await Promise.all(event.ticket_catalog.map(ticket => this.priceService.deletePrice(ticket.id)));
+    const event = await this.eventRepository.findOne(1);
+    if (!event) {
+      return;
+    }
     await this.eventRepository.delete(id);
     return id;
   }

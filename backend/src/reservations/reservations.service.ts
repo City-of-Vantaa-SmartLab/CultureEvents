@@ -52,6 +52,10 @@ export class ReservationService {
 
       const reservation = await this.findOneById(id);
 
+      if (!reservation) {
+        return;
+      }
+
       await Promise.all(
         reservation.tickets.map(
           async ticket => {
@@ -63,7 +67,6 @@ export class ReservationService {
       await this.reservationsRepository.delete(id);
       return id;
     } catch (error) {
-      console.error('failed to delete reservation', error);
       return null;
     }
   }

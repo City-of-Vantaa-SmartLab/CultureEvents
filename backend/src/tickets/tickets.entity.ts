@@ -6,12 +6,12 @@ import { Reservations } from '../reservations/reservations.entity';
 export class Tickets {
   @PrimaryGeneratedColumn() id: number;
 
-  @ManyToOne(type => Price, price => price.id)
+  @ManyToOne(_ => Price, price => price.id, { onDelete: 'CASCADE' })
   @Column()
   price_id: number;
 
   @Column() no_of_tickets: number;
 
-  @ManyToOne(type => Reservations, reservations => reservations.tickets)
+  @ManyToOne(_ => Reservations, reservations => reservations.tickets, { onDelete: 'CASCADE' })
   tickets: Reservations;
 }

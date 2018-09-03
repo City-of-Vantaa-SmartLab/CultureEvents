@@ -115,13 +115,6 @@ export class EventsController {
         return response.status(400).json(`Invalid event Id: ${id}`);
       }
 
-      const reservations = await this.reservationsService.findReservationsForEvent(id);
-      if (reservations.length > 0) {
-        return response
-          .status(401)
-          .json(`You cannot delete an event having reservations!`);
-      }
-
       const deleted = await this.eventsService.deleteEvent(id);
       if (deleted) {
         return response.status(200).json(deleted);

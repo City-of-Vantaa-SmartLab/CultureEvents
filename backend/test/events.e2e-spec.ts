@@ -5,14 +5,12 @@ import 'jest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { connectionDetails } from '../src/connection';
 import { ReservationsModule } from '../src/reservations/reservations.module';
-import { PriceModule } from '../src/price/price.module';
 import { EventsService } from '../src/event/events.service';
 import { ValidationService } from '../src/utils/validations/validations.service';
 import { EventsController } from '../src/event/events.controller';
 import { Events } from '../src/event/events.entity';
 import { Reservations } from '../src/reservations/reservations.entity';
 import { newEvent, updateEvent } from './data/events.data';
-import { Price } from '../src/price/price.entity';
 import { ReservationsController } from '../src/reservations/reservations.controller';
 import { newReservation } from './data/reservations.data';
 
@@ -26,9 +24,8 @@ describe('EventsController (e2e)', () => {
             controllers: [EventsController, ReservationsController],
             imports: [
                 TypeOrmModule.forRoot({ ...connectionDetails, dropSchema: true }),
-                TypeOrmModule.forFeature([Events, Reservations, Price]),
+                TypeOrmModule.forFeature([Events, Reservations]),
                 ReservationsModule,
-                PriceModule
             ],
             providers: [EventsService, ValidationService]
         }).compile();
@@ -100,27 +97,27 @@ describe('EventsController (e2e)', () => {
     });
 
     // Events having reservation should not be able to be deleted
-    it('/DELETE /:id', async () => {
+    it('/DELETE /:id /api/events/1', async () => {
         const response = await request(app.getHttpServer())
             .delete('/api/events/1');
-        expect(response.status).toBe(401);
-        expect(response.body).toEqual('You cannot delete an event having reservations!');
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual(JSON.stringify(1));
     });
 
-    // Delete the reservation for the event
+    // Make sure that the event is deleted properly.
+    it('/DELETE /events/:id', async () => {
+        const response = await request(app.getHttpServer())
+            .delete('/api/events/1');
+        expect(response.status).toBe(404);
+        expect(response.body).toEqual('Could not find any event with id: 1');
+    });
+
+    // Make sure that the reservations related to the events is also deleted.
     it('/DELETE /reserations/:id', async () => {
         const response = await request(app.getHttpServer())
             .delete('/api/reservations/1')
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual('1');
-    });
-
-    // Make sure delete is working fine now since there are no reservations for the event.
-    it('/DELETE /events/:id', async () => {
-        return await request(app.getHttpServer())
-            .delete('/api/events/1')
-            .expect(200)
-            .expect(JSON.stringify("1"));
+        expect(response.status).toBe(404);
+        expect(response.body).toEqual('Could not find any reservations with id: 1');
     });
 
     // Making sure that the event is deleted

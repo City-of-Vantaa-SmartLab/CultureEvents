@@ -16,6 +16,7 @@ export class Reservations {
   @Column('int')
   @ManyToOne(_ => Events, event => event.id, {
     cascade: true,
+    onDelete: 'CASCADE'
   })
   event_id: number;
 
