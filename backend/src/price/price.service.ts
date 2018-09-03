@@ -27,9 +27,25 @@ export class PriceService {
     const priceDetails = await this.priceRepository.findOne(id);
     if (priceDetails) {
       priceDetails.occupied_seats = priceDetails.occupied_seats + seats_booked;
+      if (priceDetails.occupied_seats > priceDetails.max_seats) {
+        throw new Error('Not enough tickets available!.');
+      }
       await this.priceRepository.save(priceDetails);
     } else {
       throw new Error('Failed to get Price details!.');
     }
+  }
+
+  async isTicketUpdatable(id: number, seats_booked: number) {
+    const priceDetails = await this.priceRepository.findOne(id);
+    if (priceDetails) {
+      priceDetails.occupied_seats = priceDetails.occupied_seats + seats_booked;
+      if (priceDetails.occupied_seats > priceDetails.max_seats) {
+        return false;
+      }
+    } else {
+      throw new Error('Failed to get Price details!.');
+    }
+    return true;
   }
 }

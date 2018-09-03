@@ -183,6 +183,18 @@ export class ReservationService {
     return response.price;
   }
 
+  async isReservationUpdatable(reservation: ReservationsDto) {
+    if (reservation.tickets) {
+      for (let ticket of reservation.tickets) {
+        const isUpdatable = await this.priceService.isTicketUpdatable(ticket.id, ticket.no_of_tickets);
+        if (!isUpdatable) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   async checkSeatAvailability(reservationReq: ReservationsDto) {
     const ticketDetails = await this.checkTicketDetails(reservationReq);
     const availableTickets = ticketDetails.filter(

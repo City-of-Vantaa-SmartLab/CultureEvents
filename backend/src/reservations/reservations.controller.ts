@@ -128,24 +128,33 @@ export class ReservationsController {
   async update(
     @Res() response,
     @Param('id') id: number,
-    @Body() Reservation: ReservationsDto,
+    @Body() reservation: ReservationsDto,
   ) {
     try {
       if (this.validationService.validateId(+id)) {
         return response.status(400).json(`Invalid reservation Id: ${id}`);
-      } else {
-        const updatedReservation = await this.reservationsService.updateReservation(
-          id,
-          Reservation,
-        );
-        if (updatedReservation) {
-          return response.status(200).json(updatedReservation);
-        } else {
-          return response
-            .status(404)
-            .json(`Could not find any reservations with id: ${id}`);
-        }
       }
+
+      const isUpdatable = await this.reservationsService.isReservationUpdatable(reservation);
+      if (!isUpdatable) {
+        return response
+          .status(401)
+          .json(`This reservation is not updatable. Not enough seats!`);
+      }
+
+      const updatedReservation = await this.reservationsService.updateReservation(
+        id,
+        reservation,
+      );
+
+      if (!updatedReservation) {
+        return response
+          .status(404)
+          .json(`Could not find any reservations with id: ${id}`);
+
+      }
+      return response.status(200).json(updatedReservation);
+
     } catch (error) {
       return response
         .status(500)

@@ -9,7 +9,7 @@ import { EventsService } from '../src/event/events.service';
 import { ValidationService } from '../src/utils/validations/validations.service';
 import { Events } from '../src/event/events.entity';
 import { Reservations } from '../src/reservations/reservations.entity';
-import { newReservation, updateReservation } from './data/reservations.data';
+import { newReservation, updateReservation, nonUpdatableReservation } from './data/reservations.data';
 import { ReservationsController } from '../src/reservations/reservations.controller';
 import { Tickets } from '../src/tickets/tickets.entity';
 import { ReservationService } from '../src/reservations/reservations.service';
@@ -106,6 +106,17 @@ describe('ReservationsController (e2e)', () => {
         }).toEqual(updateReservation);
     });
 
+    // Confirm that the reservation is updated properly
+    it('/GET /:id /api/reservations/1', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/api/reservations/1');
+        expect(response.status).toBe(200);
+        expect({
+            ...response.body,
+            created: dateFns.format(response.body.created, 'YYYY-MM-DDTHH:mm:ss.SSS')
+        }).toEqual(updateReservation);
+    });
+
     it('Confirm the number of tickets available after update', async () => {
         const ticketDetails1 = await priceService.getPriceDetails(1);
         expect(ticketDetails1.max_seats).toBe(10);
@@ -117,7 +128,29 @@ describe('ReservationsController (e2e)', () => {
         expect(ticketDetails2.price).toBe(10);
     });
 
-    // Confirm that the reservation is updated properly
+    // Making sure that reservation is not updatable
+    // When trying to update with more tickets than available.
+    it('/PUT /:id /api/reservations/1', async () => {
+        const response = await request(app.getHttpServer())
+            .put('/api/reservations/1')
+            .send(nonUpdatableReservation);
+        expect(response.status).toBe(401);
+        expect(response.body).toEqual('This reservation is not updatable. Not enough seats!');
+    });
+
+    //Making sure ticket count and reservation has not changed after a failed reservation.
+    it('Confirm the number of tickets available after update', async () => {
+        const ticketDetails1 = await priceService.getPriceDetails(1);
+        expect(ticketDetails1.max_seats).toBe(10);
+        expect(ticketDetails1.occupied_seats).toBe(2);
+        expect(ticketDetails1.price).toBe(10);
+        const ticketDetails2 = await priceService.getPriceDetails(2);
+        expect(ticketDetails2.max_seats).toBe(10);
+        expect(ticketDetails2.occupied_seats).toBe(0);
+        expect(ticketDetails2.price).toBe(10);
+    });
+
+    // Making sure that the failed reservation has not changes any reservation data.
     it('/GET /:id /api/reservations/1', async () => {
         const response = await request(app.getHttpServer())
             .get('/api/reservations/1');
