@@ -201,11 +201,6 @@ export default class EventCard extends React.Component {
         <BackgroundImageGroup>
           <BackgroundImg coverImage={coverImage} />
           <Shim expanded={active && expandable && !mini} />
-          {/* <Decorator
-            coverImage={coverImage}
-            themeColor={themeColor}
-            expanded={active && expandable}
-          /> */}
           <Content>
             <Typography
               type="largebody"

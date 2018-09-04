@@ -40,4 +40,5 @@ const Event = types
       return self.ticketCatalog.find(c => c.id === id);
     },
   }));
+
 export default Event;
