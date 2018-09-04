@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import 'jest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { connectionDetails } from '../src/connection';
@@ -41,14 +41,15 @@ describe('PaymentsController (e2e)', () => {
                 TypeOrmModule.forFeature([Events, Reservations, Payments, Tickets]),
                 ReservationsModule,
                 EventsModule,
-                PriceModule
+                PriceModule,
             ],
             providers: [
                 ValidationService,
                 SMSService,
                 I18Service,
                 PaymentService,
-                BamboraService]
+                BamboraService,
+                Logger]
         }).compile();
 
         app = moduleFixture.createNestApplication();

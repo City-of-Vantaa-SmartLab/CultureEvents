@@ -20,6 +20,10 @@ export class TicketService {
     }
   }
 
+  async create(ticket: Tickets) {
+    await this.ticketsRepository.save(ticket);
+  }
+
   async delete(id: number) {
     await this.ticketsRepository.delete(id);
   }

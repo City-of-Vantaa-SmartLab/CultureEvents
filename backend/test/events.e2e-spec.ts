@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import 'jest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { connectionDetails } from '../src/connection';
@@ -27,7 +27,7 @@ describe('EventsController (e2e)', () => {
                 TypeOrmModule.forFeature([Events, Reservations]),
                 ReservationsModule,
             ],
-            providers: [EventsService, ValidationService]
+            providers: [EventsService, ValidationService, Logger]
         }).compile();
 
         app = moduleFixture.createNestApplication();

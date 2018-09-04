@@ -8,7 +8,8 @@ import {
   UsePipes,
   Res,
   Delete,
-  UseGuards
+  UseGuards,
+  Logger
 } from '@nestjs/common';
 import { ReservationsDto } from './reservations.dto';
 import { ReservationService } from './reservations.service';
@@ -24,7 +25,10 @@ export class ReservationsController {
   constructor(
     private readonly reservationsService: ReservationService,
     private readonly validationService: ValidationService,
-  ) { }
+    private readonly logger: Logger
+  ) {
+    this.logger = new Logger('ReservationController');
+  }
 
   @Get()
   async findAll(@Res() response): Promise<Reservations[]> {
@@ -38,6 +42,7 @@ export class ReservationsController {
           .json(`Could not find any reservations in the system.`);
       }
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to get reservations: ${error.message}`);
@@ -62,6 +67,7 @@ export class ReservationsController {
       );
       return response.status(201).json(reservation);
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to create new reservation: ${error.message}`);
@@ -80,6 +86,7 @@ export class ReservationsController {
       }
       return response.status(200).json(reservation);
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to update reservation as completed : ${error.message}`);
@@ -110,6 +117,7 @@ export class ReservationsController {
         }
       }
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to get reservation: ${error.message}`);
@@ -156,6 +164,7 @@ export class ReservationsController {
       return response.status(200).json(updatedReservation);
 
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to update reservation: ${error.message}`);
@@ -188,6 +197,7 @@ export class ReservationsController {
       return response.status(200).json(deletedReservation);
 
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to delete reservation: ${error.message}`);

@@ -37,12 +37,16 @@ export const updateReservation = {
         {
             id: 1,
             price_id: 1,
-            no_of_tickets: 2
+            no_of_tickets: 0
         },
         {
             id: 2,
             price_id: 2,
-            no_of_tickets: 0
+            no_of_tickets: 2
+        },
+        {
+            price_id: 3,
+            no_of_tickets: 1
         }
     ],
     confirmed: false,
@@ -72,7 +76,7 @@ export const nonUpdatableReservation = {
             id: 2,
             price_id: 2,
             no_of_tickets: 11
-        }
+        },
     ],
     confirmed: false,
     sms_sent: false,

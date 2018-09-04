@@ -79,9 +79,15 @@ export class ReservationService {
     }
     if (reservation.tickets) {
       for (let ticket of reservation.tickets) {
-        const ticketFromDb = await this.ticketService.getTicketDetails(ticket.id);
-        await this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets - ticketFromDb.no_of_tickets);
-        await this.ticketService.update(ticket.id, ticket);
+        if (ticket.id) {
+          const ticketFromDb = await this.ticketService.getTicketDetails(ticket.id);
+          await this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets - ticketFromDb.no_of_tickets);
+          await this.ticketService.update(ticket.id, ticket);
+        } else {
+          ticket.tickets = reservationFromDb;
+          await this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets);
+          await this.ticketService.create(ticket);
+        }
       }
     }
     await this.reservationsRepository.update(id, reservationToUpdate);
@@ -189,9 +195,17 @@ export class ReservationService {
   async isReservationUpdatable(reservation: ReservationsDto) {
     if (reservation.tickets) {
       for (let ticket of reservation.tickets) {
-        const isUpdatable = await this.priceService.isTicketUpdatable(ticket.id, ticket.no_of_tickets);
-        if (!isUpdatable) {
-          return false;
+        if (!ticket.id) {
+          const isUpdatable = await this.priceService.isSeatsAvailable(ticket.price_id, ticket.no_of_tickets);
+          if (!isUpdatable) {
+            return false;
+          }
+        } else {
+          const ticketFromDb = await this.ticketService.getTicketDetails(1);
+          const isUpdatable = await this.priceService.isSeatsUpdatable(ticket, ticketFromDb);
+          if (!isUpdatable) {
+            return false;
+          }
         }
       }
     }

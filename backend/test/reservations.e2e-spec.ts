@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import 'jest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { connectionDetails } from '../src/connection';
@@ -33,7 +33,7 @@ describe('ReservationsController (e2e)', () => {
             imports: [
                 TypeOrmModule.forRoot({ ...connectionDetails, dropSchema: true }),
                 TypeOrmModule.forFeature([Events, Reservations, Tickets]),
-                PriceModule
+                PriceModule,
             ],
             providers: [ReservationService,
                 ValidationService,
@@ -41,6 +41,7 @@ describe('ReservationsController (e2e)', () => {
                 EventsService,
                 I18Service,
                 TicketService,
+                Logger
             ]
         }).compile();
 
@@ -84,21 +85,11 @@ describe('ReservationsController (e2e)', () => {
             .expect(createdReservation);
     });
 
-    it('Confirm the number of tickets available', async () => {
-        const ticketDetails1 = await priceService.getPriceDetails(1);
-        expect(ticketDetails1.max_seats).toBe(10);
-        expect(ticketDetails1.occupied_seats).toBe(1);
-        expect(ticketDetails1.price).toBe(10);
-        const ticketDetails2 = await priceService.getPriceDetails(2);
-        expect(ticketDetails2.max_seats).toBe(10);
-        expect(ticketDetails2.occupied_seats).toBe(1);
-        expect(ticketDetails2.price).toBe(10);
-    });
-
     it('/PUT /:id /api/reservations/1', async () => {
         const response = await request(app.getHttpServer())
             .put('/api/reservations/1')
             .send(updateReservation);
+        updateReservation.tickets = updateReservation.tickets.map(ticket => ticket.id ? ticket : { ...ticket, id: 3 })
         expect(response.status).toBe(200);
         expect({
             ...response.body,
@@ -118,14 +109,18 @@ describe('ReservationsController (e2e)', () => {
     });
 
     it('Confirm the number of tickets available after update', async () => {
-        const ticketDetails1 = await priceService.getPriceDetails(1);
-        expect(ticketDetails1.max_seats).toBe(10);
-        expect(ticketDetails1.occupied_seats).toBe(2);
-        expect(ticketDetails1.price).toBe(10);
-        const ticketDetails2 = await priceService.getPriceDetails(2);
-        expect(ticketDetails2.max_seats).toBe(10);
-        expect(ticketDetails2.occupied_seats).toBe(0);
-        expect(ticketDetails2.price).toBe(10);
+        const priceDetails1 = await priceService.getPriceDetails(1);
+        expect(priceDetails1.max_seats).toBe(10);
+        expect(priceDetails1.occupied_seats).toBe(0);
+        expect(priceDetails1.price).toBe(10);
+        const priceDetails2 = await priceService.getPriceDetails(2);
+        expect(priceDetails2.max_seats).toBe(10);
+        expect(priceDetails2.occupied_seats).toBe(2);
+        expect(priceDetails2.price).toBe(10);
+        const priceDetails3 = await priceService.getPriceDetails(3);
+        expect(priceDetails3.max_seats).toBe(5);
+        expect(priceDetails3.occupied_seats).toBe(1);
+        expect(priceDetails3.price).toBe(15);
     });
 
     // Making sure that reservation is not updatable
@@ -140,14 +135,18 @@ describe('ReservationsController (e2e)', () => {
 
     //Making sure ticket count and reservation has not changed after a failed reservation.
     it('Confirm the number of tickets available after update', async () => {
-        const ticketDetails1 = await priceService.getPriceDetails(1);
-        expect(ticketDetails1.max_seats).toBe(10);
-        expect(ticketDetails1.occupied_seats).toBe(2);
-        expect(ticketDetails1.price).toBe(10);
-        const ticketDetails2 = await priceService.getPriceDetails(2);
-        expect(ticketDetails2.max_seats).toBe(10);
-        expect(ticketDetails2.occupied_seats).toBe(0);
-        expect(ticketDetails2.price).toBe(10);
+        const priceDetails1 = await priceService.getPriceDetails(1);
+        expect(priceDetails1.max_seats).toBe(10);
+        expect(priceDetails1.occupied_seats).toBe(0);
+        expect(priceDetails1.price).toBe(10);
+        const priceDetails2 = await priceService.getPriceDetails(2);
+        expect(priceDetails2.max_seats).toBe(10);
+        expect(priceDetails2.occupied_seats).toBe(2);
+        expect(priceDetails2.price).toBe(10);
+        const priceDetails3 = await priceService.getPriceDetails(3);
+        expect(priceDetails3.max_seats).toBe(5);
+        expect(priceDetails3.occupied_seats).toBe(1);
+        expect(priceDetails3.price).toBe(15);
     });
 
     // Making sure that the failed reservation has not changes any reservation data.

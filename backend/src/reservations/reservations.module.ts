@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { ReservationsController } from './reservations.controller';
 import { ReservationService } from './reservations.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -24,7 +24,8 @@ import { PriceModule } from '../price/price.module';
     SMSService,
     EventsService,
     I18Service,
-    TicketService
+    TicketService,
+    Logger
   ],
   exports: [ReservationService],
 })
