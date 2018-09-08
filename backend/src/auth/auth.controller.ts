@@ -7,11 +7,10 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserDto } from 'user/user.dto';
+import { UserDto } from '../user/user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserService } from 'user/user.service';
-import { User } from 'user/user.entity';
-import { ValidationPipe } from 'validations/validation.pipe';
+import { UserService } from '../user/user.service';
+import { ValidationPipe } from '../validations/validation.pipe';
 import { ApiUseTags } from '@nestjs/swagger';
 
 @ApiUseTags('auth')
@@ -20,7 +19,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   @Post('/login')
   @UsePipes(new ValidationPipe())

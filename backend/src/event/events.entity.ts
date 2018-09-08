@@ -1,11 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Price } from '../price/price.entity';
 import { PriceDto } from 'price/price.dto';
-import { Reservations } from 'reservations/reservations.entity';
+import { Reservations } from '../reservations/reservations.entity';
 
 @Entity()
 export class Events {
-  @OneToMany(type => Reservations, reservations => reservations.event_id)
+  @OneToMany(_ => Reservations, reservations => reservations.event_id)
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,9 +24,9 @@ export class Events {
   @Column({ length: 500 })
   event_time: string;
 
-  @OneToMany(type => Price, price => price.events, {
+  @OneToMany(_ => Price, price => price.events, {
     cascade: true,
-    onDelete: 'CASCADE',
+    onDelete: 'CASCADE'
   })
   ticket_catalog: PriceDto[];
 
@@ -46,12 +46,12 @@ export class Events {
   @Column({ nullable: true })
   area: string;
 
-  @Column({ length: 1000 })
+  @Column({ length: 2000 })
   cover_image: string;
 
   @Column({ length: 300 })
   theme_color: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 300 })
   performer: string;
 }

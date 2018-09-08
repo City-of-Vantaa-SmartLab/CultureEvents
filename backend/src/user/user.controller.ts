@@ -10,17 +10,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ValidationPipe } from 'validations/validation.pipe';
+import { ValidationPipe } from '../validations/validation.pipe';
 import { UserDto } from './user.dto';
-import { User } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from 'auth/auth.service';
 import { ApiUseTags } from '@nestjs/swagger';
 
 @ApiUseTags('user')
 @Controller('/api/user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   @UseGuards(AuthGuard('jwt'))

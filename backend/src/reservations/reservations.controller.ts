@@ -3,18 +3,21 @@ import {
   Get,
   Post,
   Put,
-  Req,
   Param,
   Body,
   UsePipes,
   Res,
+  Delete,
+  UseGuards,
+  Logger
 } from '@nestjs/common';
 import { ReservationsDto } from './reservations.dto';
 import { ReservationService } from './reservations.service';
-import { ValidationPipe } from 'validations/validation.pipe';
+import { ValidationPipe } from '../validations/validation.pipe';
 import { Reservations } from './reservations.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('reservations')
 @Controller('/api/reservations')
@@ -22,7 +25,10 @@ export class ReservationsController {
   constructor(
     private readonly reservationsService: ReservationService,
     private readonly validationService: ValidationService,
-  ) { }
+    private readonly logger: Logger
+  ) {
+    this.logger = new Logger('ReservationController');
+  }
 
   @Get()
   async findAll(@Res() response): Promise<Reservations[]> {
@@ -36,6 +42,7 @@ export class ReservationsController {
           .json(`Could not find any reservations in the system.`);
       }
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to get reservations: ${error.message}`);
@@ -60,24 +67,26 @@ export class ReservationsController {
       );
       return response.status(201).json(reservation);
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to create new reservation: ${error.message}`);
     }
   }
 
-  @Post('/mark-complete')
+  @Post('/:id/mark-complete')
   @UsePipes(new ValidationPipe())
-  async mark_complete(@Res() response, @Body() id: number) {
+  async mark_complete(@Res() response, @Param() id: number) {
     try {
       const reservation = await this.reservationsService.updateReservation(id, { payment_completed: true });
-      if (!reservation.confirmed) {
+      if (!reservation.payment_completed) {
         return response
           .status(422)
           .json(`Failed to update reservation as completed`);
       }
       return response.status(200).json(reservation);
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to update reservation as completed : ${error.message}`);
@@ -108,6 +117,7 @@ export class ReservationsController {
         }
       }
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to get reservation: ${error.message}`);
@@ -126,28 +136,71 @@ export class ReservationsController {
   async update(
     @Res() response,
     @Param('id') id: number,
-    @Body() Reservation: ReservationsDto,
+    @Body() reservation: ReservationsDto,
   ) {
     try {
       if (this.validationService.validateId(+id)) {
         return response.status(400).json(`Invalid reservation Id: ${id}`);
-      } else {
-        const updatedReservation = await this.reservationsService.updateReservation(
-          id,
-          Reservation,
-        );
-        if (updatedReservation) {
-          return response.status(200).json(updatedReservation);
-        } else {
-          return response
-            .status(404)
-            .json(`Could not find any reservations with id: ${id}`);
-        }
       }
+
+      const isUpdatable = await this.reservationsService.isReservationUpdatable(reservation);
+      if (!isUpdatable) {
+        return response
+          .status(401)
+          .json(`This reservation is not updatable. Not enough seats!`);
+      }
+
+      const updatedReservation = await this.reservationsService.updateReservation(
+        id,
+        reservation,
+      );
+
+      if (!updatedReservation) {
+        return response
+          .status(404)
+          .json(`Could not find any reservations with id: ${id}`);
+
+      }
+      return response.status(200).json(updatedReservation);
+
     } catch (error) {
+      this.logger.error(error);
       return response
         .status(500)
         .json(`Failed to update reservation: ${error.message}`);
+    }
+  }
+
+  @Delete(':id')
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description:
+      'Reservation Id, of the reservations which needs to be deleted',
+    type: String,
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(new ValidationPipe())
+  async delete(@Res() response, @Param('id') id: number) {
+    try {
+      if (this.validationService.validateId(+id)) {
+        return response.status(400).json(`Invalid reservation Id: ${id}`);
+      }
+      const deletedReservation = await this.reservationsService.deleteReservation(id);
+
+      if (!deletedReservation) {
+        return response
+          .status(404)
+          .json(`Could not find any reservations with id: ${id}`);
+      }
+
+      return response.status(200).json(deletedReservation);
+
+    } catch (error) {
+      this.logger.error(error);
+      return response
+        .status(500)
+        .json(`Failed to delete reservation: ${error.message}`);
     }
   }
 }

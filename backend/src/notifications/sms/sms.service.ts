@@ -11,7 +11,7 @@ export class SMSService {
     try {
       const formattedPhoneNumber = new PhoneNumber(phoneNumber, 'FI');
       phoneNumber = formattedPhoneNumber.getNumber();
-      console.log(`Sending sms for user ${user} to number ${phoneNumber}`);
+      console.error(`Sending sms for user ${user} to number ${phoneNumber}`);
       const request = this.generateTeliaMessageRequest(phoneNumber, message);
       const response = await axios.post(teliaEndPoint, request);
       if (
@@ -23,7 +23,7 @@ export class SMSService {
         return null;
       }
     } catch (error) {
-      console.log(`Failed to send sms to the user: ${error.message}`);
+      console.error(`Failed to send sms to the user: ${error.message}`);
     }
   }
 

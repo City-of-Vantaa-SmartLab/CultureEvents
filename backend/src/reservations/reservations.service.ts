@@ -3,18 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Reservations } from './reservations.entity';
 import { ReservationsDto } from './reservations.dto';
-import { Price } from 'price/price.entity';
-import { SMSService } from 'notifications/sms/sms.service';
-import { EventsDto } from 'event/events.dto';
+import { SMSService } from '../notifications/sms/sms.service';
+import { EventsDto } from '../event/events.dto';
 import { format } from 'date-fns';
 import { I18Service } from '../i18/i18.service';
-import { EventsService } from 'event/events.service';
-import { Tickets } from 'tickets/tickets.entity';
-import { PriceDto } from 'price/price.dto';
-import { PriceService } from 'price/price.service';
-import * as stringInterpolator from 'interpolate';
-import { TicketService } from 'tickets/tickets.service';
-
+import { EventsService } from '../event/events.service';
+import { PriceDto } from '../price/price.dto';
+import { PriceService } from '../price/price.service';
+const stringInterpolator = require('interpolate');
+import { TicketService } from '../tickets/tickets.service';
+import * as dateFns from 'date-fns';
 @Injectable()
 export class ReservationService {
   constructor(
@@ -24,7 +22,7 @@ export class ReservationService {
     private readonly i18Service: I18Service,
     private readonly eventService: EventsService,
     private readonly priceService: PriceService,
-    private readonly ticketService: TicketService
+    private readonly ticketService: TicketService,
   ) { }
 
   async createReservation(reservation: ReservationsDto, sendSms: boolean) {
@@ -50,18 +48,27 @@ export class ReservationService {
   }
 
   async deleteReservation(id: number) {
-    const reservation = await this.findOneById(id);
-    await Promise.all(
-      reservation.tickets.map(
-        async ticket => {
-          await this.priceService.updateSeats(ticket.price_id, -ticket.no_of_tickets);
-          await this.ticketService.delete(ticket.id);
-        }
-      ),
-    );
+    try {
 
-    await this.reservationsRepository.delete(id);
-    return id;
+      const reservation = await this.findOneById(id);
+
+      if (!reservation) {
+        return;
+      }
+
+      await Promise.all(
+        reservation.tickets.map(
+          async ticket => {
+            await this.priceService.updateSeats(ticket.price_id, -ticket.no_of_tickets);
+            await this.ticketService.delete(ticket.id);
+          }
+        ),
+      );
+      await this.reservationsRepository.delete(id);
+      return id;
+    } catch (error) {
+      return null;
+    }
   }
 
   async updateReservation(id: number, reservation: Partial<ReservationsDto>) {
@@ -70,15 +77,51 @@ export class ReservationService {
       ...reservationFromDb,
       ...reservation
     }
+    if (reservation.tickets) {
+      for (let ticket of reservation.tickets) {
+        if (ticket.id) {
+          const ticketFromDb = await this.ticketService.getTicketDetails(ticket.id);
+          await this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets - ticketFromDb.no_of_tickets);
+          await this.ticketService.update(ticket.id, ticket);
+        } else {
+          ticket.tickets = reservationFromDb;
+          await this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets);
+          await this.ticketService.create(ticket);
+        }
+      }
+    }
     await this.reservationsRepository.update(id, reservationToUpdate);
-    return await this.reservationsRepository.findOne(id);
+    return await this.reservationsRepository.findOne(id, { relations: ['tickets'] });
   }
 
   async findAll(): Promise<Reservations[]> {
-    return await this.reservationsRepository.find({
+    let failedReservations = await this.reservationsRepository.find({
+      where: {
+        payment_required: true,
+        payment_completed: false,
+      },
       relations: ['tickets'],
     });
 
+    //Find failed reservations
+    failedReservations = failedReservations.filter(reservation =>
+      dateFns.differenceInMinutes(new Date(), reservation.created) > 5);
+
+    //Delete failed reservations
+    failedReservations.forEach(async reservation => {
+      await this.deleteReservation(reservation.id)
+    });
+
+    let reservations = await this.reservationsRepository.find({
+      relations: ['tickets'],
+    });
+
+    reservations = reservations.filter(reservations => (
+      (reservations.payment_completed && reservations.payment_required)
+      || !reservations.payment_required)
+    );
+
+    return reservations;
   }
 
   async findOneById(id: number) {
@@ -149,6 +192,26 @@ export class ReservationService {
     return response.price;
   }
 
+  async isReservationUpdatable(reservation: ReservationsDto) {
+    if (reservation.tickets) {
+      for (let ticket of reservation.tickets) {
+        if (!ticket.id) {
+          const isUpdatable = await this.priceService.isSeatsAvailable(ticket.price_id, ticket.no_of_tickets);
+          if (!isUpdatable) {
+            return false;
+          }
+        } else {
+          const ticketFromDb = await this.ticketService.getTicketDetails(1);
+          const isUpdatable = await this.priceService.isSeatsUpdatable(ticket, ticketFromDb);
+          if (!isUpdatable) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
   async checkSeatAvailability(reservationReq: ReservationsDto) {
     const ticketDetails = await this.checkTicketDetails(reservationReq);
     const availableTickets = ticketDetails.filter(
@@ -159,10 +222,6 @@ export class ReservationService {
     } else {
       return false;
     }
-  }
-
-  async getSeatAvailabilityDetails(eventId: number) {
-    const eventDetails = await this.eventService.findOneById(eventId);
   }
 
   async checkTicketDetails(reservationReq: ReservationsDto) {

@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Put,
-  Req,
   Param,
   Body,
   UsePipes,
@@ -13,12 +12,12 @@ import {
 } from '@nestjs/common';
 import { EventsDto } from './events.dto';
 import { EventsService } from './events.service';
-import { ValidationPipe } from 'validations/validation.pipe';
+import { ValidationPipe } from '../validations/validation.pipe';
 import { Events } from './events.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
-import { ReservationService } from 'reservations/reservations.service';
+import { ReservationService } from '../reservations/reservations.service';
 
 @ApiUseTags('events')
 @Controller('/api/events')
@@ -27,7 +26,7 @@ export class EventsController {
     private readonly eventsService: EventsService,
     private readonly validationService: ValidationService,
     private readonly reservationsService: ReservationService,
-  ) {}
+  ) { }
   @Get()
   async findAll(@Res() response): Promise<Events[]> {
     try {
@@ -47,7 +46,6 @@ export class EventsController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
   async create(@Res() response, @Body() event: EventsDto) {
     try {
@@ -115,16 +113,17 @@ export class EventsController {
     try {
       if (this.validationService.validateId(+id)) {
         return response.status(400).json(`Invalid event Id: ${id}`);
-      } else {
-        const deleted = await this.eventsService.deleteEvent(id);
-        if (deleted) {
-          return response.status(200).json(deleted);
-        } else {
-          return response
-            .status(404)
-            .json(`Could not find any event with id: ${id}`);
-        }
       }
+
+      const deleted = await this.eventsService.deleteEvent(id);
+      if (deleted) {
+        return response.status(200).json(deleted);
+      } else {
+        return response
+          .status(404)
+          .json(`Could not find any event with id: ${id}`);
+      }
+
     } catch (error) {
       return response.status(500).json(`Failed to delete event with id: ${id}`);
     }

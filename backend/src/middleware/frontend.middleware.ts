@@ -1,5 +1,4 @@
 import { NestMiddleware, MiddlewareFunction, Injectable } from '@nestjs/common';
-import { MiddlewareBuilder } from '@nestjs/core';
 
 const path = require('path');
 const ROUTE_PREFIX = 'api';
@@ -21,9 +20,9 @@ const resolvePath = (file: string) =>
 
 @Injectable()
 export class FrontendMiddleware implements NestMiddleware {
-  resolve(...args: any[]): MiddlewareFunction {
+  resolve(..._: any[]): MiddlewareFunction {
     return (req, res, next) => {
-      const { url, baseUrl } = req;
+      const { _, baseUrl } = req;
       if (baseUrl.indexOf(ROUTE_PREFIX) === 1) {
         // it starts with /api --> continue with execution
         next();

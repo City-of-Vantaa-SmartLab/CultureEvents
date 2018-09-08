@@ -4,16 +4,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payments } from './payment.entity';
 import { Repository } from 'typeorm';
-import { BamboraService } from 'services/bambora.service';
-import { ReservationService } from 'reservations/reservations.service';
-import { EventsService } from 'event/events.service';
-import { I18Service } from 'i18/i18.service';
+import { BamboraService } from '../services/bambora.service';
+import { ReservationService } from '../reservations/reservations.service';
+import { EventsService } from '../event/events.service';
+import { I18Service } from '../i18/i18.service';
 import { format } from 'date-fns';
-import { EventsDto } from 'event/events.dto';
-import { SMSService } from 'notifications/sms/sms.service';
-import * as stringInterpolator from 'interpolate';
-import { ReservationsDto } from 'reservations/reservations.dto';
-import { PriceService } from 'price/price.service';
+import { EventsDto } from '../event/events.dto';
+import { SMSService } from '../notifications/sms/sms.service';
+const stringInterpolator = require('interpolate');
+import { ReservationsDto } from '../reservations/reservations.dto';
+import { PriceService } from '../price/price.service';
 import { PaymentsDto } from './payment.dto';
 
 const TOKEN_URL = 'https://payform.bambora.com/pbwapi/auth_payment';
@@ -34,6 +34,7 @@ export class PaymentService {
 
   async getPaymentRedirectUrl(paymentObj) {
     try {
+
       const paymentEntity = await this.bamboraService.createPaymentModel(
         paymentObj,
       );
@@ -46,7 +47,7 @@ export class PaymentService {
       const redirectUrl = BAMBORA_API_URL + response.data.token;
       return redirectUrl;
     } catch (error) {
-      console.log(`Failed to get redirect url from bambora: ${error.message}`);
+      console.error(`Failed to get redirect url from bambora: ${error.message}`);
       return null;
     }
   }
@@ -55,6 +56,16 @@ export class PaymentService {
     return await this.paymentRepository.findOne({
       where: { order_number: orderNumber },
     });
+  }
+
+  async getPaymentByReservationId(reservationId: number) {
+    return await this.paymentRepository.findOne({
+      where: { reservation_id: reservationId },
+    });
+  }
+
+  async getOne(id: number) {
+    return await this.paymentRepository.findOne(id);
   }
 
   async delete(id: number) {
@@ -70,7 +81,7 @@ export class PaymentService {
     await this.paymentRepository.update(paymentFromDb.id, paymentToUpdate);
   }
 
-  async sendSmsToUser(id: number, amount: number) {
+  async sendSmsToUser(id: number) {
     const reservation = await this.reservationService.findOneById(id);
     const event = await this.eventService.findOneById(reservation.event_id);
     const reservationMessage = await this.buildPaymentMessage(event, reservation);
