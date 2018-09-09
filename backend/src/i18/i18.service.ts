@@ -1,4 +1,4 @@
-const content = require('./content.json');
+import { content } from './content';
 export class I18Service {
   language = 'fi';
   getContents = () => {

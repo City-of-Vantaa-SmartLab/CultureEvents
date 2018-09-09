@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
-const seed_users = require('../seed-db/seed_users.json');
+import { users } from './seed_users';
 const SEED_DB = process.env.SEED_DB;
 
 @Injectable()
@@ -28,11 +28,11 @@ export class SeedService implements OnModuleInit {
         );
 
         await Promise.all(
-          seed_users.map(async user => {
+          users.map(async user => {
             user.password = await this.userService.hashPassword(user.password);
           }),
         );
-        await this.userRepository.save(seed_users);
+        await this.userRepository.save(users);
       }
     } catch (error) {
       console.error(`Failed to seed users to database ${error.message}`);
