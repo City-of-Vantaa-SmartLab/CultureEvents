@@ -20,6 +20,7 @@ import { connectionDetails } from '../src/connection';
     UserModule,
     AuthModule,
     SeedModule,
+    PaymentModule,
     FileUploadModule,
   ],
   controllers: [AppController],
