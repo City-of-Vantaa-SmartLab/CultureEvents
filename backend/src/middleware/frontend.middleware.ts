@@ -16,12 +16,13 @@ const allowedExt = [
 ];
 
 const resolvePath = (file: string) =>
-  path.resolve(__dirname, `../../public/${file}`);
+  path.resolve(__dirname, `../../../public/${file}`);
 
 @Injectable()
 export class FrontendMiddleware implements NestMiddleware {
   resolve(..._: any[]): MiddlewareFunction {
     return (req, res, next) => {
+
       const { baseUrl } = req;
       if (baseUrl.indexOf(ROUTE_PREFIX) === 1) {
         // it starts with /api --> continue with execution
