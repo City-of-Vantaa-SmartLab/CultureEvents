@@ -65,7 +65,7 @@ export class ReservationsController {
         reservation,
         true,
       );
-      return response.status(201).json(reservation);
+      return response.status(201).json(reservationDto);
     } catch (error) {
       this.logger.error(error);
       return response

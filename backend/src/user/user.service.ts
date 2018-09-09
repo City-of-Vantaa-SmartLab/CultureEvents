@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { UserDto } from './user.dto';
 import { JwtPayload } from 'auth/jwt.payload';
 import { User } from './user.entity';
-import { AuthService } from 'auth/auth.service';
 import * as bcrypt from 'bcryptjs';
 const SALT_ROUNDS = 10;
 
