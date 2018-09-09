@@ -9,4 +9,4 @@ RUN npm run build
 RUN cp -r ./build ../backend/public
 WORKDIR /backend
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:prod"]
