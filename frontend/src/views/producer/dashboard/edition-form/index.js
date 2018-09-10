@@ -22,6 +22,7 @@ class EditionForm extends React.Component {
         <Editor
           selectedEvent={this.props.store.selectedEvent}
           onSubmit={this.commitChange}
+          deleteEvent={this.props.store.ui.eventList.setAskConfirmation}
         />
       </Wrapper>
     );

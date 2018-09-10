@@ -98,6 +98,16 @@ export const Content = styled(ModalContentAnimatable)`
   padding: 2rem;
 `;
 
+export const ActionBar = styled.div`
+  padding: 0 2rem 2rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin-left: 1rem;
+  }
+`;
+
 class Blur extends React.Component {
   target = document.querySelector('#root');
   isFireFox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;

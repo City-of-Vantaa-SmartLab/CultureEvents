@@ -1,5 +1,5 @@
-// @TODO: Reafactor to make this component less gigantic
 // @TODO: Editor is a whole view. Find a way to break up the data into smaller parts
+// @TODO: Restructure this component and make props/context more visible. Now everyting is everywhere.
 
 import React from 'react';
 import styled, { withTheme, injectGlobal } from 'styled-components';
@@ -153,6 +153,9 @@ class Editor extends React.Component {
           addNewEventCB={this.switchToCreationMode}
           confirmChangeCB={this.submitForm}
           discardChangeCB={this.discardDraft}
+          deleteEventCB={() =>
+            this.props.deleteEvent(this.props.selectedEvent.id)
+          }
           canConfirm={canConfirm}
           canDiscard={canConfirm && !this.internalData.creationMode}
           canAddNew={!this.internalData.creationMode}

@@ -3,11 +3,18 @@
 import EventModel from './event';
 import User from './user';
 import UI from './ui';
-import { types, flow, applySnapshot, resolveIdentifier } from 'mobx-state-tree';
+import {
+  types,
+  flow,
+  applySnapshot,
+  resolveIdentifier,
+  destroy,
+} from 'mobx-state-tree';
 import {
   fetchEvents,
   postEvent,
   putEvent,
+  deleteEvent,
   login as loginAPI,
   getPaymentRedirectUrl,
   validateUserToken,
@@ -112,6 +119,21 @@ export const RootModel = types
           self.ui.eventList.fetching = false;
           self.ui.eventList.fetchError = 'Could not modify event ' + event.name;
         }
+      }
+    }),
+    deleteEvent: flow(function*(id) {
+      if (!id) return;
+      self.ui.eventList.deleteEventStatus = 2;
+      try {
+        yield deleteEvent(id, self.user.token);
+        self.ui.eventList.deleteEventStatus = 3;
+        const target = resolveIdentifier(EventModel, self.events, id);
+        // locally wipe event
+        self.selectedEvent = undefined;
+        destroy(target);
+      } catch (error) {
+        self.ui.eventList.deleteEventStatus = 4;
+        console.log(error);
       }
     }),
     // auth actions

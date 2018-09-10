@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled, { withTheme } from 'styled-components';
 import AntButton from 'antd/lib/button';
 import { connect } from 'utils';
@@ -30,6 +30,7 @@ class ButtonBar extends React.Component {
       addNewEventCB,
       confirmChangeCB,
       discardChangeCB,
+      deleteEventCB,
       canConfirm,
       canAddNew,
       canSeeReservation,
@@ -66,15 +67,24 @@ class ButtonBar extends React.Component {
             Hylkää muutokset
           </Button>
           {canSeeReservation && (
-            <Button
-              bgColor={palette.purple}
-              icon="solution"
-              onClick={() =>
-                this.props.store.ui.orderAndPayment.toggleShowListing()
-              }
-            >
-              Katso varauslista
-            </Button>
+            <Fragment>
+              <Button
+                bgColor={palette.purple}
+                icon="solution"
+                onClick={() =>
+                  this.props.store.ui.orderAndPayment.toggleShowListing()
+                }
+              >
+                Katso varauslista
+              </Button>
+              <Button
+                bgColor={palette.red}
+                icon="delete"
+                onClick={deleteEventCB}
+              >
+                Poista tapahtuma
+              </Button>
+            </Fragment>
           )}
         </AntButton.Group>
       </Wrapper>

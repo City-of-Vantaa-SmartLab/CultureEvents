@@ -45,6 +45,10 @@ const putEvent = async (event, authToken) => {
   return parseTo('camel')(result);
 };
 
+const deleteEvent = async (id, authToken) => {
+  return customFetchFn(`/api/events/${id}`, { method: 'DELETE' }, authToken);
+};
+
 const login = (username, password) => {
   return customFetchFn('/api/auth/login', {
     method: 'POST',
@@ -80,6 +84,7 @@ export {
   fetchEvents,
   postEvent,
   putEvent,
+  deleteEvent,
   login,
   getPaymentRedirectUrl,
   validateUserToken,

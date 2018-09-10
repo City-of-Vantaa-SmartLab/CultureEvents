@@ -47,6 +47,7 @@
     ]
   },
   "devDependencies": {
-    "react-cosmos": "^4.6.4"
+    "react-cosmos": "^4.6.4",
+    "react-cosmos-context-proxy": "^4.6.1"
   }
 }
