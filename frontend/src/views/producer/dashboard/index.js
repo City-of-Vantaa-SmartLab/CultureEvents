@@ -3,6 +3,7 @@ import Appbar from './Appbar';
 import EventExplorer from './event-explore';
 import EditionForm from './edition-form';
 import ReservationList from './reservation-list';
+import ReservationEditionModal from './reservation-edition-modal';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'utils';
@@ -26,8 +27,7 @@ const InnerWrapper = styled(Wrapper)`
 export default connect('store')(
   class DashBoard extends React.Component {
     render() {
-      if (!this.props.store.user.isAuthenticated)
-        return <Redirect to="./login" />;
+      if (!this.props.store.user.isAuthenticated) return <Redirect to="./login" />;
       return (
         <Wrapper>
           <Appbar />
@@ -36,6 +36,7 @@ export default connect('store')(
             <EditionForm />
           </InnerWrapper>
           <ReservationList />
+          <ReservationEditionModal />
         </Wrapper>
       );
     }

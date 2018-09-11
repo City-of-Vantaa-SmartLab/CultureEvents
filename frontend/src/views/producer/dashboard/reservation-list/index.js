@@ -78,16 +78,7 @@ const CheckBoxDecorative = styled.div`
 `;
 
 const ReservationListItem = ({ reservation, event }) => {
-  const {
-    customerType,
-    name,
-    schoolName,
-    class: className,
-    phone,
-    email,
-    paymentCompleted,
-    tickets,
-  } = reservation;
+  const { customerType, name, schoolName, class: className, phone, email, paymentCompleted, tickets } = reservation;
   const isPrivateCustomer = customerType === 'private';
   const totalCost = tickets.reduce((acc, curr) => {
     const { price } = event.catalogById(curr.priceId);
@@ -117,8 +108,7 @@ const ReservationListItem = ({ reservation, event }) => {
             return (
               <li key={ticket.priceId}>
                 <Typography type="body">
-                  {catalog.ticketDescription} {ticket.noOfTickets} kpl{' '}
-                  {catalog.price * ticket.noOfTickets} €
+                  {catalog.ticketDescription} {ticket.noOfTickets} kpl {catalog.price * ticket.noOfTickets} €
                 </Typography>
               </li>
             );
@@ -137,28 +127,18 @@ class ReservationList extends React.Component {
     const { palette } = this.props.theme;
     const { reservationsAndOrders, selectedEvent, ui } = this.props.store;
     if (!reservationsAndOrders || !selectedEvent) return null;
-    const reservations = values(reservationsAndOrders).filter(
-      r => r.eventId.id === selectedEvent.id,
-    );
+    const reservations = values(reservationsAndOrders).filter(r => r.eventId.id === selectedEvent.id);
     if (!reservations) return null;
 
     return createPortal(
       <FullScreenModal shown={ui.orderAndPayment.listingShown}>
-        <Button
-          icon="close"
-          backgroundColor={palette.red}
-          onClick={ui.orderAndPayment.toggleShowListing}
-        >
+        <Button icon="close" backgroundColor={palette.red} onClick={ui.orderAndPayment.toggleShowListing}>
           Takaisin
         </Button>
         <ScrollContainer>
           <HeadSectionContainer>
             <div>
-              <Typography
-                type="headline"
-                color={palette.primaryDeep}
-                style={{ margin: 0 }}
-              >
+              <Typography type="headline" color={palette.primaryDeep} style={{ margin: 0 }}>
                 Vantaa Kulttuuria{' '}
               </Typography>
               <Typography type="subheader">Varauslista</Typography>
@@ -170,8 +150,7 @@ class ReservationList extends React.Component {
                 {selectedEvent.name}
               </Typography>
               <Typography type="body">
-                {selectedEvent.area} - {selectedEvent.eventDate} kello{' '}
-                {selectedEvent.eventTime}
+                {selectedEvent.area} - {selectedEvent.eventDate} kello {selectedEvent.eventTime}
               </Typography>
             </div>
           </HeadSectionContainer>
@@ -183,11 +162,7 @@ class ReservationList extends React.Component {
               })
               .map((r, index) => (
                 <div className="page-break">
-                  <ReservationListItem
-                    key={index}
-                    reservation={r}
-                    event={selectedEvent}
-                  />
+                  <ReservationListItem key={index} reservation={r} event={selectedEvent} />
                 </div>
               ))}
           </ul>
