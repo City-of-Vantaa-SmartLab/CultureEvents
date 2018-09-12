@@ -3,6 +3,7 @@ import Appbar from './Appbar';
 import EventExplorer from './event-explore';
 import EditionForm from './edition-form';
 import ReservationList from './reservation-list';
+import DeleteEventConfirmationModal from './delete-event-confirmation-modal';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'utils';
@@ -36,6 +37,7 @@ export default connect('store')(
             <EditionForm />
           </InnerWrapper>
           <ReservationList />
+          <DeleteEventConfirmationModal />
         </Wrapper>
       );
     }

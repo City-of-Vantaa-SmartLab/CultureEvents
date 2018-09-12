@@ -22,13 +22,24 @@ const UI = types.model({
     {},
   ),
   eventList: types.optional(
-    types.model({
-      fetching: false,
-      fetchError: types.optional(
-        types.union(types.string, types.boolean),
-        false,
-      ),
-    }),
+    types
+      .model({
+        fetching: false,
+        fetchError: types.optional(
+          types.union(types.string, types.boolean),
+          false,
+        ),
+        // 0: unasked, 1: waiting for confirmation, 2: in action, 3: completed, 4: failed
+        deleteEventStatus: types.optional(types.number, 0),
+      })
+      .actions(self => ({
+        clearDeletionFlag() {
+          self.deleteEventStatus = 0;
+        },
+        setAskConfirmation() {
+          self.deleteEventStatus = 1;
+        },
+      })),
     {},
   ),
   orderAndPayment: types.optional(
