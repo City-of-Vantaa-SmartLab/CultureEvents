@@ -21,7 +21,7 @@ export class EventsService {
   }
 
   async deleteEvent(id: number) {
-    const event = await this.eventRepository.findOne(1);
+    const event = await this.eventRepository.findOne(id);
     if (!event) {
       return;
     }
