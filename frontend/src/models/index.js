@@ -262,14 +262,14 @@ export const RootModel = types
     getReservationsAndOrders: id => {
       return resolveIdentifier(ReservationAndOrder, self.reservationsAndOrders, id);
     },
-    submitReservationPatch: flow(function*({ id, reservedSeats }) {
+    submitReservationPatch: flow(function*(reservationId, data) {
       try {
         self.ui.orderAndPayment.editionStatus = 1;
-        yield patchReservation(id, {
-          tickets: {
-            price_id: id,
-            no_of_tickets: reservedSeats,
-          },
+        yield patchReservation(reservationId, {
+          tickets: data.map(datum => ({
+            price_id: datum.id,
+            no_of_tickets: datum.reservedSeats,
+          })),
         });
         self.ui.orderAndPayment.editionStatus = 2;
       } catch (error) {

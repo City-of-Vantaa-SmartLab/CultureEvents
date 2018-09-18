@@ -38,7 +38,7 @@ class EditReservationDetail extends React.Component {
         <Typography type="largebody" color={theme.palette.primaryDeep}>
           Edit reservation details
         </Typography>
-        {this.formState.map(ticket => {
+        {formState.map(ticket => {
           return <TicketFormRow key={ticket.id} ticket={ticket} />;
         })}
       </Wrapper>
