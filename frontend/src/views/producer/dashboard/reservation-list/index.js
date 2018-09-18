@@ -77,7 +77,7 @@ const CheckBoxDecorative = styled.div`
   border: 1px ${props => props.color} solid;
 `;
 
-const ReservationListItem = ({ reservation, event }) => {
+const ReservationListItem = ({ reservation, event, requestEditReservation }) => {
   const { customerType, name, schoolName, class: className, phone, email, paymentCompleted, tickets } = reservation;
   const isPrivateCustomer = customerType === 'private';
   const totalCost = tickets.reduce((acc, curr) => {
@@ -117,12 +117,22 @@ const ReservationListItem = ({ reservation, event }) => {
         <Typography type="largebody" color={event.themeColor}>
           Yhteensa: {totalCost} €
         </Typography>
+        <br />
+        <Button backgroundColor={event.themeColor} onClick={requestEditReservation}>
+          Edit
+        </Button>
       </div>
     </LiStyled>
   );
 };
 
 class ReservationList extends React.Component {
+  selectReservation(reservation) {
+    // TODO: Find appropriate abstraction for this
+    this.props.store.selectReservation(reservation.id);
+    this.props.store.ui.orderAndPayment.toggleEditionModal();
+  }
+
   render() {
     const { palette } = this.props.theme;
     const { reservationsAndOrders, selectedEvent, ui } = this.props.store;
@@ -162,7 +172,12 @@ class ReservationList extends React.Component {
               })
               .map((r, index) => (
                 <div className="page-break">
-                  <ReservationListItem key={index} reservation={r} event={selectedEvent} />
+                  <ReservationListItem
+                    key={index}
+                    reservation={r}
+                    event={selectedEvent}
+                    requestEditReservation={() => this.selectReservation(r)}
+                  />
                 </div>
               ))}
           </ul>

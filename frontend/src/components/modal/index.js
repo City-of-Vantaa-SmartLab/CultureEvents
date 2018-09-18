@@ -44,13 +44,12 @@ const Wrapper = styled('div')`
   background-color: rgba(0, 0, 0, 0.7);
   transition: all 1s ease;
 
-  ${props =>
-    !props.block && 'pointer-events: none; background-color: transparent'};
+  ${props => !props.block && 'pointer-events: none; background-color: transparent'};
 `;
 
 const ModalWrapper = styled(ModalAnimatable)`
   width: 80%;
-  max-width: 600px;
+  max-width: 750px;
   height: auto;
   margin: auto;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
@@ -96,6 +95,16 @@ const ModalContentAnimatable = posed.div({
 
 export const Content = styled(ModalContentAnimatable)`
   padding: 2rem;
+`;
+
+export const ActionBar = styled.div`
+  padding: 0 2rem 2rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin-left: 1rem;
+  }
 `;
 
 class Blur extends React.Component {

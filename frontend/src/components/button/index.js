@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import AntButton from 'antd/lib/button';
 import 'antd/lib/button/style/css';
@@ -14,7 +15,7 @@ const getContrastColor = color => {
 
 const CustomButton = styled(AntButton)`
   && {
-    border-radius: 2rem;
+    border-radius: 4px;
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -46,5 +47,9 @@ export default class Button extends React.Component {
     );
   }
 }
+
+Button.propTypes = {
+  backgroundColor: PropTypes.string,
+};
 
 export const ButtonGroup = AntButton.Group;

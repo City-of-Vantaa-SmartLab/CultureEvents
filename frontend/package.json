@@ -29,7 +29,9 @@
     "start": "react-scripts start",
     "build": "export PUBLIC_URL=\"/app\" && react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cosmos": "NODE_PATH=./src cosmos",
+    "cosmos:export": "cosmos-export"
   },
   "browserslist": {
     "development": [
@@ -43,5 +45,9 @@
       "Firefox ESR",
       "not ie < 11"
     ]
+  },
+  "devDependencies": {
+    "react-cosmos": "^4.6.4",
+    "react-cosmos-context-proxy": "^4.6.1"
   }
 }
