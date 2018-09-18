@@ -20,7 +20,8 @@ class ReservationEditionModal extends React.Component {
         const { maxSeats, occupiedSeats } = correspondingCatalog;
 
         return {
-          id: ticket.priceId,
+          id: ticket.id,
+          priceId: ticket.priceId,
           maxSeats,
           occupiedSeats,
           ticketName: correspondingCatalog.ticketDescription,

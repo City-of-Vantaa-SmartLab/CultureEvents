@@ -267,7 +267,8 @@ export const RootModel = types
         self.ui.orderAndPayment.editionStatus = 1;
         yield patchReservation(reservationId, {
           tickets: data.map(datum => ({
-            price_id: datum.id,
+            id: datum.id,
+            price_id: datum.priceId,
             no_of_tickets: datum.reservedSeats,
           })),
         });

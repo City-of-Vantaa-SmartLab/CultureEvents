@@ -137,7 +137,7 @@ class ReservationList extends React.Component {
     const { palette } = this.props.theme;
     const { reservationsAndOrders, selectedEvent, ui } = this.props.store;
     if (!reservationsAndOrders || !selectedEvent) return null;
-    const reservations = values(reservationsAndOrders).filter(r => r.eventId.id === selectedEvent.id);
+    const reservations = values(reservationsAndOrders).filter(r => r.eventId === selectedEvent.id);
     if (!reservations) return null;
 
     return createPortal(
