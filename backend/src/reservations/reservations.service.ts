@@ -192,7 +192,7 @@ export class ReservationService {
     return response.price;
   }
 
-  async isReservationUpdatable(reservation: ReservationsDto) {
+  async isReservationUpdatable(reservation: Partial<ReservationsDto>) {
     if (reservation.tickets) {
       for (let ticket of reservation.tickets) {
         if (!ticket.id) {
