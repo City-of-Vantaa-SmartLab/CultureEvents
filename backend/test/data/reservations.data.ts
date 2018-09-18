@@ -26,13 +26,6 @@ export const newReservation = {
 
 export const updateReservation = {
     id: 1,
-    event_id: 1,
-    customer_type: 'private',
-    name: 'Updated User',
-    school_name: 'Updated school name',
-    class: 'test class name',
-    phone: '1234',
-    email: 'testuser@test.com',
     tickets: [
         {
             id: 1,
@@ -49,12 +42,6 @@ export const updateReservation = {
             no_of_tickets: 1
         }
     ],
-    confirmed: false,
-    sms_sent: false,
-    cancelled: false,
-    payment_completed: false,
-    payment_required: false,
-    created: dateFns.format(new Date(), 'YYYY-MM-DDTHH:mm:ss.SSS')
 }
 
 export const nonUpdatableReservation = {

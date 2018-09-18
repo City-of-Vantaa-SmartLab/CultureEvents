@@ -26,6 +26,7 @@ describe('ReservationsController (e2e)', () => {
     let createdReservation: Reservations;
     let priceService: PriceService;
     let createdEvent: Events;
+    let updatedReservation: any;
 
     beforeAll(async () => {
         const moduleFixture = await Test.createTestingModule({
@@ -89,12 +90,13 @@ describe('ReservationsController (e2e)', () => {
         const response = await request(app.getHttpServer())
             .put('/api/reservations/1')
             .send(updateReservation);
-        updateReservation.tickets = updateReservation.tickets.map(ticket => ticket.id ? ticket : { ...ticket, id: 3 })
+        updatedReservation = {
+            ...createdReservation,
+            tickets: updateReservation.tickets.map(ticket => ticket.id ? ticket : { ...ticket, id: 3 })
+        }
         expect(response.status).toBe(200);
-        expect({
-            ...response.body,
-            created: dateFns.format(response.body.created, 'YYYY-MM-DDTHH:mm:ss.SSS')
-        }).toEqual(updateReservation);
+
+        expect(response.body).toEqual(updatedReservation);
     });
 
     // Confirm that the reservation is updated properly
@@ -102,10 +104,7 @@ describe('ReservationsController (e2e)', () => {
         const response = await request(app.getHttpServer())
             .get('/api/reservations/1');
         expect(response.status).toBe(200);
-        expect({
-            ...response.body,
-            created: dateFns.format(response.body.created, 'YYYY-MM-DDTHH:mm:ss.SSS')
-        }).toEqual(updateReservation);
+        expect(response.body).toEqual(updatedReservation);
     });
 
     it('Confirm the number of tickets available after update', async () => {
@@ -154,20 +153,14 @@ describe('ReservationsController (e2e)', () => {
         const response = await request(app.getHttpServer())
             .get('/api/reservations/1');
         expect(response.status).toBe(200);
-        expect({
-            ...response.body,
-            created: dateFns.format(response.body.created, 'YYYY-MM-DDTHH:mm:ss.SSS')
-        }).toEqual(updateReservation);
+        expect(response.body).toEqual(updatedReservation);
     });
 
     it('/POST mark-complete /:id', async () => {
         const response = await request(app.getHttpServer())
             .post('/api/reservations/1/mark-complete');
         expect(response.status).toBe(200);
-        expect({
-            ...response.body,
-            created: dateFns.format(response.body.created, 'YYYY-MM-DDTHH:mm:ss.SSS')
-        }).toEqual({ ...updateReservation, payment_completed: true });
+        expect(response.body).toEqual({ ...updatedReservation, payment_completed: true });
     });
 
     afterAll(async () => {
