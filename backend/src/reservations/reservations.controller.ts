@@ -136,7 +136,7 @@ export class ReservationsController {
   async update(
     @Res() response,
     @Param('id') id: number,
-    @Body() reservation: ReservationsDto,
+    @Body() reservation: Partial<ReservationsDto>,
   ) {
     try {
       if (this.validationService.validateId(+id)) {
