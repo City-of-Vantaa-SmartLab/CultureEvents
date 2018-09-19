@@ -11,12 +11,14 @@ import { observable } from 'mobx';
 class ReservationEditionModal extends React.Component {
   componentWillUpdate() {
     if (!this.props.store.selectedReservation || !this.props.store.selectedEvent) return;
+    console.log('Updating');
 
     this._state = observable(
       this.props.store.selectedReservation.tickets.map(ticket => {
-        const correspondingCatalog = this.props.store.selectedEvent.ticketCatalog
-          .toJSON()
-          .find(cat => cat.id === ticket.priceId);
+        const correspondingEvent = this.props.store.findEvent(this.props.store.selectedReservation.eventId);
+        console.log(correspondingEvent);
+
+        const correspondingCatalog = correspondingEvent.ticketCatalog.toJSON().find(cat => cat.id === ticket.priceId);
         const { maxSeats, occupiedSeats } = correspondingCatalog;
 
         return {

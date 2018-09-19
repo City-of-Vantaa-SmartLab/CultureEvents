@@ -7,6 +7,7 @@ import { connect } from 'utils';
 import Typography from 'components/typography';
 import { values } from 'mobx';
 import Icon from 'antd/lib/icon';
+import { observer } from 'mobx-react';
 
 const FullScreenModal = styled.article`
   position: absolute;
@@ -77,7 +78,7 @@ const CheckBoxDecorative = styled.div`
   border: 1px ${props => props.color} solid;
 `;
 
-const ReservationListItem = ({ reservation, event, requestEditReservation }) => {
+const ReservationListItem = observer(({ reservation, event, requestEditReservation }) => {
   const { customerType, name, schoolName, class: className, phone, email, paymentCompleted, tickets } = reservation;
   const isPrivateCustomer = customerType === 'private';
   const totalCost = tickets.reduce((acc, curr) => {
@@ -124,7 +125,7 @@ const ReservationListItem = ({ reservation, event, requestEditReservation }) => 
       </div>
     </LiStyled>
   );
-};
+});
 
 class ReservationList extends React.Component {
   selectReservation(reservation) {

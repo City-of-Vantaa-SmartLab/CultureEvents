@@ -127,7 +127,9 @@ export const RootModel = types
         const target = resolveIdentifier(EventModel, self.events, id);
         // locally wipe event
         self.selectedEvent = undefined;
+        self.selectedReservation = undefined;
         destroy(target);
+        // wipe related reservations
       } catch (error) {
         self.ui.eventList.deleteEventStatus = 4;
         console.log(error);
@@ -265,6 +267,7 @@ export const RootModel = types
     submitReservationPatch: flow(function*(reservationId, data) {
       try {
         self.ui.orderAndPayment.editionStatus = 1;
+
         yield patchReservation(reservationId, {
           tickets: data.map(datum => ({
             id: datum.id,
@@ -272,7 +275,18 @@ export const RootModel = types
             no_of_tickets: datum.reservedSeats,
           })),
         });
+
         self.ui.orderAndPayment.editionStatus = 2;
+
+        const foundReservation = resolveIdentifier(ReservationAndOrder, self.reservationsAndOrders, reservationId);
+        if (foundReservation) {
+          // patch tis locally
+          foundReservation.tickets = data.map(datum => ({
+            id: datum.id,
+            priceId: datum.priceId,
+            noOfTickets: datum.reservedSeats,
+          }));
+        }
       } catch (error) {
         console.error(error);
         self.ui.orderAndPayment.editionStatus = 3;
