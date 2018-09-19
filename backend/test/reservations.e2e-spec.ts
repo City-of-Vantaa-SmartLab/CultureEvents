@@ -18,7 +18,6 @@ import { I18Service } from '../src/i18/i18.service';
 import { TicketService } from '../src/tickets/tickets.service';
 import { newEvent } from './data/events.data';
 import { EventsController } from '../src/event/events.controller';
-import * as dateFns from 'date-fns';
 import { PriceService } from '../src/price/price.service';
 
 describe('ReservationsController (e2e)', () => {
