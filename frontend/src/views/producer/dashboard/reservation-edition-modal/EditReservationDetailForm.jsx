@@ -28,9 +28,9 @@ const TicketLabelGroup = styled.div`
 `;
 
 class EditReservationDetail extends React.Component {
-  // in
 
   render() {
+
     const { theme, formState } = this.props;
 
     return (
@@ -39,7 +39,10 @@ class EditReservationDetail extends React.Component {
           Edit reservation details
         </Typography>
         {formState.map(ticket => {
-          return <TicketFormRow key={ticket.id} ticket={ticket} />;
+          return <TicketFormRow
+            key={ticket.id}
+            ticket={ticket}
+            orginalTickets={ticket.reservedSeats} />;
         })}
       </Wrapper>
     );
@@ -47,25 +50,33 @@ class EditReservationDetail extends React.Component {
 }
 
 const TicketFormRow = withTheme(
-  observer(({ theme, ticket }) => (
-    <Row>
-      <TicketLabelGroup>
-        <Typography type="largebody">{ticket.ticketName}</Typography>
-        <TagPill highlightColor={theme.palette.orange} selected color={'white'}>
-          {ticket.maxSeats - ticket.occupiedSeats} seats
-        </TagPill>
-      </TicketLabelGroup>
-      <InputField
-        type="number"
-        min={0}
-        max={ticket.maxSeats - ticket.occupiedSeats}
-        value={ticket.reservedSeats}
-        onChange={v => {
-          ticket.reservedSeats = v;
-        }}
-      />
-    </Row>
-  )),
+  observer(({ theme, ticket, orginalTickets }) => {
+    return (
+
+      <Row>
+        <TicketLabelGroup>
+          <Typography type="largebody">{ticket.ticketName}</Typography>
+          Booked <TagPill
+            highlightColor={((ticket.reservedSeats + (ticket.occupiedSeats - orginalTickets)) > ticket.maxSeats || ticket.reservedSeats < 0) ? theme.palette.red : theme.palette.orange}
+            selected color={'green'}>
+            {ticket.reservedSeats ? ticket.reservedSeats : 0} seats
+          </TagPill>
+          Available <TagPill
+            highlightColor={(ticket.maxSeats - ticket.occupiedSeats - (ticket.reservedSeats - orginalTickets)) > 0 ? theme.palette.lightGreen : theme.palette.red}
+            selected color={'white'}>
+            {ticket.maxSeats - ticket.occupiedSeats - (ticket.reservedSeats - orginalTickets)} more seats
+          </TagPill>
+        </TicketLabelGroup>
+        <InputField
+          type="number"
+          min={0}
+          max={ticket.maxSeats - ticket.occupiedSeats + orginalTickets}
+          value={ticket.reservedSeats}
+          onChange={(value) => { ticket.reservedSeats = value }}
+        />
+      </Row>
+    )
+  }),
 );
 
 export default withTheme(EditReservationDetail);
