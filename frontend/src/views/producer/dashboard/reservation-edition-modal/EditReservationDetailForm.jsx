@@ -34,7 +34,7 @@ class EditReservationDetail extends React.Component {
     return (
       <Wrapper>
         <Typography type="largebody" color={theme.palette.primaryDeep}>
-          Edit reservation details
+          Muokkaa varauksen tietoja
         </Typography>
         {formState.map(ticket => {
           return (
@@ -75,7 +75,7 @@ const TicketFormRow = withTheme(
               ticket.maxSeats -
                 ticket.occupiedSeats -
                 (ticket.reservedSeats - orginalTickets) >
-              0
+                0
                 ? theme.palette.lightGreen
                 : theme.palette.red
             }

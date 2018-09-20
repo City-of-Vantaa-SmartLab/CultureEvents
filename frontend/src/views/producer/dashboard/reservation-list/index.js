@@ -101,46 +101,41 @@ const ReservationListItem = observer(
         {paymentCompleted ? (
           <Icon type="check-circle-o" style={{ color: event.themeColor }} />
         ) : (
-          <CheckBoxDecorative color={event.themeColor} />
-        )}
+            <CheckBoxDecorative color={event.themeColor} />
+          )}
         <div>
           {isPrivateCustomer ? (
             <Typography style={{ margin: 0 }} type="paragraph" show={true}>
               {name}
             </Typography>
           ) : (
-            <Typography style={{ margin: 0 }} type="paragraph" show={true}>
-              {name}, {schoolName}, {className}, {phone}, {email}
-            </Typography>
-          )}
+              <Typography style={{ margin: 0 }} type="paragraph" show={true}>
+                {name}, {schoolName}, {className}, {phone}, {email}
+              </Typography>
+            )}
           <ul>
             {tickets.map(ticket => {
               const catalog = event.catalogById(ticket.priceId);
               return (
                 <li key={ticket.priceId}>
                   <Typography type="body">
-                    {catalog.ticketDescription} {ticket.noOfTickets} kpl{' '}
-                    {catalog.price * ticket.noOfTickets} €
-                  </Typography>
+                    {catalog.ticketDescription} {ticket.noOfTickets} kpl {catalog.price * ticket.noOfTickets} €
+                </Typography>
                 </li>
               );
             })}
           </ul>
           <Typography type="largebody" color={event.themeColor}>
-            Yhteensa: {totalCost} €
-          </Typography>
+            Yhteensä: {totalCost} €
+        </Typography>
           <br />
-          <Button
-            backgroundColor={event.themeColor}
-            onClick={requestEditReservation}
-          >
-            Edit
-          </Button>
+          <Button backgroundColor={event.themeColor} onClick={requestEditReservation}>
+            Muokkaa
+        </Button>
         </div>
       </LiStyled>
     );
-  },
-);
+  });
 
 class ReservationList extends React.Component {
   selectReservation(reservation) {

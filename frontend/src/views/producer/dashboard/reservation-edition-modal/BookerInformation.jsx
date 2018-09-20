@@ -15,7 +15,7 @@ class BookerInformation extends React.Component {
       <Wrapper>
         <div>
           <Typography type="largebody" color={theme.palette.primaryDeep}>
-            Booker
+            Varaaja
           </Typography>{' '}
           <br />
           <Typography

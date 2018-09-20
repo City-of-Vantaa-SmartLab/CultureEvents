@@ -53,7 +53,7 @@ class ReservationEditionModal extends React.Component {
           selectedReservation &&
           orderAndPayment.editionStatus === 0 && [
             <Content key="content">
-              <Typography type="title">Modify Reservation</Typography>
+              <Typography type="title">Muokkaa varausta</Typography>
               <BookerInformation
                 name={selectedReservation.name}
                 school={selectedReservation.schoolName}
@@ -64,11 +64,8 @@ class ReservationEditionModal extends React.Component {
             </Content>,
             <EditReservationDetailForm key="form" formState={this._state} />,
             <ActionBar key="actionbar">
-              <Button
-                backgroundColor="white"
-                onClick={store.ui.orderAndPayment.toggleEditionModal}
-              >
-                Quit and do nothing
+              <Button backgroundColor="white" onClick={store.ui.orderAndPayment.toggleEditionModal}>
+                Poistu tallentamatta muutoksia
               </Button>
               <Button
                 backgroundColor={theme.palette.primaryDeep}
@@ -79,27 +76,25 @@ class ReservationEditionModal extends React.Component {
                   )
                 }
               >
-                Confirm changes
+                Tallenna muutokset
               </Button>
             </ActionBar>,
           ]}
         {orderAndPayment.editionStatus === 2 && (
           <Content>
             <Typography type="title" color={theme.palette.lightGreen}>
-              Success
+              Tallennus onnistui
             </Typography>
-            <Typography type="body">
-              The reservation has been successfully modified
-            </Typography>
+            <Typography type="body">Muutokset varaukseen on tallennettu onnistuneesti.</Typography>
           </Content>
         )}
         {orderAndPayment.editionStatus === 3 && (
           <Content>
             <Typography type="title" color={theme.palette.red}>
-              Error
+              Tallennus epäonnistui
             </Typography>
             <Typography type="body">
-              Something wrong happen. Try again later
+              Tallennus epäonnistui. Yritä uudelleen ja ota tarvittaessa yhteys ylläpitoon.
             </Typography>
           </Content>
         )}
