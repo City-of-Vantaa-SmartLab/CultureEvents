@@ -18,7 +18,14 @@ class BookerInformation extends React.Component {
             Booker
           </Typography>{' '}
           <br />
-          <Typography style={{ display: 'inline', marginRight: '1.5rem', fontWeight: '600' }} type="subheader">
+          <Typography
+            style={{
+              display: 'inline',
+              marginRight: '1.5rem',
+              fontWeight: '600',
+            }}
+            type="subheader"
+          >
             {name}
           </Typography>
           <Typography type="body">

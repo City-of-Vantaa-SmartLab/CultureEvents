@@ -10,13 +10,21 @@ import { observable } from 'mobx';
 
 class ReservationEditionModal extends React.Component {
   componentWillUpdate() {
-    if (!this.props.store.selectedReservation || !this.props.store.selectedEvent) return;
+    if (
+      !this.props.store.selectedReservation ||
+      !this.props.store.selectedEvent
+    )
+      return;
 
     this._state = observable(
       this.props.store.selectedReservation.tickets.map(ticket => {
-        const correspondingEvent = this.props.store.findEvent(this.props.store.selectedReservation.eventId);
+        const correspondingEvent = this.props.store.findEvent(
+          this.props.store.selectedReservation.eventId,
+        );
 
-        const correspondingCatalog = correspondingEvent.ticketCatalog.toJSON().find(cat => cat.id === ticket.priceId);
+        const correspondingCatalog = correspondingEvent.ticketCatalog
+          .toJSON()
+          .find(cat => cat.id === ticket.priceId);
         const { maxSeats, occupiedSeats } = correspondingCatalog;
 
         return {
@@ -37,7 +45,10 @@ class ReservationEditionModal extends React.Component {
     const { orderAndPayment } = store.ui;
 
     return (
-      <Modal show={orderAndPayment.editionModelShown} onClear={store.ui.orderAndPayment.toggleEditionModal}>
+      <Modal
+        show={orderAndPayment.editionModelShown}
+        onClear={store.ui.orderAndPayment.toggleEditionModal}
+      >
         {selectedEvent &&
           selectedReservation &&
           orderAndPayment.editionStatus === 0 && [
@@ -53,12 +64,20 @@ class ReservationEditionModal extends React.Component {
             </Content>,
             <EditReservationDetailForm key="form" formState={this._state} />,
             <ActionBar key="actionbar">
-              <Button backgroundColor="white" onClick={store.ui.orderAndPayment.toggleEditionModal}>
+              <Button
+                backgroundColor="white"
+                onClick={store.ui.orderAndPayment.toggleEditionModal}
+              >
                 Quit and do nothing
               </Button>
               <Button
                 backgroundColor={theme.palette.primaryDeep}
-                onClick={() => store.submitReservationPatch(selectedReservation.id, this._state)}
+                onClick={() =>
+                  store.submitReservationPatch(
+                    selectedReservation.id,
+                    this._state,
+                  )
+                }
               >
                 Confirm changes
               </Button>
@@ -69,7 +88,9 @@ class ReservationEditionModal extends React.Component {
             <Typography type="title" color={theme.palette.lightGreen}>
               Success
             </Typography>
-            <Typography type="body">The reservation has been successfully modified</Typography>
+            <Typography type="body">
+              The reservation has been successfully modified
+            </Typography>
           </Content>
         )}
         {orderAndPayment.editionStatus === 3 && (
@@ -77,7 +98,9 @@ class ReservationEditionModal extends React.Component {
             <Typography type="title" color={theme.palette.red}>
               Error
             </Typography>
-            <Typography type="body">Something wrong happen. Try again later</Typography>
+            <Typography type="body">
+              Something wrong happen. Try again later
+            </Typography>
           </Content>
         )}
       </Modal>

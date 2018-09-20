@@ -78,54 +78,69 @@ const CheckBoxDecorative = styled.div`
   border: 1px ${props => props.color} solid;
 `;
 
-const ReservationListItem = observer(({ reservation, event, requestEditReservation }) => {
-  const { customerType, name, schoolName, class: className, phone, email, paymentCompleted, tickets } = reservation;
-  const isPrivateCustomer = customerType === 'private';
-  const totalCost = tickets.reduce((acc, curr) => {
-    const { price } = event.catalogById(curr.priceId);
-    return (acc += price * curr.noOfTickets);
-  }, 0);
+const ReservationListItem = observer(
+  ({ reservation, event, requestEditReservation }) => {
+    const {
+      customerType,
+      name,
+      schoolName,
+      class: className,
+      phone,
+      email,
+      paymentCompleted,
+      tickets,
+    } = reservation;
+    const isPrivateCustomer = customerType === 'private';
+    const totalCost = tickets.reduce((acc, curr) => {
+      const { price } = event.catalogById(curr.priceId);
+      return (acc += price * curr.noOfTickets);
+    }, 0);
 
-  return (
-    <LiStyled key={reservation.id}>
-      {paymentCompleted ? (
-        <Icon type="check-circle-o" style={{ color: event.themeColor }} />
-      ) : (
-        <CheckBoxDecorative color={event.themeColor} />
-      )}
-      <div>
-        {isPrivateCustomer ? (
-          <Typography style={{ margin: 0 }} type="paragraph" show={true}>
-            {name}
-          </Typography>
+    return (
+      <LiStyled key={reservation.id}>
+        {paymentCompleted ? (
+          <Icon type="check-circle-o" style={{ color: event.themeColor }} />
         ) : (
-          <Typography style={{ margin: 0 }} type="paragraph" show={true}>
-            {name}, {schoolName}, {className}, {phone}, {email}
-          </Typography>
+          <CheckBoxDecorative color={event.themeColor} />
         )}
-        <ul>
-          {tickets.map(ticket => {
-            const catalog = event.catalogById(ticket.priceId);
-            return (
-              <li key={ticket.priceId}>
-                <Typography type="body">
-                  {catalog.ticketDescription} {ticket.noOfTickets} kpl {catalog.price * ticket.noOfTickets} €
-                </Typography>
-              </li>
-            );
-          })}
-        </ul>
-        <Typography type="largebody" color={event.themeColor}>
-          Yhteensa: {totalCost} €
-        </Typography>
-        <br />
-        <Button backgroundColor={event.themeColor} onClick={requestEditReservation}>
-          Edit
-        </Button>
-      </div>
-    </LiStyled>
-  );
-});
+        <div>
+          {isPrivateCustomer ? (
+            <Typography style={{ margin: 0 }} type="paragraph" show={true}>
+              {name}
+            </Typography>
+          ) : (
+            <Typography style={{ margin: 0 }} type="paragraph" show={true}>
+              {name}, {schoolName}, {className}, {phone}, {email}
+            </Typography>
+          )}
+          <ul>
+            {tickets.map(ticket => {
+              const catalog = event.catalogById(ticket.priceId);
+              return (
+                <li key={ticket.priceId}>
+                  <Typography type="body">
+                    {catalog.ticketDescription} {ticket.noOfTickets} kpl{' '}
+                    {catalog.price * ticket.noOfTickets} €
+                  </Typography>
+                </li>
+              );
+            })}
+          </ul>
+          <Typography type="largebody" color={event.themeColor}>
+            Yhteensa: {totalCost} €
+          </Typography>
+          <br />
+          <Button
+            backgroundColor={event.themeColor}
+            onClick={requestEditReservation}
+          >
+            Edit
+          </Button>
+        </div>
+      </LiStyled>
+    );
+  },
+);
 
 class ReservationList extends React.Component {
   selectReservation(reservation) {
@@ -138,18 +153,28 @@ class ReservationList extends React.Component {
     const { palette } = this.props.theme;
     const { reservationsAndOrders, selectedEvent, ui } = this.props.store;
     if (!reservationsAndOrders || !selectedEvent) return null;
-    const reservations = values(reservationsAndOrders).filter(r => r.eventId === selectedEvent.id);
+    const reservations = values(reservationsAndOrders).filter(
+      r => r.eventId === selectedEvent.id,
+    );
     if (!reservations) return null;
 
     return createPortal(
       <FullScreenModal shown={ui.orderAndPayment.listingShown}>
-        <Button icon="close" backgroundColor={palette.red} onClick={ui.orderAndPayment.toggleShowListing}>
+        <Button
+          icon="close"
+          backgroundColor={palette.red}
+          onClick={ui.orderAndPayment.toggleShowListing}
+        >
           Takaisin
         </Button>
         <ScrollContainer>
           <HeadSectionContainer>
             <div>
-              <Typography type="headline" color={palette.primaryDeep} style={{ margin: 0 }}>
+              <Typography
+                type="headline"
+                color={palette.primaryDeep}
+                style={{ margin: 0 }}
+              >
                 Vantaa Kulttuuria{' '}
               </Typography>
               <Typography type="subheader">Varauslista</Typography>
@@ -161,7 +186,8 @@ class ReservationList extends React.Component {
                 {selectedEvent.name}
               </Typography>
               <Typography type="body">
-                {selectedEvent.area} - {selectedEvent.eventDate} kello {selectedEvent.eventTime}
+                {selectedEvent.area} - {selectedEvent.eventDate} kello{' '}
+                {selectedEvent.eventTime}
               </Typography>
             </div>
           </HeadSectionContainer>
