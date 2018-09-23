@@ -3,9 +3,16 @@
 import EventModel from './event';
 import User from './user';
 import UI from './ui';
-import { types, flow, applySnapshot, resolveIdentifier, destroy } from 'mobx-state-tree';
+import {
+  types,
+  flow,
+  applySnapshot,
+  resolveIdentifier,
+  destroy,
+} from 'mobx-state-tree';
 import {
   fetchEvents,
+  fetchOneEvent,
   postEvent,
   putEvent,
   deleteEvent,
@@ -72,7 +79,8 @@ export const RootModel = types
     selectReservation: id => (self.selectedReservation = id),
     deselectReservation: () => (self.selectedReservation = undefined),
     findEvent: id => resolveIdentifier(EventModel, self.events, id),
-    findReservation: id => resolveIdentifier(ReservationAndOrder, self.reservationsAndOrders, id),
+    findReservation: id =>
+      resolveIdentifier(ReservationAndOrder, self.reservationsAndOrders, id),
     fetchEvents: flow(function*() {
       try {
         self.ui.eventList.fetching = true;
@@ -88,12 +96,24 @@ export const RootModel = types
         self.ui.eventList.fetchError = 'Could not fetch events';
       }
     }),
+    fetchAnEvent: flow(function*(id) {
+      try {
+        const data = yield fetchOneEvent(id);
+        self.events.put(data);
+      } catch (error) {
+        console.log('Cannot fetch one event', id);
+        console.error(error);
+      }
+    }),
     patchEvent: flow(function*(event) {
       if (!resolveIdentifier(EventModel, self.events, event.id)) {
         // new event. POST
         try {
           self.ui.eventList.fetching = true;
-          const result = yield postEvent(removeIdRecursively(event), self.user.token);
+          const result = yield postEvent(
+            removeIdRecursively(event),
+            self.user.token,
+          );
 
           self.ui.eventList.fetching = false;
           self.events.put(result);
@@ -180,11 +200,16 @@ export const RootModel = types
     },
     updateAvailableSeat: (eventId, ticketCatalogId, amount) => {
       const resolvedEvent = resolveIdentifier(EventModel, self.events, eventId);
-      if (!resolvedEvent) throw new Error('UpdateAvailableSeat failed. Cant find the event');
-      const resolveTicketType = resolvedEvent.ticketCatalog.find(catalogs => catalogs.id === ticketCatalogId);
+      if (!resolvedEvent)
+        throw new Error('UpdateAvailableSeat failed. Cant find the event');
+      const resolveTicketType = resolvedEvent.ticketCatalog.find(
+        catalogs => catalogs.id === ticketCatalogId,
+      );
       if (resolveTicketType.maxSeats < resolveTicketType.occupiedSeats + amount)
         throw new Error(
-          `Invalid amount of seat. There are max ${resolveTicketType.maxSeats}, and there are ${
+          `Invalid amount of seat. There are max ${
+            resolveTicketType.maxSeats
+          }, and there are ${
             resolveTicketType.occupiedSeats
           } while you try to occupy ${amount} seats`,
         );
@@ -231,7 +256,9 @@ export const RootModel = types
             school_name: orderInfo.school,
             name: orderInfo.name,
             class: orderInfo.classRoom,
-            phone: orderInfo.phoneNumber.replace(/^0/, '+358').replace(/\s/g, ''),
+            phone: orderInfo.phoneNumber
+              .replace(/^0/, '+358')
+              .replace(/\s/g, ''),
             email: orderInfo.email,
             tickets: orderInfo.tickets.map(ticket => ({
               price_id: ticket.value,
@@ -242,7 +269,11 @@ export const RootModel = types
           const result = yield postReservation(payload);
           self.ui.orderAndPayment.reservedEvent = result.event_id;
           payload.tickets.forEach(ticket =>
-            self.updateAvailableSeat(orderInfo.eventId, ticket.price_id, ticket.no_of_tickets),
+            self.updateAvailableSeat(
+              orderInfo.eventId,
+              ticket.price_id,
+              ticket.no_of_tickets,
+            ),
           );
           // @TODO: somehow add this result into a reservation model
           self.ui.orderAndPayment.reservationStatus = 2;
@@ -262,7 +293,11 @@ export const RootModel = types
       }
     }),
     getReservationsAndOrders: id => {
-      return resolveIdentifier(ReservationAndOrder, self.reservationsAndOrders, id);
+      return resolveIdentifier(
+        ReservationAndOrder,
+        self.reservationsAndOrders,
+        id,
+      );
     },
     submitReservationPatch: flow(function*(reservationId, data) {
       try {
@@ -278,7 +313,11 @@ export const RootModel = types
 
         self.ui.orderAndPayment.editionStatus = 2;
 
-        const foundReservation = resolveIdentifier(ReservationAndOrder, self.reservationsAndOrders, reservationId);
+        const foundReservation = resolveIdentifier(
+          ReservationAndOrder,
+          self.reservationsAndOrders,
+          reservationId,
+        );
         if (foundReservation) {
           // patch tis locally
           foundReservation.tickets = data.map(datum => ({
@@ -286,6 +325,9 @@ export const RootModel = types
             priceId: datum.priceId,
             noOfTickets: datum.reservedSeats,
           }));
+
+          // patch the available seat for the affected events locally
+          self.fetchAnEvent(foundReservation.eventId);
         }
       } catch (error) {
         console.error(error);
