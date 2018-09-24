@@ -44,13 +44,12 @@ const Wrapper = styled('div')`
   background-color: rgba(0, 0, 0, 0.7);
   transition: all 1s ease;
 
-  ${props =>
-    !props.block && 'pointer-events: none; background-color: transparent'};
+  ${props => !props.block && 'pointer-events: none; background-color: transparent'};
 `;
 
 const ModalWrapper = styled(ModalAnimatable)`
   width: 80%;
-  max-width: 600px;
+  max-width: 750px;
   height: auto;
   margin: auto;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);

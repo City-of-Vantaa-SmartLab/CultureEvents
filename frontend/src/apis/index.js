@@ -28,6 +28,11 @@ const fetchEvents = async () => {
   const result = await customFetchFn('/api/events');
   return parseTo()(result);
 };
+
+const fetchOneEvent = async id => {
+  const result = await customFetchFn('/api/events/' + id);
+  return parseTo()(result);
+};
 const postEvent = async (event, authToken) => {
   const result = await customFetchFn(
     '/api/events',
@@ -80,8 +85,15 @@ const postReservation = orderInfo => {
 const getReservations = async () =>
   parseTo('camel')(await customFetchFn(`/api/reservations`));
 
+const patchReservation = async (id, data) =>
+  customFetchFn(`/api/reservations/${id}`, {
+    method: 'PUT',
+    body: data,
+  });
+
 export {
   fetchEvents,
+  fetchOneEvent,
   postEvent,
   putEvent,
   deleteEvent,
@@ -90,4 +102,5 @@ export {
   validateUserToken,
   postReservation,
   getReservations,
+  patchReservation,
 };

@@ -25,11 +25,7 @@ export default class App extends React.Component {
             <Switch>
               <Route path="/producer" component={LazyProducerUI} />
               <Route path="/consumer" component={LazyConsumerUI} />
-              <Route
-                exact
-                path="/"
-                render={props => <Redirect to="/consumer" />}
-              />
+              <Route exact path="/" render={props => <Redirect to="/consumer" />} />
             </Switch>
           </Router>
         </React.Fragment>

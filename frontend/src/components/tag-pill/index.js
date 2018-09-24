@@ -16,14 +16,12 @@ const TagPillText = styled(Typography)`
 
   &:hover {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.23);
-    transform: translateY(-2px);
   }
 
   ${props =>
     props.selected &&
     `
-    background-color: ${props.highlightColor ||
-      props.theme.palette.primaryDeep};
+    background-color: ${props.highlightColor || props.theme.palette.primaryDeep};
     color: white;
     text-shadow: 0 2px 6px rgba(0,0,0, .23);
     transform: translateY(-2px);
@@ -73,9 +71,7 @@ export default observer(
         }
       } else {
         if (multiple) {
-          const index = this.internalState.selected.findIndex(
-            elem => elem.id == tagValue,
-          );
+          const index = this.internalState.selected.findIndex(elem => elem.id == tagValue);
           if (index == -1) this.internalState.selected.push(tagValue);
           else this.internalState.selected.splice(index, 1);
         } else {
@@ -87,8 +83,7 @@ export default observer(
     isChildSelected = tag => {
       // the presence of value props means that the component is controlled
       if (this.props.value !== undefined) {
-        if (this.props.multiple)
-          return this.props.value.find(v => v === tag.value);
+        if (this.props.multiple) return this.props.value.find(v => v === tag.value);
         else return this.props.value == tag.value;
       } else {
         // otherwise we use internal state

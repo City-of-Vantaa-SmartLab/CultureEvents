@@ -7,6 +7,7 @@ import DeleteEventConfirmationModal from './delete-event-confirmation-modal';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'utils';
+import ReservationEditionModal from './reservation-edition-modal';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -27,8 +28,7 @@ const InnerWrapper = styled(Wrapper)`
 export default connect('store')(
   class DashBoard extends React.Component {
     render() {
-      if (!this.props.store.user.isAuthenticated)
-        return <Redirect to="./login" />;
+      if (!this.props.store.user.isAuthenticated) return <Redirect to="./login" />;
       return (
         <Wrapper>
           <Appbar />
@@ -37,6 +37,7 @@ export default connect('store')(
             <EditionForm />
           </InnerWrapper>
           <ReservationList />
+          <ReservationEditionModal />
           <DeleteEventConfirmationModal />
         </Wrapper>
       );

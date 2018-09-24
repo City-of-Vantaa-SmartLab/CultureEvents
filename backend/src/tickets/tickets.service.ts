@@ -6,10 +6,7 @@ import { TicketsDto } from './tickets.dto';
 
 @Injectable()
 export class TicketService {
-  constructor(
-    @InjectRepository(Tickets)
-    private readonly ticketsRepository: Repository<Tickets>,
-  ) { }
+  constructor(@InjectRepository(Tickets) private readonly ticketsRepository: Repository<Tickets>) {}
 
   async getTicketDetails(id: number) {
     const response = await this.ticketsRepository.findOne(id);
@@ -32,8 +29,8 @@ export class TicketService {
     const ticketFromDb = await this.ticketsRepository.findOne(id);
     const ticketToUpdate = {
       ...ticketFromDb,
-      ...ticket
-    }
+      ...ticket,
+    };
     await this.ticketsRepository.save(ticketToUpdate);
   }
 }

@@ -16,14 +16,13 @@ import * as dateFns from 'date-fns';
 @Injectable()
 export class ReservationService {
   constructor(
-    @InjectRepository(Reservations)
-    private readonly reservationsRepository: Repository<Reservations>,
+    @InjectRepository(Reservations) private readonly reservationsRepository: Repository<Reservations>,
     private readonly smsService: SMSService,
     private readonly i18Service: I18Service,
     private readonly eventService: EventsService,
     private readonly priceService: PriceService,
     private readonly ticketService: TicketService,
-  ) { }
+  ) {}
 
   async createReservation(reservation: ReservationsDto, sendSms: boolean) {
     const response = await this.reservationsRepository.save(reservation);
@@ -31,17 +30,13 @@ export class ReservationService {
       if (sendSms) {
         const smsResponse = await this.sendSmsToUser(reservation);
         if (smsResponse) {
-          await this.updateReservation(reservation.id, { sms_sent: true })
+          await this.updateReservation(reservation.id, { sms_sent: true });
         }
       }
       await Promise.all(
-        reservation.tickets.map(
-          ticket =>
-            this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets),
-        ),
+        reservation.tickets.map(ticket => this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets)),
       );
       return response;
-
     } else {
       throw new Error('Failed to create reservation!.');
     }
@@ -49,7 +44,6 @@ export class ReservationService {
 
   async deleteReservation(id: number) {
     try {
-
       const reservation = await this.findOneById(id);
 
       if (!reservation) {
@@ -57,12 +51,10 @@ export class ReservationService {
       }
 
       await Promise.all(
-        reservation.tickets.map(
-          async ticket => {
-            await this.priceService.updateSeats(ticket.price_id, -ticket.no_of_tickets);
-            await this.ticketService.delete(ticket.id);
-          }
-        ),
+        reservation.tickets.map(async ticket => {
+          await this.priceService.updateSeats(ticket.price_id, -ticket.no_of_tickets);
+          await this.ticketService.delete(ticket.id);
+        }),
       );
       await this.reservationsRepository.delete(id);
       return id;
@@ -75,8 +67,8 @@ export class ReservationService {
     const reservationFromDb = await this.findOneById(id);
     const reservationToUpdate = {
       ...reservationFromDb,
-      ...reservation
-    }
+      ...reservation,
+    };
     if (reservation.tickets) {
       for (let ticket of reservation.tickets) {
         if (ticket.id) {
@@ -104,21 +96,22 @@ export class ReservationService {
     });
 
     //Find failed reservations
-    failedReservations = failedReservations.filter(reservation =>
-      dateFns.differenceInMinutes(new Date(), reservation.created) > 5);
+    failedReservations = failedReservations.filter(
+      reservation => dateFns.differenceInMinutes(new Date(), reservation.created) > 5,
+    );
 
     //Delete failed reservations
     failedReservations.forEach(async reservation => {
-      await this.deleteReservation(reservation.id)
+      await this.deleteReservation(reservation.id);
     });
 
     let reservations = await this.reservationsRepository.find({
       relations: ['tickets'],
     });
 
-    reservations = reservations.filter(reservations => (
-      (reservations.payment_completed && reservations.payment_required)
-      || !reservations.payment_required)
+    reservations = reservations.filter(
+      reservations =>
+        (reservations.payment_completed && reservations.payment_required) || !reservations.payment_required,
     );
 
     return reservations;
@@ -140,37 +133,30 @@ export class ReservationService {
   async sendSmsToUser(reservation: ReservationsDto) {
     const event = await this.eventService.findOneById(reservation.event_id);
     const reservationMessage = await this.buildReservationMessage(event, reservation);
-    return await this.smsService.sendMessageToUser(
-      reservation.phone,
-      reservation.name,
-      reservationMessage,
-    );
+    return await this.smsService.sendMessageToUser(reservation.phone, reservation.name, reservationMessage);
   }
 
   async buildReservationMessage(event: EventsDto, reservation: ReservationsDto) {
-    const time = event.event_time.replace(/:/g, '.')
+    const time = event.event_time.replace(/:/g, '.');
     const date = this.getDate(event.event_date);
     const name = event.name;
     const location = event.location;
-    let ticketDetails = await Promise.all(reservation.tickets.map(async ticket => {
-      const priceDetails = await this.priceService.getPriceDetails(ticket.price_id);
-      return (
-        (`${priceDetails.ticket_description}  ${priceDetails.price} €  ${ticket.no_of_tickets} kpl `)
-      )
-    }));
+    let ticketDetails = await Promise.all(
+      reservation.tickets.map(async ticket => {
+        const priceDetails = await this.priceService.getPriceDetails(ticket.price_id);
+        return `${priceDetails.ticket_description}  ${priceDetails.price} €  ${ticket.no_of_tickets} kpl `;
+      }),
+    );
     const ticketDetailString = ticketDetails.join('\n');
     const personName = reservation.name;
-    const message = stringInterpolator(
-      this.i18Service.getContents().reservations.confirmation,
-      {
-        personName,
-        name,
-        location,
-        date,
-        time,
-        ticketDetailString
-      },
-    );
+    const message = stringInterpolator(this.i18Service.getContents().reservations.confirmation, {
+      personName,
+      name,
+      location,
+      date,
+      time,
+      ticketDetailString,
+    });
     return message;
   }
 
@@ -178,9 +164,7 @@ export class ReservationService {
     const event = await this.eventService.findOneById(reservation.event_id);
     const total = await reservation.tickets.reduce((amount, ticket) => {
       amount =
-        amount +
-        Number(ticket.no_of_tickets) *
-        Number(this.getTicketPrice(event.ticket_catalog, ticket.price_id));
+        amount + Number(ticket.no_of_tickets) * Number(this.getTicketPrice(event.ticket_catalog, ticket.price_id));
       return amount;
     }, 0);
 
@@ -201,7 +185,7 @@ export class ReservationService {
             return false;
           }
         } else {
-          const ticketFromDb = await this.ticketService.getTicketDetails(1);
+          const ticketFromDb = await this.ticketService.getTicketDetails(ticket.id);
           const isUpdatable = await this.priceService.isSeatsUpdatable(ticket, ticketFromDb);
           if (!isUpdatable) {
             return false;
@@ -214,9 +198,7 @@ export class ReservationService {
 
   async checkSeatAvailability(reservationReq: ReservationsDto) {
     const ticketDetails = await this.checkTicketDetails(reservationReq);
-    const availableTickets = ticketDetails.filter(
-      ticket => ticket.seats_available,
-    );
+    const availableTickets = ticketDetails.filter(ticket => ticket.seats_available);
     if (ticketDetails.length === availableTickets.length) {
       return true;
     } else {
@@ -227,12 +209,8 @@ export class ReservationService {
   async checkTicketDetails(reservationReq: ReservationsDto) {
     const reducedTickets = await Promise.all(
       reservationReq.tickets.map(async tickets => {
-        const ticketDetails = await this.priceService.getPriceDetails(
-          tickets.price_id,
-        );
-        const availability =
-          ticketDetails.max_seats - ticketDetails.occupied_seats >=
-          tickets.no_of_tickets;
+        const ticketDetails = await this.priceService.getPriceDetails(tickets.price_id);
+        const availability = ticketDetails.max_seats - ticketDetails.occupied_seats >= tickets.no_of_tickets;
         return {
           ...tickets,
           max_seats: ticketDetails.max_seats,

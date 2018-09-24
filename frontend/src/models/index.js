@@ -12,6 +12,7 @@ import {
 } from 'mobx-state-tree';
 import {
   fetchEvents,
+  fetchOneEvent,
   postEvent,
   putEvent,
   deleteEvent,
@@ -20,6 +21,7 @@ import {
   validateUserToken,
   postReservation,
   getReservations,
+  patchReservation,
 } from '../apis';
 import { removeIdRecursively } from 'utils';
 import FilterModel from './filter';
@@ -37,6 +39,7 @@ export const RootModel = types
   .model({
     events: types.optional(types.map(EventModel), {}),
     selectedEvent: types.maybe(types.reference(EventModel)),
+    selectedReservation: types.maybe(types.reference(ReservationAndOrder)),
     user: types.optional(User, {}),
     ui: types.optional(UI, {}),
     filters: types.optional(FilterModel, {}),
@@ -56,6 +59,7 @@ export const RootModel = types
       }
       // since whole store is hydrated, override these fields with default values
       self.selectedEvent = undefined;
+      self.selectedReservation = undefined;
       self.ui = UI.create({});
       self.filters = FilterModel.create({});
       // validate token access (only happen in Producer)
@@ -72,7 +76,11 @@ export const RootModel = types
     deselectEvent: () => {
       if (self.selectedEvent) self.selectedEvent = undefined;
     },
+    selectReservation: id => (self.selectedReservation = id),
+    deselectReservation: () => (self.selectedReservation = undefined),
     findEvent: id => resolveIdentifier(EventModel, self.events, id),
+    findReservation: id =>
+      resolveIdentifier(ReservationAndOrder, self.reservationsAndOrders, id),
     fetchEvents: flow(function*() {
       try {
         self.ui.eventList.fetching = true;
@@ -86,6 +94,15 @@ export const RootModel = types
         console.error(error);
         self.ui.eventList.fetching = false;
         self.ui.eventList.fetchError = 'Could not fetch events';
+      }
+    }),
+    fetchAnEvent: flow(function*(id) {
+      try {
+        const data = yield fetchOneEvent(id);
+        self.events.put(data);
+      } catch (error) {
+        console.log('Cannot fetch one event', id);
+        console.error(error);
       }
     }),
     patchEvent: flow(function*(event) {
@@ -130,7 +147,9 @@ export const RootModel = types
         const target = resolveIdentifier(EventModel, self.events, id);
         // locally wipe event
         self.selectedEvent = undefined;
+        self.selectedReservation = undefined;
         destroy(target);
+        // wipe related reservations
       } catch (error) {
         self.ui.eventList.deleteEventStatus = 4;
         console.log(error);
@@ -280,6 +299,41 @@ export const RootModel = types
         id,
       );
     },
+    submitReservationPatch: flow(function*(reservationId, data) {
+      try {
+        self.ui.orderAndPayment.editionStatus = 1;
+
+        yield patchReservation(reservationId, {
+          tickets: data.map(datum => ({
+            id: datum.id,
+            price_id: datum.priceId,
+            no_of_tickets: datum.reservedSeats,
+          })),
+        });
+
+        self.ui.orderAndPayment.editionStatus = 2;
+
+        const foundReservation = resolveIdentifier(
+          ReservationAndOrder,
+          self.reservationsAndOrders,
+          reservationId,
+        );
+        if (foundReservation) {
+          // patch tis locally
+          foundReservation.tickets = data.map(datum => ({
+            id: datum.id,
+            priceId: datum.priceId,
+            noOfTickets: datum.reservedSeats,
+          }));
+
+          // patch the available seat for the affected events locally
+          self.fetchAnEvent(foundReservation.eventId);
+        }
+      } catch (error) {
+        console.error(error);
+        self.ui.orderAndPayment.editionStatus = 3;
+      }
+    }),
   }))
   .views(self => ({
     get isEmpty() {

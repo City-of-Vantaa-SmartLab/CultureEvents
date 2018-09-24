@@ -291,12 +291,20 @@ export default connect('store')(
               <Button
                 style={{ alignSelf: 'flex-end' }}
                 backgroundColor={themeColor}
-                disabled={!submittable}
+                disabled={!submittable || totalCost === 0}
                 onClick={this.submit('payment')}
               >
                 OSTA LIPUT
               </Button>
             </FlexBoxHorizontal>
+            {totalCost === 0 && (
+              <FlexBoxHorizontal>
+                <Typography type="secondarybody">
+                  You cannot purchase the ticket because there is no amount of
+                  be paid
+                </Typography>
+              </FlexBoxHorizontal>
+            )}
           </FormListItem>
         </Wrapper>
       );
