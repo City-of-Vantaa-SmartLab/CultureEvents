@@ -19,19 +19,20 @@ class DeleteConfrimationModal extends React.Component {
   getTitle() {
     const status = this.props.store.ui.eventList.deleteEventStatus;
 
-    if (status === 1) return `Oletko varma?`;
-    if (status === 2) return `Hetkinen...`;
-    if (status === 3) return `Tapahtuminen poistettu`;
-    if (status === 4) return `Virhe. Ei voi poistaa`;
+    if (status === 1) return `Haluatko varmasti poistaa tapahtuman?`;
+    if (status === 2) return `Odota hetki...`;
+    if (status === 3) return `Tapahtuma poistettu onnistuneesti`;
+    if (status === 4) return `Virhe. Tapahtumaa ei voitu poistaa`;
   }
   getBody() {
     const status = this.props.store.ui.eventList.deleteEventStatus;
 
-    if (status === 1) return `Poista tämä tapahtuma. Toimenpide on pysyvä`;
-    if (status === 2) return `Pyrimme siihen...`;
-    if (status === 3)
-      return `Se on tehty. Et voi enää nähdä vanhaa tapahtumaa.`;
-    if (status === 4) return `Voi ei. Jokin asia väärin tapahtui`;
+    if (status === 1)
+      return `Tapahtuman poistaminen poistaa koko tapahtuman ja siihen liittyvät varaukset. Haluatko varmasti poistaa tapahtuman?`;
+    if (status === 2) return ``;
+    if (status === 3) return ``;
+    if (status === 4)
+      return `Tapahtuman poistaminen epäonnistui. Yritä uudelleen ja ota tarvittaessa yhteyttä sovelluksen ylläpitoon.`;
   }
   render() {
     const { store, theme } = this.props;
@@ -40,10 +41,7 @@ class DeleteConfrimationModal extends React.Component {
     return (
       <Modal show={status > 0} onClear={store.ui.eventList.clearDeletionFlag}>
         <Content>
-          <Typography
-            type="title"
-            color={status !== 3 ? theme.palette.red : theme.palette.deepGreen}
-          >
+          <Typography type="title" color={status !== 3 ? theme.palette.red : theme.palette.deepGreen}>
             {this.getTitle()}
           </Typography>
           <Typography type="body">{this.getBody()}</Typography>
@@ -55,17 +53,11 @@ class DeleteConfrimationModal extends React.Component {
         </Content>
         {status === 1 && (
           <ActionBar>
-            <Button
-              backgroundColor="white"
-              onClick={store.ui.eventList.clearDeletionFlag}
-            >
-              No, I change my mind
+            <Button backgroundColor="white" onClick={store.ui.eventList.clearDeletionFlag}>
+              En ole varma, keskeytä poistaminen
             </Button>
-            <Button
-              backgroundColor={theme.palette.red}
-              onClick={() => store.deleteEvent(store.selectedEvent.id)}
-            >
-              Yes, delete this
+            <Button backgroundColor={theme.palette.red} onClick={() => store.deleteEvent(store.selectedEvent.id)}>
+              Olen varma, poista tapahtuma
             </Button>
           </ActionBar>
         )}
