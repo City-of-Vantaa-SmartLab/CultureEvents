@@ -56,7 +56,7 @@ const TicketFormRow = withTheme(
       <Row>
         <TicketLabelGroup>
           <Typography type="largebody">{ticket.ticketName}</Typography>
-          Booked{' '}
+          Varattu{' '}
           <TagPill
             highlightColor={
               ticket.reservedSeats + (ticket.occupiedSeats - orginalTickets) >
@@ -67,9 +67,9 @@ const TicketFormRow = withTheme(
             selected
             color={'green'}
           >
-            {ticket.reservedSeats ? ticket.reservedSeats : 0} seats
+            {ticket.reservedSeats ? ticket.reservedSeats : 0} paikkaa
           </TagPill>
-          Available{' '}
+          Vapaana{' '}
           <TagPill
             highlightColor={
               ticket.maxSeats -
@@ -85,7 +85,7 @@ const TicketFormRow = withTheme(
             {ticket.maxSeats -
               ticket.occupiedSeats -
               (ticket.reservedSeats - orginalTickets)}{' '}
-            more seats
+            paikkaa
           </TagPill>
         </TicketLabelGroup>
         <InputField
