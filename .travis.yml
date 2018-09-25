@@ -1,0 +1,9 @@
+language: generic
+sudo: required
+services:
+- docker
+script:
+- docker login -u _ -p "$HEROKU_API_KEY" registry.heroku.com
+- heroku update
+- heroku container:push web --app vantaa-golden-eagle
+- heroku container:release web --app vantaa-golden-eagle
