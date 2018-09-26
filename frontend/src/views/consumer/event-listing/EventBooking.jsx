@@ -297,14 +297,6 @@ export default connect('store')(
                 OSTA LIPUT
               </Button>
             </FlexBoxHorizontal>
-            {totalCost === 0 && (
-              <FlexBoxHorizontal>
-                <Typography type="secondarybody">
-                  You cannot purchase the ticket because there is no amount of
-                  be paid
-                </Typography>
-              </FlexBoxHorizontal>
-            )}
           </FormListItem>
         </Wrapper>
       );
