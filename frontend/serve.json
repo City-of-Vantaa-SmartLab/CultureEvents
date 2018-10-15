@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+      { "source": "/api", "destination": "https://localhost:5000/api" }
+    ],
+    "redirect": [
+        { "source": "/api", "destination": "https://vantaa-golden-eagle.herokuapp.com/api/" }
+      ]
+  }
