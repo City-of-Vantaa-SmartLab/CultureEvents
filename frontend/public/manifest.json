@@ -1,6 +1,6 @@
 {
-  "short_name": "Vantaa Kultuuri",
-  "name": "Cultural event booking app for City Of Vantaa",
+  "short_name": "Kulttuuria",
+  "name": "Vantaa Kulttuuria",
   "description": "Cultural event booking app for City Of Vantaa",
   "orientation": "portrait",
   "icons": [
@@ -15,8 +15,13 @@
       "type": "image/png"
     },
     {
-      "src": "./VKLogo-192.png",
-      "sizes": "792x685",
+      "src": "./VKLogo-Big.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "./VKLogo-Splash.png",
+      "sizes": "256x256",
       "type": "image/png"
     }
   ],
