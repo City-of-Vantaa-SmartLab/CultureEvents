@@ -1,6 +1,6 @@
 const theme = {
   palette: {
-    primary: '#498DC7',
+    primary: '#3C8FDE',
     secondary: '#FEF283',
     red: '#BF2E43',
     purple: '#43368D',
@@ -10,7 +10,7 @@ const theme = {
     deepGreen: '#08866B',
     primaryDeep: '#0B5BA5',
   },
-  currentActivePrimary: '#498DC7',
+  currentActivePrimary: '#3C8FDE',
 };
 
 export default theme;
