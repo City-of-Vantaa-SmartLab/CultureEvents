@@ -31,19 +31,20 @@ const Wrapper = styled(Sliddable)`
 `;
 const LeftBox = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   margin-right: 2rem;
+  justify-content: center;
   svg {
     width: 3rem;
     height: auto;
     margin-right: 1rem;
-    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.22));
   }
   h6 {
     margin: 0;
     font-weight: 700;
     line-height: 1;
-    font-size: 1.6rem;
+    font-size: 1.3rem;
+    color: white;
   }
   * {
     flex-shrink: 0;
