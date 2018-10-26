@@ -53,7 +53,7 @@ const FormListItemWrapper = styled.div`
     }
   }
 `;
-const CustomerGroupButton = styled(Button)`
+const CustomerGroupButton = styled(Button) `
   &&& {
     padding: 0.5rem;
     width: 100%;
@@ -72,7 +72,7 @@ const FlexBoxHorizontal = styled.div`
     margin-right: 1rem;
   }
 `;
-const TotalAmountCalculated = styled(FlexBoxHorizontal)`
+const TotalAmountCalculated = styled(FlexBoxHorizontal) `
   background-color: rgba(0, 0, 0, 0.1);
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -161,17 +161,17 @@ export default connect('store')(
       const submittable =
         (isGroupConductorCustomer
           ? internalState.school &&
-            internalState.classRoom &&
-            internalState.name &&
-            isValidNumber(internalState.phoneNumber, 'FI')
+          internalState.classRoom &&
+          internalState.name &&
+          isValidNumber(internalState.phoneNumber, 'FI')
           : internalState.name &&
-            isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
+          isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
       return (
         <Wrapper bgColor={themeColor}>
           <TitleBox>
             <Typography type="title">Varaa/osta lippu</Typography>
             <Typography type="secondarybody">
-              Varaaminen on mahdollista vain ryhmille
+              Yksityishenkilönä voit ostaa lippuja. Lippujen varaaminen on mahdollista vain ryhmänohjaajille.
             </Typography>
           </TitleBox>
           <FormListItem title="1 - Olen">
@@ -227,33 +227,33 @@ export default connect('store')(
                   onChange={e => (internalState.name = e.target.value)}
                 />
               ) : (
-                <React.Fragment>
-                  <InputField
-                    lightMode
-                    type="text"
-                    label="Päiväkoti / koulu"
-                    mandatory
-                    value={internalState.school}
-                    onChange={e => (internalState.school = e.target.value)}
-                  />
-                  <InputField
-                    lightMode
-                    type="text"
-                    label="Ryhmä / luokka"
-                    mandatory
-                    value={internalState.classRoom}
-                    onChange={e => (internalState.classRoom = e.target.value)}
-                  />
-                  <InputField
-                    lightMode
-                    type="text"
-                    label="Varaajan nimi"
-                    mandatory
-                    value={internalState.name}
-                    onChange={e => (internalState.name = e.target.value)}
-                  />
-                </React.Fragment>
-              )}
+                  <React.Fragment>
+                    <InputField
+                      lightMode
+                      type="text"
+                      label="Päiväkoti / koulu"
+                      mandatory
+                      value={internalState.school}
+                      onChange={e => (internalState.school = e.target.value)}
+                    />
+                    <InputField
+                      lightMode
+                      type="text"
+                      label="Ryhmä / luokka"
+                      mandatory
+                      value={internalState.classRoom}
+                      onChange={e => (internalState.classRoom = e.target.value)}
+                    />
+                    <InputField
+                      lightMode
+                      type="text"
+                      label="Varaajan nimi"
+                      mandatory
+                      value={internalState.name}
+                      onChange={e => (internalState.name = e.target.value)}
+                    />
+                  </React.Fragment>
+                )}
               <InputField
                 key="tel-input"
                 lightMode

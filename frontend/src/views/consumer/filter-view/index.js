@@ -23,7 +23,7 @@ const Sliddable = posed.div({
   },
 });
 
-const Wrapper = styled(Sliddable)`
+const Wrapper = styled(Sliddable) `
   opacity: 0;
   position: absolute;
   overflow-y: scroll;
@@ -152,7 +152,7 @@ export default withTheme(
                 />
               </div>
               <div>
-                <Typography type="subheader">Päivämäärä</Typography>
+                <Typography type="subheader">Ajankohta</Typography>
                 <TagPillGroup
                   multiple
                   highlightColor={theme.palette.primaryDeep}
@@ -162,7 +162,7 @@ export default withTheme(
                 />
               </div>
               <div>
-                <Typography type="subheader">Tapahtuminen Typpi</Typography>
+                <Typography type="subheader">Tapahtumien tyyppi</Typography>
                 <TagPillGroup
                   multiple
                   value={store.filters.eventTypes}
