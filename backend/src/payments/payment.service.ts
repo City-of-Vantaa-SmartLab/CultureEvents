@@ -40,6 +40,7 @@ export class PaymentService {
       );
       // Saves the payment request to database
       await this.paymentRepository.save(paymentEntity);
+      console.log('making payment request', paymentEntity);
       const paymentRequest = await this.bamboraService.createBamboraPaymentRequest(
         paymentEntity,
       );
