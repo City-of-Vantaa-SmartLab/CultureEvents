@@ -14,7 +14,7 @@ export class SeedService implements OnModuleInit {
   ) { }
 
   async onModuleInit() {
-    await this.seedUsers();
+    //await this.seedUsers();
   }
 
   async seedUsers() {
