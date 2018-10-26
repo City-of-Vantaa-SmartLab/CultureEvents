@@ -19,7 +19,7 @@ const Sliddable = posed.div({
     transition: props => tween({ ...props, duration: 600 }),
   },
 });
-const Wrapper = styled(Sliddable)`
+const Wrapper = styled(Sliddable) `
   width: 100%;
   padding: 1rem;
   background-color: ${props => props.bgColor};
@@ -59,7 +59,7 @@ const LeftBox = styled.div`
 
 const LogoBox = props => (
   <LeftBox>
-    <Logo noText />
+    <Logo noText={false} />
     <div>
       <Typography type="subheader">Vantaa</Typography>
       <Typography type="subheader">Kulttuuria</Typography>
@@ -126,33 +126,33 @@ export default withTheme(
                 </Button>
               </Wrapper>
             ) : (
-              <Wrapper
-                key="app-bar-has-filter"
-                bgColor={theme.palette.primaryDeep}
-              >
-                <LeftBox
-                  style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+                <Wrapper
+                  key="app-bar-has-filter"
+                  bgColor={theme.palette.primaryDeep}
                 >
-                  <div className="button-container">
-                    <Button
-                      icon="arrow-left"
-                      backgroundColor="transparent"
-                      onClick={store.toggleFilterView}
-                    />
-                    <Typography type="subheader" color="white">
-                      Rajaa hakua
+                  <LeftBox
+                    style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+                  >
+                    <div className="button-container">
+                      <Button
+                        icon="arrow-left"
+                        backgroundColor="transparent"
+                        onClick={store.toggleFilterView}
+                      />
+                      <Typography type="subheader" color="white">
+                        Rajaa hakua
                     </Typography>
-                  </div>
-                  <FilterStrings filters={filters.toJSON()} />
-                </LeftBox>
-                <Button
-                  backgroundColor={this.props.theme.palette.red}
-                  onClick={this.props.store.filters.clearAllFilters}
-                >
-                  POISTA
+                    </div>
+                    <FilterStrings filters={filters.toJSON()} />
+                  </LeftBox>
+                  <Button
+                    backgroundColor={this.props.theme.palette.red}
+                    onClick={this.props.store.filters.clearAllFilters}
+                  >
+                    POISTA
                 </Button>
-              </Wrapper>
-            )}
+                </Wrapper>
+              )}
           </PoseGroup>
         );
       }

@@ -62,7 +62,7 @@ class LoadingComponent extends React.Component {
                   key={'logo-container'}
                   style={{ display: 'flex' }}
                 >
-                  <Logo noText style={{ width: '5rem', margin: '1rem' }} />
+                  <Logo noText={false} style={{ width: '5rem', margin: '1rem' }} />
                 </AnimatedElement>
                 <AnimatedText key={'logo-text'} style={{ display: 'flex' }}>
                   <TextArt
