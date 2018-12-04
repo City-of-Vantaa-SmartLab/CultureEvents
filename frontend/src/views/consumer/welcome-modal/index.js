@@ -9,7 +9,7 @@ class WelcomeModal extends React.Component {
       JSON.parse(window.localStorage.getItem('dontShowWelcomeMessage')) ===
       true,
   };
-  componentDidMount() {}
+  componentDidMount() { }
   onClear = e => {
     this.setState({ dontShow: true });
     window.localStorage.setItem('dontShowWelcomeMessage', 'true');
@@ -30,7 +30,7 @@ class WelcomeModal extends React.Component {
           </Typography>
           <Typography type="largebody">
             Lisää tapahtumia löydät osoitteesta:{' '}
-            <a href="vantaa.fi/lastenkulttuuri">vantaa.fi/lastenkulttuuri</a>
+            <a style={{ color: this.props.theme.palette.primaryDeep }} href="https://www.vantaa.fi/lastenkulttuuri">vantaa.fi/lastenkulttuuri</a>
           </Typography>
         </Content>
       </Modal>

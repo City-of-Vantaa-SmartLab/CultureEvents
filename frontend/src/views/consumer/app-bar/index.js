@@ -44,6 +44,7 @@ const LeftBox = styled.div`
     font-weight: 700;
     line-height: 1;
     font-size: 1.6rem;
+    color: #FFFFFF;
   }
   * {
     flex-shrink: 0;
@@ -60,13 +61,16 @@ const LeftBox = styled.div`
 const LogoBox = props => (
   <LeftBox>
     <Logo noText={false} />
-    <Typography type="subheader">Vantaa<br />Kulttuuria</Typography>
-  </LeftBox>
+    <div>
+      <Typography type="subheader">Vantaa</Typography>
+      <Typography type="subheader">Kulttuuria</Typography>
+    </div>
+  </LeftBox >
 );
 const FlexBox = styled.div`
-      display: flex;
-      flex-wrap: wrap;
-    `;
+  display: flex;
+  flex-wrap: wrap;
+`;
 
 const FilterStrings = ({ filters }) => {
   return (
