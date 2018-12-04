@@ -61,8 +61,8 @@ const LogoBox = props => (
   <LeftBox>
     <Logo noText={false} />
     <div>
-      <Typography type="subheader">Vantaa</Typography>
-      <Typography type="subheader">Kulttuuria</Typography>
+      <Typography type="subheader" color="#242424">Vantaa</Typography>
+      <Typography type="subheader" color="#242424">Kulttuuria</Typography>
     </div>
   </LeftBox>
 );
