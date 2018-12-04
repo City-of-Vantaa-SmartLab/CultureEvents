@@ -60,16 +60,13 @@ const LeftBox = styled.div`
 const LogoBox = props => (
   <LeftBox>
     <Logo noText={false} />
-    <div>
-      <Typography type="subheader" color="#242424">Vantaa</Typography>
-      <Typography type="subheader" color="#242424">Kulttuuria</Typography>
-    </div>
+    <Typography type="subheader">Vantaa<br />Kulttuuria</Typography>
   </LeftBox>
 );
 const FlexBox = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
+      display: flex;
+      flex-wrap: wrap;
+    `;
 
 const FilterStrings = ({ filters }) => {
   return (

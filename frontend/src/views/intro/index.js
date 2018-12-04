@@ -13,11 +13,11 @@ const AnimatedElement = posed.div({
     opacity: 0,
   },
   enter: {
-    delay: 500,
+    delay: 100,
     x: 0,
     scale: 1,
     opacity: 1,
-    transition: props => tween({ duration: 1000, ...props }),
+    transition: props => tween({ duration: 200, ...props }),
   },
   exit: {
     scale: 0,
@@ -30,9 +30,9 @@ const AnimatedText = posed.div({
     opacity: 0,
   },
   enter: {
-    delay: 900,
+    delay: 100,
     opacity: 1,
-    transition: props => tween({ duration: 1000, ...props }),
+    transition: props => tween({ duration: 200, ...props }),
   },
   exit: {
     opacity: 0,
@@ -42,10 +42,10 @@ const AnimatedText = posed.div({
 const AnimatedContainer = posed.div({
   enter: {
     opacity: 1,
-    transition: props => tween({ duration: 1000, ...props }),
+    transition: props => tween({ duration: 200, ...props }),
   },
   exit: {
-    delay: 500,
+    delay: 100,
     opacity: 0,
   },
 });
@@ -106,7 +106,7 @@ class LoadingScreen extends React.Component {
   componentDidMount() {
     window.setTimeout(() => {
       this.setState({ done: true });
-    }, 3500);
+    }, 500);
   }
   render() {
     return createPortal(
