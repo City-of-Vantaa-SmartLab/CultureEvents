@@ -32,7 +32,7 @@ const CloseButton = posed.span({
     scale: 0,
   },
 });
-const Wrapper = styled('div')`
+const Wrapper = styled('div') `
   position: absolute;
   width: 100%;
   min-width: 100%;
@@ -47,7 +47,7 @@ const Wrapper = styled('div')`
   ${props => !props.block && 'pointer-events: none; background-color: transparent'};
 `;
 
-const ModalWrapper = styled(ModalAnimatable)`
+const ModalWrapper = styled(ModalAnimatable) `
   width: 80%;
   max-width: 750px;
   height: auto;
@@ -56,7 +56,7 @@ const ModalWrapper = styled(ModalAnimatable)`
   border-radius: 8px;
   background-color: white;
   position: relative;
-  color: rgba(0, 0, 0, 0.86);
+  color: rgba(0, 0, 0, 1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -93,7 +93,7 @@ const ModalContentAnimatable = posed.div({
   },
 });
 
-export const Content = styled(ModalContentAnimatable)`
+export const Content = styled(ModalContentAnimatable) `
   padding: 2rem;
 `;
 

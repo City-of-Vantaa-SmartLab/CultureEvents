@@ -81,9 +81,15 @@ export class PaymentController {
     try {
       const bamboraReturnCode = req.query.RETURN_CODE;
       const orderNumber = req.query.ORDER_NUMBER;
+      console.log('bamboraCode', bamboraReturnCode, 'orderNumber', orderNumber);
       const payment = await this.paymentService.getPaymentByOrderNumber(
         orderNumber,
       );
+      if (payment) {
+        console.log('Payment exists', payment);
+      } else {
+        console.log('payment doesnt exist for', orderNumber);
+      }
 
       if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
         //delete reservation since payment failed
@@ -205,6 +211,7 @@ export class PaymentController {
         reservation_id: reservationDto.id,
         username: reservationDto.name,
       };
+      console.log('making payment for object', paymentObj);
       const redirectUrl = await this.paymentService.getPaymentRedirectUrl(
         paymentObj,
       );

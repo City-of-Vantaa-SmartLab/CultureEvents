@@ -1,5 +1,10 @@
 {
-  "ageGroup": ["0-2", "3-6", "7-12", "13+"],
+  "ageGroup": [
+    "0-2",
+    "3-6",
+    "7-12",
+    "13+"
+  ],
   "area": [
     "Tikkurila",
     "Aviapolis",
@@ -9,5 +14,8 @@
     "Koivukylä",
     "Kivistö"
   ],
-  "eventType": ["Kurssit Ja Työpajat", "Esitykset"]
+  "eventType": [
+    "Kurssit ja työpajat",
+    "Esitykset"
+  ]
 }

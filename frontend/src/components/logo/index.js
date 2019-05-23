@@ -38,7 +38,7 @@ const SvgComponent = props => (
                 id="Vantaa"
                 fill="white"
               >
-                <tspan className="cls-6">Vanda</tspan>
+                <tspan className="cls-6">Vantaa</tspan>
               </text>
             )}
           </g>

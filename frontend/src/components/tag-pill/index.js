@@ -4,12 +4,12 @@ import Typography from '../typography';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-const TagPillText = styled(Typography)`
+const TagPillText = styled(Typography) `
   display: inline;
   padding: 0.3rem 0.6rem;
   background-color: rgba(0, 0, 0, 0.15);
   opacity: 1;
-  text-transform: capitalize;
+  text-transform: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;

@@ -51,7 +51,8 @@ const Paragraph = styled.p`
 
 export default class Typography extends React.Component {
   render() {
-    const { color, type, children, show, ...props } = this.props;
+    const { type, children, show, ...props } = this.props;
+    const color = this.props.color ? this.props.color : 'inherit';
     switch (type) {
       case 'headline':
         return (

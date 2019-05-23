@@ -56,7 +56,7 @@ const BoxImageAnimation = posed.div({
   },
 });
 
-const Wrapper = styled(WrapperBase)`
+const Wrapper = styled(WrapperBase) `
   overflow-y: auto;
   overflow-x: hidden;
   position: ${props => (props.expanded ? 'fixed' : 'relative')};
@@ -119,7 +119,7 @@ const BackgroundImg = styled.div`
   height: 100%;
 `;
 
-const BackgroundImageGroup = styled(BoxImageAnimation)`
+const BackgroundImageGroup = styled(BoxImageAnimation) `
   position: relative;
   will-change: transform;
   margin: 0;
@@ -140,14 +140,14 @@ const BottomSection = styled.div`
   background-color: ${props => props.themeColor};
 `;
 
-const Content = styled(MorphableText)`
+const Content = styled(MorphableText) `
   left: 0;
   z-index: 10;
   background-color: transparent;
   padding: 1rem;
   height: auto;
 `;
-const BackButton = styled(Button)`
+const BackButton = styled(Button) `
   && {
     border: none;
     position: absolute;
@@ -157,13 +157,13 @@ const BackButton = styled(Button)`
   }
 `;
 
-const EventTypeLabel = styled(Typography)`
+const EventTypeLabel = styled(Typography) `
   font-weight: 600 !important;
   position: absolute;
   top: 0;
   right: 1rem;
   transform: translate(0, -2rem);
-  text-transform: uppercase;
+  text-transform: none;
 `;
 
 export default class EventCard extends React.Component {
@@ -208,11 +208,11 @@ export default class EventCard extends React.Component {
                 soldOut
                   ? '#DEDEDE'
                   : toRgba(
-                      chroma(themeColor)
-                        .saturate(2)
-                        .brighten(3)
-                        .rgba(),
-                    )
+                    chroma(themeColor)
+                      .saturate(2)
+                      .brighten(3)
+                      .rgba(),
+                  )
               }
             >
               {performer}

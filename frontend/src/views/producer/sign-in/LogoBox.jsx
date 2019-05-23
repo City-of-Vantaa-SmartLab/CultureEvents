@@ -14,11 +14,11 @@ const Wrapper = styled.div`
   }
 `;
 
-const LogoText = styled(Text)`
+const LogoText = styled(Text) `
   margin-bottom: 0;
   margin-top: 2rem;
 `;
-const FlavorText = styled(Text)`
+const FlavorText = styled(Text) `
   display: block;
   text-align: right;
 `;
@@ -27,7 +27,7 @@ export default class LogoBox extends React.Component {
   render() {
     return (
       <Wrapper>
-        <Logo noText />
+        <Logo noText={false} />
         <div>
           <LogoText type="title" color="#FEF283">
             VANTAA KULTTUURIA
