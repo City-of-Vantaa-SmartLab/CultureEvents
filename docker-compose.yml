@@ -4,7 +4,7 @@ services:
   frontend:
     build: ./frontend
     volumes:
-      - ./frontend/src:/app
+      - ./frontend:/app
       - /app/node_modules
     command: yarn run start
     ports:
@@ -33,9 +33,9 @@ services:
       TELIA_USERNAME: vantaa-zylinc
       TELIA_PASSWORD:
       TELIA_USER: Vantaa
-      AWS_S3_BUCKET_NAME: vantaa
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
+      AWS_S3_BUCKET_NAME: vantaa-culture-dev
+      AWS_ACCESS_KEY_ID: AKIA4YGZ53M3B754PQ7G
+      AWS_SECRET_ACCESS_KEY: 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
       DATABASE_HOST: postgres-dev-db
       NODE_ENV: local
 
