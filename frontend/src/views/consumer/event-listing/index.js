@@ -32,7 +32,7 @@ const EmptyStateContainer = styled.div`
 const Wrapper = styled.div`
   overflow-y: ${props => (props.hasOverlay ? 'hidden' : 'scroll')};
   overflow-x: hidden;
-  -webkit-overflow-scroll: touch;
+  -webkit-overflow-scrolling: touch;
   height: 100%;
 `;
 

@@ -64,7 +64,7 @@ const Wrapper = styled(WrapperBase) `
   max-width: ${props => !props.expanded && '30rem'};
   max-height: ${props => props.mini && '20rem'};
   width: 100%;
-  -webkit-overflow-scroll: touch;
+  -webkit-overflow-scrolling: touch;
   margin: 0;
   cursor: pointer;
   background-color: white;
