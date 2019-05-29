@@ -9,6 +9,7 @@ import Typography from 'components/typography';
 import getMonth from 'date-fns/get_month';
 import { values } from 'mobx';
 import Button from 'components/button';
+import LazyLoad from 'react-lazy-load';
 
 const EmptyStateContainer = styled.div`
   width: 100%;
@@ -31,7 +32,7 @@ const EmptyStateContainer = styled.div`
 const Wrapper = styled.div`
   overflow-y: ${props => (props.hasOverlay ? 'hidden' : 'scroll')};
   overflow-x: hidden;
-  -webkit-overflow-scroll: touch;
+  -webkit-overflow-scrolling: touch;
   height: 100%;
 `;
 
@@ -65,11 +66,11 @@ export default withTheme(
         const consumableEventList = values(events);
         const displayableEvents = filters.hasActiveFilter
           ? pipeable(consumableEventList).pipe(
-            ageGroupLimits.length > 0 && filterByAgeGroup(ageGroupLimits),
-            areas.length > 0 && filterByArea(areas),
-            months.length > 0 && filterByDate(months),
-            eventTypes.length > 0 && filterByEventType(eventTypes),
-          )
+              ageGroupLimits.length > 0 && filterByAgeGroup(ageGroupLimits),
+              areas.length > 0 && filterByArea(areas),
+              months.length > 0 && filterByDate(months),
+              eventTypes.length > 0 && filterByEventType(eventTypes),
+            )
           : consumableEventList;
 
         return (
@@ -77,35 +78,38 @@ export default withTheme(
             {displayableEvents.length > 0 ? (
               <ScrollContainer>
                 {displayableEvents.map(event => (
-                  <EventCard
-                    expandable
-                    active={selectedEvent && selectedEvent.id === event.id}
-                    style={{ marginBottom: '0.7rem' }}
-                    key={event.id}
-                    event={event}
-                    onSelect={() => this.props.store.selectEvent(event.id)}
-                    onDeselect={this.props.store.deselectEvent}
-                  >
-                    <EventDetail event={event} />
-                    <EventBooking event={event} />
-                  </EventCard>
+                  <LazyLoad height={320} offsetVertical={2000}>
+                    <EventCard
+                      expandable
+                      active={selectedEvent && selectedEvent.id === event.id}
+                      style={{ marginBottom: '0.7rem' }}
+                      key={event.id}
+                      event={event}
+                      onSelect={() => this.props.store.selectEvent(event.id)}
+                      onDeselect={this.props.store.deselectEvent}
+                    >
+                      <EventDetail event={event} />
+                      <EventBooking event={event} />
+                    </EventCard>
+                  </LazyLoad>
                 ))}
               </ScrollContainer>
             ) : (
-                <EmptyStateContainer key={'emptyState'}>
-                  <NotFoundIcon />
-                  <Typography type="body">
-                    Ei osumia!<br />
-                    Kokeile laajentaa hakuehtoja
+              <EmptyStateContainer key={'emptyState'}>
+                <NotFoundIcon />
+                <Typography type="body">
+                  Ei osumia!
+                  <br />
+                  Kokeile laajentaa hakuehtoja
                 </Typography>
-                  <Button
-                    onClick={filters.clearAllFilters}
-                    backgroundColor={this.props.theme.palette.primaryDeep}
-                  >
-                    POISTA RAJAUKSET
+                <Button
+                  onClick={filters.clearAllFilters}
+                  backgroundColor={this.props.theme.palette.primaryDeep}
+                >
+                  POISTA RAJAUKSET
                 </Button>
-                </EmptyStateContainer>
-              )}
+              </EmptyStateContainer>
+            )}
           </Wrapper>
         );
       }
