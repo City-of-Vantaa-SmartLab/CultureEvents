@@ -5,7 +5,7 @@ services:
     build: ./frontend
     volumes:
       - ./frontend:/app
-      - /frontend/node_modules
+      - /app/node_modules
     command: yarn run start
     ports:
       - 3000:3000
@@ -19,6 +19,7 @@ services:
     command: npm run dev
     volumes:
       - ./backend:/backend
+      - /backend/node_modules
     depends_on:
       - postgres-dev-db
     environment:
@@ -32,8 +33,7 @@ services:
       TELIA_USERNAME: vantaa-zylinc
       TELIA_PASSWORD:
       TELIA_USER: Vantaa
-      SEED_DB: 0
-      AWS_S3_BUCKET_NAME: vantaa
+      AWS_S3_BUCKET_NAME:
       AWS_ACCESS_KEY_ID:
       AWS_SECRET_ACCESS_KEY:
       DATABASE_HOST: postgres-dev-db
