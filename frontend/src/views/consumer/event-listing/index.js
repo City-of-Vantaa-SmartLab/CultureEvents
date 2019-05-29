@@ -78,7 +78,7 @@ export default withTheme(
             {displayableEvents.length > 0 ? (
               <ScrollContainer>
                 {displayableEvents.map(event => (
-                  <LazyLoad height={320} offsetVertical={2000}>
+                  <LazyLoad height={320} debounce={false} offsetVertical={2200}>
                     <EventCard
                       expandable
                       active={selectedEvent && selectedEvent.id === event.id}
