@@ -272,7 +272,7 @@ class Editor extends React.Component {
           <Row fullsize>
             <InputField
               backgroundColor={inputBackgroundColor}
-              label="Lisätiedot"
+              label="Lisätiedot ja peruutukset"
               lightMode
               type="text"
               value={this.internalData.eventDraft.contactInformation}
