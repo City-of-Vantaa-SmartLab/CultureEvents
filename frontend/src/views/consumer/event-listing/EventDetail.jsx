@@ -41,6 +41,7 @@ export default class EventDetails extends Component {
     const { event } = this.props;
     const soldOut = event.totalAvailableTickets < 1;
     const themeColor = soldOut ? '#9B9B9B' : event.themeColor;
+    const soldOutColor = '#FF4B4B';
     return (
       <Wrapper>
         <ListItem
@@ -73,16 +74,27 @@ export default class EventDetails extends Component {
             />
           ))}
         />
-        <ListItem
-          color={themeColor}
-          title="Lisätietoja"
-          content={event.contactInformation}
-        />
+        {!soldOut && (
+          <ListItem
+            color={themeColor}
+            title="Lisätiedot ja peruutukset"
+            content={event.contactInformation}
+          />
+        )}
         <ListItem
           color={themeColor}
           title="Paikkoja jäljellä"
           content={event.totalAvailableTickets + ' jäljellä'}
         />
+        {soldOut && (
+          <ListItem
+            color={soldOutColor}
+            title={
+              'Tilaisuus on loppuunmyyty. Jos haluat ilmoittautua jonoon, ole yhteydessä: ' +
+              event.contactInformation
+            }
+          />
+        )}
       </Wrapper>
     );
   }
