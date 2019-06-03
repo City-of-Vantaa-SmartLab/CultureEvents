@@ -74,11 +74,13 @@ export default class EventDetails extends Component {
             />
           ))}
         />
-        <ListItem
-          color={themeColor}
-          title="Lisätiedot ja peruutukset"
-          content={event.contactInformation}
-        />
+        {!soldOut && (
+          <ListItem
+            color={themeColor}
+            title="Lisätiedot ja peruutukset"
+            content={event.contactInformation}
+          />
+        )}
         <ListItem
           color={themeColor}
           title="Paikkoja jäljellä"
@@ -87,7 +89,10 @@ export default class EventDetails extends Component {
         {soldOut && (
           <ListItem
             color={soldOutColor}
-            title="Jos tilaisuus on loppuunmyyty, voit tiedustella peruutuspaikkoja tapahtuman tuottajalta."
+            title={
+              'Tilaisuus on loppuunmyyty. Jos haluat ilmoittautua jonoon, ole yhteydessä: ' +
+              event.contactInformation
+            }
           />
         )}
       </Wrapper>
