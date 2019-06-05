@@ -49,6 +49,12 @@ export default withTheme(
                   <Typography type="body">
                     Kiitos varauksestasi! Lähetämme varaustiedot antamaasi
                     puhelinnumeroon tekstiviestillä.
+                    <br />
+                    Jos et saa tekstiviestiä, ota yhteys tapahtuman tuottajaan:
+                    <br />
+                  </Typography>
+                  <Typography type="largebody">
+                    {orderAndPayment.reservedEvent.contactInformation}
                   </Typography>
                   <Redirect to="/consumer" />
                 </Content>

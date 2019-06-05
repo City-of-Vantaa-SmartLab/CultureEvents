@@ -26,8 +26,8 @@ services:
       PORT: 80
       PAYMENT_RETURN_URL: https://118adc7b.ngrok.io/payments/payment-return
       PAYMENT_NOTIFY_URL: https://118adc7b.ngrok.io/payments/payment-notify
-      BAMBORA_SECRET_KEY: 267e417772b5e6eab74925e0b244865e
-      BAMBORA_API_KEY: 29925487a8624661db983b9c854118b38919
+      BAMBORA_SECRET_KEY:
+      BAMBORA_API_KEY:
       BAMBORA_PRODUCT_ID: 327554_163423301_MF
       BAMBORA_PRODUCT_TITLE: Saldovaraus Jumppaliput-sovellukseen
       TELIA_USERNAME: vantaa-zylinc

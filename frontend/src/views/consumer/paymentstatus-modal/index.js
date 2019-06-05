@@ -46,8 +46,8 @@ export default withTheme(
       };
       getMeaningLong = statusCode => {
         if (statusCode == 0)
-          return `Kiitos ostostasi! Lähetämme liput antamaasi 
-        puhelinnumeroon tekstiviestillä.`;
+          return `Kiitos ostostasi! Lähetämme liput antamaasi puhelinnumeroon tekstiviestillä.
+          Jos et saa tekstiviestiä, ota yhteys tapahtuman tuottajaan:`;
         // @TODO: Wording to handle this case?
         if (statusCode == 1)
           return `Olemme pahoillamme! Varaus epäonnistui, koska maksua vastaavaa varausta ei löytynyt järjestelmästä`;
@@ -91,23 +91,26 @@ export default withTheme(
                       {longText}
                     </Typography>
                     <br />
-                    {query.status == 4 &&
-                      event && (
-                        <Typography
-                          style={{ whiteSpace: 'pre-line' }}
-                          type="largebody"
-                          color={this.props.theme.palette.primaryDeep}
-                        >
-                          {event.contactInformation}
-                        </Typography>
-                      )}
-                  </Content>
-                  {event &&
-                    query.status == 0 && (
-                      <EventCardWrapper bgColor={event.themeColor}>
-                        <EventCard mini event={event} />
-                      </EventCardWrapper>
+                    {query.status == 0 && event && (
+                      <Typography type="largebody">
+                        {event.contactInformation}
+                      </Typography>
                     )}
+                    {query.status == 4 && event && (
+                      <Typography
+                        style={{ whiteSpace: 'pre-line' }}
+                        type="largebody"
+                        color={this.props.theme.palette.primaryDeep}
+                      >
+                        {event.contactInformation}
+                      </Typography>
+                    )}
+                  </Content>
+                  {event && query.status == 0 && (
+                    <EventCardWrapper bgColor={event.themeColor}>
+                      <EventCard mini event={event} />
+                    </EventCardWrapper>
+                  )}
                 </Modal>
               );
             }}
