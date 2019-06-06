@@ -45,7 +45,6 @@ class Appbar extends React.Component {
       <React.Fragment>
         <Wrapper>
           <LogoSection>
-            <Logo noText={false} />
             <Typography type="headline" color="white">
               VANTAA
             </Typography>

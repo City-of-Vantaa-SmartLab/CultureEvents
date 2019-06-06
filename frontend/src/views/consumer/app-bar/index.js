@@ -60,7 +60,6 @@ const LeftBox = styled.div`
 
 const LogoBox = props => (
   <LeftBox>
-    <Logo noText={false} />
     <div>
       <Typography type="subheader">Vantaa</Typography>
       <Typography type="subheader">Kulttuuria</Typography>

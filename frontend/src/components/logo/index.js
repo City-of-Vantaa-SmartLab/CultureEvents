@@ -28,19 +28,6 @@ const SvgComponent = props => (
                 fill="#86cbf6"
               />
             </g>
-            {props.noText || (
-              <text
-                transform="translate(20 69.15)"
-                fontSize={20}
-                fontFamily="GT-Walsheim"
-                fontWeight={500}
-                letterSpacing="-.01em"
-                id="Vantaa"
-                fill="white"
-              >
-                <tspan className="cls-6">Vantaa</tspan>
-              </text>
-            )}
           </g>
         </g>
       </g>
