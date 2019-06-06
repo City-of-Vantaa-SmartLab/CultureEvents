@@ -91,16 +91,10 @@ export default withTheme(
                       {longText}
                     </Typography>
                     <br />
-                    {query.status == 0 && event && (
-                      <Typography type="largebody">
-                        {event.contactInformation}
-                      </Typography>
-                    )}
-                    {query.status == 4 && event && (
+                    {(query.status == 4 || query.status == 0) && event && (
                       <Typography
                         style={{ whiteSpace: 'pre-line' }}
                         type="largebody"
-                        color={this.props.theme.palette.primaryDeep}
                       >
                         {event.contactInformation}
                       </Typography>
