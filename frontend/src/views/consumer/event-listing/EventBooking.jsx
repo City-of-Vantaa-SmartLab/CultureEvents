@@ -82,6 +82,12 @@ const TotalAmountCalculated = styled(FlexBoxHorizontal) `
     margin-bottom: 0;
   }
 `;
+const Privacy = styled.div`
+  margin-top: 1rem !important;
+  font-size: 0.86rem;
+  font-weight: 400;
+  opacity: 0.7;
+`;
 
 // child components
 const FormListItem = props => {
@@ -274,6 +280,10 @@ export default connect('store')(
                 value={internalState.email}
                 onChange={e => (internalState.email = e.target.value)}
               />
+              <Privacy>
+                Jatkamalla hyväksyn {' '}
+                <a href="https://www.vantaa.fi/kulttuuriliput_kayttoehdot" target="_blank">käyttöehdot ja tietosuojakäytännöt.</a>
+              </Privacy>
             </Form>
             <FlexBoxHorizontal>
               {isGroupConductorCustomer && (
