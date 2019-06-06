@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { Price } from './price.entity';
 import { TicketsDto } from 'tickets/tickets.dto';
 import { Tickets } from 'tickets/tickets.entity';
+import {PriceDto} from './price.dto';
+import {Events} from "../event/events.entity";
 
 @Injectable()
 export class PriceService {
@@ -23,6 +25,21 @@ export class PriceService {
 
   async deletePrice(id: number) {
     await this.priceRepository.delete(id);
+  }
+
+  async updateOrCreatePrice(price: PriceDto, event: Events) {
+    const dbPrice = await this.priceRepository.findOne(price.id);
+    if (dbPrice) {
+      await this.priceRepository.update(price.id, price);
+    } else {
+      const priceDB = new Price();
+      priceDB.occupied_seats = price.occupied_seats;
+      priceDB.max_seats = price.max_seats;
+      priceDB.ticket_description = price.ticket_description;
+      priceDB.price = price.price;
+      priceDB.events = event;
+      await this.priceRepository.save(priceDB);
+    }
   }
 
   async updateSeats(id: number, seats_booked: number) {

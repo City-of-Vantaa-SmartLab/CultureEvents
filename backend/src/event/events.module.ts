@@ -6,12 +6,14 @@ import { Events } from './events.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { ReservationsModule } from '../reservations/reservations.module';
 import { Reservations } from '../reservations/reservations.entity';
+import {PriceModule} from "../price/price.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Events]),
     TypeOrmModule.forFeature([Reservations]),
     ReservationsModule,
+    PriceModule,
   ],
   controllers: [EventsController],
   providers: [EventsService, ValidationService],
