@@ -24,15 +24,15 @@ services:
       - postgres-dev-db
     environment:
       PORT: 80
-      PAYMENT_RETURN_URL: https://118adc7b.ngrok.io/payments/payment-return
-      PAYMENT_NOTIFY_URL: https://118adc7b.ngrok.io/payments/payment-notify
-      BAMBORA_SECRET_KEY: 267e417772b5e6eab74925e0b244865e
-      BAMBORA_API_KEY: 29925487a8624661db983b9c854118b38919
-      BAMBORA_PRODUCT_ID: 327554_163423301_MF
-      BAMBORA_PRODUCT_TITLE: Saldovaraus Jumppaliput-sovellukseen
-      TELIA_USERNAME: vantaa-zylinc
+      PAYMENT_RETURN_URL:
+      PAYMENT_NOTIFY_URL:
+      BAMBORA_SECRET_KEY:
+      BAMBORA_API_KEY:
+      BAMBORA_PRODUCT_ID:
+      BAMBORA_PRODUCT_TITLE:
+      TELIA_USERNAME:
       TELIA_PASSWORD:
-      TELIA_USER: Vantaa
+      TELIA_USER:
       AWS_S3_BUCKET_NAME:
       AWS_ACCESS_KEY_ID:
       AWS_SECRET_ACCESS_KEY:
