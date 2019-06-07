@@ -144,11 +144,12 @@ export class ReservationService {
     let ticketDetails = await Promise.all(
       reservation.tickets.map(async ticket => {
         const priceDetails = await this.priceService.getPriceDetails(ticket.price_id);
-        return `${priceDetails.ticket_description}  ${priceDetails.price} €  ${ticket.no_of_tickets} kpl `;
+        return `${priceDetails.ticket_description}:  ${priceDetails.price} € (${ticket.no_of_tickets} kpl) `;
       }),
     );
     const ticketDetailString = ticketDetails.join('\n');
     const personName = reservation.name;
+    const producerDetail = event.contact_information;
     const message = stringInterpolator(this.i18Service.getContents().reservations.confirmation, {
       personName,
       name,
@@ -156,6 +157,7 @@ export class ReservationService {
       date,
       time,
       ticketDetailString,
+      producerDetail,
     });
     return message;
   }
