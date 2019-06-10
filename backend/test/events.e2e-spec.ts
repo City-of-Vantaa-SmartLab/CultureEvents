@@ -13,7 +13,7 @@ import { Reservations } from '../src/reservations/reservations.entity';
 import { newEvent, updateEvent } from './data/events.data';
 import { ReservationsController } from '../src/reservations/reservations.controller';
 import { newReservation } from './data/reservations.data';
-import {PriceModule} from '../src/price/price.module';
+import { PriceModule } from '../src/price/price.module';
 
 describe('EventsController (e2e)', () => {
     let app: INestApplication;

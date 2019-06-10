@@ -4,8 +4,8 @@ import { Repository } from 'typeorm';
 import { Price } from './price.entity';
 import { TicketsDto } from 'tickets/tickets.dto';
 import { Tickets } from 'tickets/tickets.entity';
-import {PriceDto} from './price.dto';
-import {Events} from "../event/events.entity";
+import { PriceDto } from './price.dto';
+import { Events } from '../event/events.entity';
 
 @Injectable()
 export class PriceService {
