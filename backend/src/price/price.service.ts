@@ -30,7 +30,7 @@ export class PriceService {
   async updateOrCreatePrice(price: PriceDto, event: Events) {
     const dbPrice = await this.priceRepository.findOne(price.id);
     if (dbPrice) {
-      await this.priceRepository.update(price.id, price);
+      await this.priceRepository.update(price.id, {...price, occupied_seats: dbPrice.occupied_seats});
     } else {
       const priceDB = new Price();
       priceDB.occupied_seats = price.occupied_seats;
