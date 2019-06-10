@@ -127,7 +127,13 @@ export const RootModel = types
           self.ui.eventList.fetching = true;
           const result = yield putEvent(event, self.user.token);
           self.ui.eventList.fetching = false;
-          event.ticketCatalog = result.ticketCatalog;
+          event.ticketCatalog.forEach(function(ticketType, index) {
+            event.ticketCatalog[index] = {
+                ...event.ticketCatalog[index],
+                ...result.ticketCatalog[index],
+                isCreatedOnClient: false,
+            }
+          });
           // Update ticket catalog of event instance in mobx tree also. Otherwise "Observable object cannot be frozen" will occur
           resolveIdentifier(EventModel, self.events, event.id).ticketCatalog = result.ticketCatalog;
           self.events.put(event);
