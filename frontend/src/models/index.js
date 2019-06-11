@@ -26,7 +26,6 @@ import {
 import { removeIdRecursively } from 'utils';
 import FilterModel from './filter';
 import ReservationAndOrder from './reservationAndOrder';
-
 const transformToMap = (arr = []) => {
   const result = arr.reduce((accumulator, current) => {
     accumulator[current.id] = current;
@@ -119,7 +118,6 @@ export const RootModel = types
           self.events.put(result);
           self.selectEvent(result.id);
         } catch (error) {
-          console.error(error);
           self.ui.eventList.fetching = false;
           self.ui.eventList.fetchError = 'Could not create event ' + event.name;
         }
@@ -127,9 +125,17 @@ export const RootModel = types
         // existing event. PUT
         try {
           self.ui.eventList.fetching = true;
-          yield putEvent(event, self.user.token);
-
+          const result = yield putEvent(event, self.user.token);
           self.ui.eventList.fetching = false;
+          event.ticketCatalog.forEach(function(ticketType, index) {
+            event.ticketCatalog[index] = {
+                ...event.ticketCatalog[index],
+                ...result.ticketCatalog[index],
+                isCreatedOnClient: false,
+            }
+          });
+          // Update ticket catalog of event instance in mobx tree also. Otherwise "Observable object cannot be frozen" will occur
+          resolveIdentifier(EventModel, self.events, event.id).ticketCatalog = result.ticketCatalog;
           self.events.put(event);
         } catch (error) {
           console.error(error);

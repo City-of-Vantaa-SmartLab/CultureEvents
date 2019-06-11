@@ -58,14 +58,21 @@ export const updateEvent = {
         {
             id: 2,
             price: 10,
-            ticket_description: 'kids ticket',
+            ticket_description: 'kids ticket 2',
             max_seats: 10,
             occupied_seats: 0
         },
         {
             id: 3,
             price: 15,
-            ticket_description: 'senior ticket',
+            ticket_description: 'senior ticket 1',
+            max_seats: 5,
+            occupied_seats: 0
+        },
+        {
+            id: 4,
+            price: 15,
+            ticket_description: 'group ticket',
             max_seats: 5,
             occupied_seats: 0
         }

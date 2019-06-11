@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Events } from './events.entity';
 import { EventsDto } from './events.dto';
+import { PriceService } from '../price/price.service';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Events)
-    private readonly eventRepository: Repository<Events>
+    private readonly eventRepository: Repository<Events>,
+    private readonly priceService: PriceService,
   ) { }
 
   async createEvent(event: EventsDto) {
@@ -38,6 +40,11 @@ export class EventsService {
         age_group_limits: event.age_group_limits.join(','),
       };
       await this.eventRepository.update(id, event_to_update);
+      if (event_to_update.ticket_catalog) {
+          for (const price of event_to_update.ticket_catalog) {
+            await this.priceService.updateOrCreatePrice(price, dbEvent);
+          }
+      }
       const updatedEvent = await this.eventRepository.findOne(id, {
         relations: ['ticket_catalog'],
       });

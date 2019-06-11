@@ -85,7 +85,7 @@ class Editor extends React.Component {
   };
   addTicketType = e => {
     this.internalData.eventDraft.ticketCatalog.push({
-      ...TicketCatalog.create({ id: genRandomKey() }),
+      ...TicketCatalog.create({ id: genRandomKey(), isCreatedOnClient: true }),
     });
   };
   removeTicketType = id => e => {
@@ -130,7 +130,6 @@ class Editor extends React.Component {
   submitForm = () => {
     this.props.onSubmit(this.internalData.eventDraft);
   };
-
   render() {
     const inputBackgroundColor = toRgba(
       chroma(this.internalData.eventDraft.themeColor)
@@ -146,7 +145,6 @@ class Editor extends React.Component {
           }).toJSON(),
         )
       : !isEqual(serializedDraft, this.props.selectedEvent.toJSON());
-
     return (
       <React.Fragment>
         <ButtonBar

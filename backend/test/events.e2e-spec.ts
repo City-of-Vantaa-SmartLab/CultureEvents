@@ -13,6 +13,7 @@ import { Reservations } from '../src/reservations/reservations.entity';
 import { newEvent, updateEvent } from './data/events.data';
 import { ReservationsController } from '../src/reservations/reservations.controller';
 import { newReservation } from './data/reservations.data';
+import { PriceModule } from '../src/price/price.module';
 
 describe('EventsController (e2e)', () => {
     let app: INestApplication;
@@ -26,8 +27,9 @@ describe('EventsController (e2e)', () => {
                 TypeOrmModule.forRoot({ ...connectionDetails, dropSchema: true }),
                 TypeOrmModule.forFeature([Events, Reservations]),
                 ReservationsModule,
+                PriceModule,
             ],
-            providers: [EventsService, ValidationService, Logger]
+            providers: [EventsService, ValidationService, Logger],
         }).compile();
 
         app = moduleFixture.createNestApplication();
@@ -72,8 +74,9 @@ describe('EventsController (e2e)', () => {
             ...createdEvent,
             name: updateEvent.name,
             location: updateEvent.location,
-            description: updateEvent.description
-        }
+            description: updateEvent.description,
+            ticket_catalog: updateEvent.ticket_catalog,
+        };
         const response = await request(app.getHttpServer())
             .put('/api/events/1')
             .send(updateEvent);
@@ -115,7 +118,7 @@ describe('EventsController (e2e)', () => {
     // Make sure that the reservations related to the events is also deleted.
     it('/DELETE /reserations/:id', async () => {
         const response = await request(app.getHttpServer())
-            .delete('/api/reservations/1')
+            .delete('/api/reservations/1');
         expect(response.status).toBe(404);
         expect(response.body).toEqual('Could not find any reservations with id: 1');
     });

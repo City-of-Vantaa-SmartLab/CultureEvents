@@ -78,7 +78,6 @@ const TicketCatalogInputGroup = props => {
               'ticketDescription',
             )}
             value={ticketType.ticketDescription}
-            disabled={props.disabled}
           />
           <InputField
             backgroundColor={props.inputBackgroundColor}
@@ -90,7 +89,6 @@ const TicketCatalogInputGroup = props => {
             type="number"
             onChange={props.updateTicketCatalogField(ticketType.id, 'price')}
             value={Number(ticketType.price)}
-            disabled={props.disabled}
           />
           <InputField
             backgroundColor={props.inputBackgroundColor}
@@ -99,18 +97,16 @@ const TicketCatalogInputGroup = props => {
             type="number"
             onChange={props.updateTicketCatalogField(ticketType.id, 'maxSeats')}
             value={Number(ticketType.maxSeats)}
-            disabled={props.disabled}
           />
           <ButtonGroup style={{ flexShrink: 0 }}>
             <RedButton
               onClick={props.removeTicketType(ticketType.id)}
-              disabled={props.disabled}
+              disabled={!ticketType.isCreatedOnClient}
             >
               <Icon type="close" />
             </RedButton>
             {index === arr.length - 1 && (
               <GreenButton
-                disabled={props.disabled}
                 onClick={props.addTicketType}
                 onTouchEnd={props.addTicketType}
                 icon="plus"

@@ -27,7 +27,7 @@ const parseTo = caseType => node => {
 // generate random UUID
 // return String
 const genRandomKey = () => {
-  return Math.random() * 10000;
+  return Math.floor(Math.random() * 10000);
 };
 
 // pluck attribute 'id'
