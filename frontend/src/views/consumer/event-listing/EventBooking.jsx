@@ -171,10 +171,10 @@ export default connect('store')(
           internalState.classRoom &&
           internalState.name &&
           isValidNumber(internalState.phoneNumber, 'FI') &&
-          internalState.checked
+          internalState.privacy
           : internalState.name &&
           isValidNumber(internalState.phoneNumber, 'FI')) &&
-          internalState.checked && totalTicket > 0; // can't have an empty order
+          internalState.privacy && totalTicket > 0; // can't have an empty order
       return (
         <Wrapper bgColor={themeColor}>
           <TitleBox>
@@ -285,7 +285,7 @@ export default connect('store')(
               />
               <Confidentiality>
                 <input type="checkbox" onChange={ e => (
-                  internalState.checked = !internalState.checked
+                  internalState.privacy = !internalState.privacy
                 )} />
                 <label> Hyväksyn
                   <a href="https://www.vantaa.fi/kulttuuriliput_kayttoehdot" target="_blank"> käyttöehdot ja henkilötietojeni käsittelyn </a>
