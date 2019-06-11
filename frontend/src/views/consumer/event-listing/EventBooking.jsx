@@ -82,11 +82,12 @@ const TotalAmountCalculated = styled(FlexBoxHorizontal) `
     margin-bottom: 0;
   }
 `;
-const Privacy = styled.div`
+const Confidentiality = styled.div`
   margin-top: 1rem !important;
-  font-size: 0.86rem;
-  font-weight: 400;
-  opacity: 0.7;
+  font-size: 1rem;
+  input[type=checkbox] {
+    transform: scale(1.2);
+  }
 `;
 
 // child components
@@ -169,9 +170,11 @@ export default connect('store')(
           ? internalState.school &&
           internalState.classRoom &&
           internalState.name &&
-          isValidNumber(internalState.phoneNumber, 'FI')
+          isValidNumber(internalState.phoneNumber, 'FI') &&
+          internalState.checked
           : internalState.name &&
-          isValidNumber(internalState.phoneNumber, 'FI')) && totalTicket > 0; // can't have an empty order
+          isValidNumber(internalState.phoneNumber, 'FI')) &&
+          internalState.checked && totalTicket > 0; // can't have an empty order
       return (
         <Wrapper bgColor={themeColor}>
           <TitleBox>
@@ -280,10 +283,15 @@ export default connect('store')(
                 value={internalState.email}
                 onChange={e => (internalState.email = e.target.value)}
               />
-              <Privacy>
-                Jatkamalla hyväksyn {' '}
-                <a href="https://www.vantaa.fi/kulttuuriliput_kayttoehdot" target="_blank">käyttöehdot ja tietosuojakäytännöt.</a>
-              </Privacy>
+              <Confidentiality>
+                <input type="checkbox" onChange={ e => (
+                  internalState.checked = !internalState.checked
+                )} />
+                <label> Hyväksyn
+                  <a href="https://www.vantaa.fi/kulttuuriliput_kayttoehdot" target="_blank"> käyttöehdot ja henkilötietojeni käsittelyn </a>
+                  tietosuojakäytännön mukaisesti.
+                </label>
+              </Confidentiality>
             </Form>
             <FlexBoxHorizontal>
               {isGroupConductorCustomer && (
