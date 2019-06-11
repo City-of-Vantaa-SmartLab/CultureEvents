@@ -6,7 +6,7 @@ import { connect, parseQuery } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import { Route } from 'react-router-dom';
 import chroma from 'chroma-js';
-
+import {fetchOneEvent} from '../../../apis';
 const EventCardWrapper = styled.div`
   background-color: ${props =>
     chroma(props.bgColor)
@@ -23,7 +23,15 @@ export default withTheme(
     class PaymentStatusModal extends React.Component {
       state = {
         show: true,
+        eventToLoad: null,
       };
+
+      loadEvent = id => {
+        fetchOneEvent(id).then(result => this.setState({
+            eventToLoad: result,
+        }))
+      };
+
       // @TODO: status code be enums constant for easier readability
       // also would be nice to group it into a object instead
       getColor = statusCode => {
@@ -70,11 +78,11 @@ export default withTheme(
             path="/consumer/payment"
             children={({ match, location }) => {
               const query = parseQuery(location.search);
+              this.loadEvent(query.event_id);
               const meaning = match && this.getMeaning(query.status);
               const longText = match && this.getMeaningLong(query.status);
               const foundEvent = match && store.findEvent(query.event_id); // maybe undefined if not found
               const event = foundEvent && foundEvent.toJSON();
-
               return (
                 <Modal
                   show={match && this.state.show}
@@ -102,7 +110,7 @@ export default withTheme(
                   </Content>
                   {event && query.status == 0 && (
                     <EventCardWrapper bgColor={event.themeColor}>
-                      <EventCard mini event={event} />
+                      <EventCard mini event={this.state.eventToLoad} />
                     </EventCardWrapper>
                   )}
                 </Modal>
