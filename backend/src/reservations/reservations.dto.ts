@@ -86,4 +86,8 @@ export class ReservationsDto {
   @IsBoolean()
   @ApiModelProperty()
   payment_required: boolean;
+
+  @IsString()
+  @ApiModelProperty()
+  created_date: string;
 }

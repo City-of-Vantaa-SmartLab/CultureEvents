@@ -86,7 +86,10 @@ export class PaymentController {
 
       if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
         //delete reservation since payment failed
-        await this.reservationService.deleteReservation(payment.reservation_id);
+        if (payment) {
+          console.log('deleting reservation since payment failed at Bambora', payment.reservation_id);
+          await this.reservationService.deleteReservation(payment.reservation_id);
+        }
         console.error(
           `Payment failed with error code: ${bamboraReturnCode}. Please try again later`,
         );
