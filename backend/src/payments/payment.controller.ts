@@ -82,14 +82,7 @@ export class PaymentController {
       const bamboraReturnCode = req.query.RETURN_CODE;
       const orderNumber = req.query.ORDER_NUMBER;
       console.log('bamboraCode', bamboraReturnCode, 'orderNumber', orderNumber);
-      const payment = await this.paymentService.getPaymentByOrderNumber(
-        orderNumber,
-      );
-      if (payment) {
-        console.log('Payment exists', payment);
-      } else {
-        console.log('payment doesnt exist for', orderNumber);
-      }
+      const payment = await this.paymentService.getPaymentByOrderNumber(orderNumber);
 
       if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
         //delete reservation since payment failed
@@ -102,9 +95,7 @@ export class PaymentController {
 
       if (!payment) {
         console.error(
-          `Payment details not available in the system. Payment Order: ${
-          payment.order_number
-          }`,
+          `Payment details not available in the system. Payment Order: ${orderNumber}`,
         );
         return res.redirect(`${APP_REDIRECT_URL}?status=1`);
       }
@@ -193,36 +184,39 @@ export class PaymentController {
         return response
           .status(422)
           .json(`There are not enough seats available for this event`);
-      }
-
-      reservation.payment_required = true;
-      const reservationDto = await this.reservationService.createReservation(
-        reservation,
-        false,
-      );
-
-      if (!reservationDto) {
-        return response
-          .status(422)
-          .json(`Failed to make a reservation for the request`);
-      }
-      const paymentObj = {
-        amount: await this.reservationService.getTotalAmount(reservationDto),
-        reservation_id: reservationDto.id,
-        username: reservationDto.name,
-      };
-      console.log('making payment for object', paymentObj);
-      const redirectUrl = await this.paymentService.getPaymentRedirectUrl(
-        paymentObj,
-      );
-      if (!redirectUrl) {
-        return response
-          .status(422)
-          .json(
-            `Failed to make payment for the request: Could not make payment request with Bambora`,
+      } else {
+        reservation.payment_required = true;
+        const reservationDto = await this.reservationService.createReservation(
+          reservation,
+          false,
         );
+        console.log('reservation created for user', reservationDto);
+
+        if (!reservationDto) {
+          return response
+            .status(422)
+            .json(`Failed to make a reservation for the request`);
+        } else {
+          const paymentObj = {
+            amount: await this.reservationService.getTotalAmount(reservationDto),
+            reservation_id: reservationDto.id,
+            username: reservationDto.name,
+          };
+          console.log('making payment for object', paymentObj);
+          const redirectUrl = await this.paymentService.getPaymentRedirectUrl(
+            paymentObj,
+          );
+          if (!redirectUrl) {
+            return response
+              .status(422)
+              .json(
+                `Failed to make payment for the request: Could not make payment request with Bambora`,
+            );
+          } else {
+            response.status(200).json({ redirect_url: redirectUrl });
+          }
+        }
       }
-      response.status(200).json({ redirect_url: redirectUrl });
     } catch (error) {
       return response
         .status(500)
