@@ -39,14 +39,20 @@ export class PaymentService {
         paymentObj,
       );
       // Saves the payment request to database
-      await this.paymentRepository.save(paymentEntity);
-      console.log('making payment request', paymentEntity);
-      const paymentRequest = await this.bamboraService.createBamboraPaymentRequest(
-        paymentEntity,
-      );
-      const response = await axios.post(TOKEN_URL, paymentRequest);
-      const redirectUrl = BAMBORA_API_URL + response.data.token;
-      return redirectUrl;
+      console.log('saving payment to database', paymentEntity);
+      const paymentResponse = await this.paymentRepository.save(paymentEntity);
+      console.log('paymentResponse: ', paymentResponse);
+      if (paymentResponse.id) {
+        const paymentRequest = await this.bamboraService.createBamboraPaymentRequest(
+          paymentResponse,
+        );
+        const response = await axios.post(TOKEN_URL, paymentRequest);
+        const redirectUrl = BAMBORA_API_URL + response.data.token;
+        return redirectUrl;
+      } else {
+        console.log('failed to save payment', paymentResponse);
+        return null;
+      }
     } catch (error) {
       console.error(`Failed to get redirect url from bambora: ${error.message}`);
       return null;

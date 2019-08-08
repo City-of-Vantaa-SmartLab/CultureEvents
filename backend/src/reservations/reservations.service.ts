@@ -13,6 +13,9 @@ import { PriceService } from '../price/price.service';
 const stringInterpolator = require('interpolate');
 import { TicketService } from '../tickets/tickets.service';
 import * as dateFns from 'date-fns';
+const { formatToTimeZone } = require('date-fns-timezone');
+const formatString = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+
 @Injectable()
 export class ReservationService {
   constructor(
@@ -22,9 +25,10 @@ export class ReservationService {
     private readonly eventService: EventsService,
     private readonly priceService: PriceService,
     private readonly ticketService: TicketService,
-  ) {}
+  ) { }
 
   async createReservation(reservation: ReservationsDto, sendSms: boolean) {
+    reservation.created_date = formatToTimeZone(new Date(), formatString, { timeZone: 'Europe/Helsinki' });
     const response = await this.reservationsRepository.save(reservation);
     if (response) {
       if (sendSms) {
@@ -97,11 +101,13 @@ export class ReservationService {
 
     //Find failed reservations
     failedReservations = failedReservations.filter(
-      reservation => dateFns.differenceInMinutes(new Date(), reservation.created) > 5,
+      reservation => reservation.created_date != null && dateFns.differenceInMinutes(new Date(), reservation.created_date) > 15,
     );
 
+    console.log('Clearing database for failed reservation', new Date());
     //Delete failed reservations
     failedReservations.forEach(async reservation => {
+      console.log('deleting failed reservation', reservation);
       await this.deleteReservation(reservation.id);
     });
 

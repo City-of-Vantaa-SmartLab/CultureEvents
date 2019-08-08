@@ -59,6 +59,9 @@ export class Reservations {
   @Column({ type: 'timestamp without time zone', default: dateFns.format(new Date(), 'YYYY-MM-DD HH:mm') })
   created: string;
 
+  @Column({ length: 100, nullable: true })
+  created_date: string;
+
   @Column({ default: false })
   payment_required: boolean;
 
