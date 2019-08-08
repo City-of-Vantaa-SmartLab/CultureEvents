@@ -13,6 +13,9 @@ import { PriceService } from '../price/price.service';
 const stringInterpolator = require('interpolate');
 import { TicketService } from '../tickets/tickets.service';
 import * as dateFns from 'date-fns';
+const { formatToTimeZone } = require('date-fns-timezone');
+const formatString = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+
 @Injectable()
 export class ReservationService {
   constructor(
@@ -25,7 +28,7 @@ export class ReservationService {
   ) { }
 
   async createReservation(reservation: ReservationsDto, sendSms: boolean) {
-    reservation.created_date = new Date().toDateString();
+    reservation.created_date = formatToTimeZone(new Date(), formatString, { timeZone: 'Europe/Helsinki' });
     const response = await this.reservationsRepository.save(reservation);
     if (response) {
       if (sendSms) {
