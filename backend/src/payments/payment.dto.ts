@@ -15,6 +15,10 @@ export class PaymentsDto {
 
   @IsString()
   @ApiModelProperty()
+  readonly is_pending: boolean;
+
+  @IsString()
+  @ApiModelProperty()
   readonly payment_date: string;
 
   @IsString()

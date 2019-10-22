@@ -73,6 +73,71 @@ export class PaymentController {
     }
   }
 
+  @Get('/payment-notify')
+  @ApiImplicitQuery({ name: 'RETURN_CODE', required: true, type: String })
+  @ApiImplicitQuery({ name: 'ORDER_NUMBER', required: true, type: String })
+  @UsePipes(new ValidationPipe())
+  async payment_notify(@Req() req, @Res() res) {
+    try {
+      const bamboraReturnCode = req.query.RETURN_CODE;
+      const settled = req.query.SETTLED;
+      const orderNumber = req.query.ORDER_NUMBER;
+      const payment = await this.paymentService.getPaymentByOrderNumber(orderNumber);
+
+      if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
+        if (payment) {
+          console.log('deleting reservation since payment failed at Bambora', payment.reservation_id);
+          await this.reservationService.deleteReservation(payment.reservation_id);
+        }
+        console.error(
+          `Payment failed with error code: ${bamboraReturnCode}. Please try again later`,
+        );
+        return res.redirect(`${APP_REDIRECT_URL}?status=3`);
+      }
+
+      if (settled !== '1') {
+        console.log(`Received payment-notify but the payment has not been processed with settled = ${settled}`)
+        return res.status(200).json('');
+      }
+
+      if (!payment) {
+        console.error(
+          `Payment details not available in the system. Payment Order: ${orderNumber}`,
+        );
+        return res.redirect(`${APP_REDIRECT_URL}?status=1`);
+      }
+
+      const reservation = await this.reservationService.findOneById(payment.reservation_id );
+      
+      if (!reservation) {
+        console.log(`Rceived payment-notify but reservation has been deleted, orderNumber = ${orderNumber}`)
+        return res.status(200).json('');
+      }
+
+      // Checking if the payment has already been done.
+      if (payment.payment_status) {
+        console.error(`This payment was already processed!. Payment Order: ${payment.order_number}`);
+        return res.status(200).json('');
+      }
+
+      const [, , smsResponse] = await Promise.all([
+        await this.reservationService.updateReservation(reservation.id, { confirmed: true, payment_completed: true }),
+        await this.paymentService.updatePayment(payment.order_number, { payment_status: true }),
+        await this.paymentService.sendSmsToUser(payment.reservation_id, true),
+      ]);
+
+      if (smsResponse) {
+        await this.reservationService.updateReservation(reservation.id, { sms_sent: true });
+      }
+
+      return res.status(200).json('');
+
+    } catch (err) {
+      console.error(`Payment failed with error code: ${err.message}. Please try again later`);
+      return res.redirect(`${APP_REDIRECT_URL}?status=4`);
+    }
+  }
+
   @Get('/payment-return')
   @ApiImplicitQuery({ name: 'RETURN_CODE', required: true, type: String })
   @ApiImplicitQuery({ name: 'ORDER_NUMBER', required: true, type: String })
@@ -81,7 +146,6 @@ export class PaymentController {
     try {
       const bamboraReturnCode = req.query.RETURN_CODE;
       const orderNumber = req.query.ORDER_NUMBER;
-      console.log('bamboraCode', bamboraReturnCode, 'orderNumber', orderNumber);
       const payment = await this.paymentService.getPaymentByOrderNumber(orderNumber);
 
       if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
@@ -93,28 +157,28 @@ export class PaymentController {
         console.error(
           `Payment failed with error code: ${bamboraReturnCode}. Please try again later`,
         );
-        return res.redirect(`${APP_REDIRECT_URL}?status=3`);
+        return res.status(200).json('');
       }
 
       if (!payment) {
         console.error(
           `Payment details not available in the system. Payment Order: ${orderNumber}`,
         );
-        return res.redirect(`${APP_REDIRECT_URL}?status=1`);
+        return res.status(400).json('');
       }
 
-      const reservation = await this.reservationService.findOneById(payment.reservation_id, );
+      const reservation = await this.reservationService.findOneById(payment.reservation_id );
 
       // Checking if the payment has already been done.
       if (payment.payment_status) {
         console.error(`This payment was already processed!. Payment Order: ${payment.order_number}`);
-        return res.redirect(`${APP_REDIRECT_URL}?status=2&event_id=${reservation.event_id}`);
+        return res.status(400).json('');;
       }
 
       const [, , smsResponse] = await Promise.all([
         await this.reservationService.updateReservation(reservation.id, { confirmed: true, payment_completed: true }),
         await this.paymentService.updatePayment(payment.order_number, { payment_status: true }),
-        await this.paymentService.sendSmsToUser(payment.reservation_id)
+        await this.paymentService.sendSmsToUser(payment.reservation_id),
       ]);
 
       if (smsResponse) {
