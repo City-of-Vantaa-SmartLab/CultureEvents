@@ -78,7 +78,9 @@ export default withTheme(
             path="/consumer/payment"
             children={({ match, location }) => {
               const query = parseQuery(location.search);
-              this.loadEvent(query.event_id);
+              if (query.event_id && !this.state.eventToLoad) {
+                  this.loadEvent(query.event_id);
+              }
               const meaning = match && this.getMeaning(query.status);
               const longText = match && this.getMeaningLong(query.status);
               const foundEvent = match && store.findEvent(query.event_id); // maybe undefined if not found
@@ -110,7 +112,7 @@ export default withTheme(
                   </Content>
                   {event && query.status == 0 && (
                     <EventCardWrapper bgColor={event.themeColor}>
-                      <EventCard mini event={this.state.eventToLoad} />
+                      <EventCard mini event={event} />
                     </EventCardWrapper>
                   )}
                 </Modal>

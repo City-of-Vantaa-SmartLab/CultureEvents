@@ -26,6 +26,7 @@ export class Payments {
   @Column({ default: false })
   payment_status: boolean;
 
+  @Column({})
   @Column({ length: 100 })
   payment_date: string;
 

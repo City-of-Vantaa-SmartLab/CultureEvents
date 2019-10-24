@@ -88,10 +88,12 @@ export class PaymentService {
     await this.paymentRepository.update(paymentFromDb.id, paymentToUpdate);
   }
 
-  async sendSmsToUser(id: number) {
+  async sendSmsToUser(id: number, isNotify: boolean = false) {
     const reservation = await this.reservationService.findOneById(id);
     const event = await this.eventService.findOneById(reservation.event_id);
-    const reservationMessage = await this.buildPaymentMessage(event, reservation);
+    console.log(event);
+    console.log(`is from notify ${isNotify}`);
+    const reservationMessage = await this.buildPaymentMessage(event, reservation, isNotify);
     return await this.smsService.sendMessageToUser(
       reservation.phone,
       reservation.name,
@@ -99,7 +101,7 @@ export class PaymentService {
     );
   }
 
-  async buildPaymentMessage(event: EventsDto, reservation: ReservationsDto) {
+  async buildPaymentMessage(event: EventsDto, reservation: ReservationsDto, isNotify: boolean) {
     const time = event.event_time.replace(/:/g, '.')
     const date = this.getDate(event.event_date);
     const name = event.name;
@@ -113,8 +115,9 @@ export class PaymentService {
     const ticketDetailString = ticketDetails.join('\n');
     const personName = reservation.name;
     const producerDetail = event.contact_information;
+    const paymentStatus = isNotify ? this.i18Service.getContents().payments.pendingResolve : this.i18Service.getContents().payments.confirmation;
     const message = stringInterpolator(
-      this.i18Service.getContents().payments.confirmation,
+      paymentStatus,
       {
         personName,
         name,

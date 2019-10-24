@@ -9,6 +9,7 @@ export const content =
       payments: {
         "dateFormat": "DD.MM.YYYY",
         "timeFormat": "HH:mm",
+        "pendingResolve": "Your payment has been processed\n\nOlet ostanut liput nimellä {personName} seuraavaan tilaisuuteen:\n{name}, {date}, {time}, {location}\n\n{ticketDetailString}\n\nTämä viesti on pääsylippusi ja se tarkistetaan tilaisuuteen tullessasi.\n\nLisätiedot ja peruutukset: \n{producerDetail}\n\nTervetuloa!\nVantaan Kulttuuripalvelut\n",
         "confirmation": "Vahvistus ostosta\n\nOlet ostanut liput nimellä {personName} seuraavaan tilaisuuteen:\n{name}, {date}, {time}, {location}\n\n{ticketDetailString}\n\nTämä viesti on pääsylippusi ja se tarkistetaan tilaisuuteen tullessasi.\n\nLisätiedot ja peruutukset: \n{producerDetail}\n\nTervetuloa!\nVantaan Kulttuuripalvelut\n"
       }
     },
@@ -21,6 +22,7 @@ export const content =
       payments: {
         "dateFormat": "DD.MM.YYYY",
         "timeFormat": "HH:mm",
+        "pendingResolve": "Your payment has been processed\n\nOlet ostanut liput nimellä {personName} seuraavaan tilaisuuteen:\n{name}, {date}, {time}, {location}\n\n{ticketDetailString}\n\nTämä viesti on pääsylippusi ja se tarkistetaan tilaisuuteen tullessasi.\n\nLisätiedot ja peruutukset: \n{producerDetail}\n\nTervetuloa!\nVantaan Kulttuuripalvelut\n",
         "confirmation": "Vahvistus ostosta\n\nOlet ostanut liput nimellä {personName} seuraavaan tilaisuuteen:\n{name}, {date}, {time}, {location}\n\n{ticketDetailString}\n\nTämä viesti on pääsylippusi ja se tarkistetaan tilaisuuteen tullessasi.\n\nLisätiedot ja peruutukset: \n{producerDetail}\n\nTervetuloa!\nVantaan Kulttuuripalvelut\n"
       }
     },
@@ -33,6 +35,7 @@ export const content =
       payments: {
         "dateFormat": "DD.MM.YYYY",
         "timeFormat": "HH:mm",
+        "pendingResolve": "Your payment has been processed\n\nOlet ostanut liput nimellä {personName} seuraavaan tilaisuuteen:\n{name}, {date}, {time}, {location}\n\n{ticketDetailString}\n\nTämä viesti on pääsylippusi ja se tarkistetaan tilaisuuteen tullessasi.\n\nLisätiedot ja peruutukset: \n{producerDetail}\n\nTervetuloa!\nVantaan Kulttuuripalvelut\n",
         "confirmation": "Vahvistus ostosta\n\nOlet ostanut liput nimellä {personName} seuraavaan tilaisuuteen:\n{name}, {date}, {time}, {location}\n\n{ticketDetailString}\n\nTämä viesti on pääsylippusi ja se tarkistetaan tilaisuuteen tullessasi.\n\nLisätiedot ja peruutukset: \n{producerDetail}\n\nTervetuloa!\nVantaan Kulttuuripalvelut\n"
       }
     }

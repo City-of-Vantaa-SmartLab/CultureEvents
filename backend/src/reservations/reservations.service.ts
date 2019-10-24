@@ -101,7 +101,7 @@ export class ReservationService {
 
     //Find failed reservations
     failedReservations = failedReservations.filter(
-      reservation => reservation.created_date != null && dateFns.differenceInMinutes(new Date(), reservation.created_date) > 15,
+      reservation => reservation.created_date != null && dateFns.differenceInMinutes(new Date(), reservation.created_date) > 90,
     );
 
     console.log('Clearing database for failed reservation', new Date());
