@@ -63,14 +63,15 @@ export default withTheme(
         // @TODO: beware of performance cost
         // This might not be the best for performance
         // See if we can memoize the filter function
-        const consumableEventList = values(events);
+        const consumableEventList = values(events)
+          .filter(event => 0 < new Date(`${event.eventDate}T${event.eventTime}`) - Date.now());
         const displayableEvents = filters.hasActiveFilter
           ? pipeable(consumableEventList).pipe(
-              ageGroupLimits.length > 0 && filterByAgeGroup(ageGroupLimits),
-              areas.length > 0 && filterByArea(areas),
-              months.length > 0 && filterByDate(months),
-              eventTypes.length > 0 && filterByEventType(eventTypes),
-            )
+            ageGroupLimits.length > 0 && filterByAgeGroup(ageGroupLimits),
+            areas.length > 0 && filterByArea(areas),
+            months.length > 0 && filterByDate(months),
+            eventTypes.length > 0 && filterByEventType(eventTypes),
+          )
           : consumableEventList;
 
         return (
@@ -95,21 +96,21 @@ export default withTheme(
                 ))}
               </ScrollContainer>
             ) : (
-              <EmptyStateContainer key={'emptyState'}>
-                <NotFoundIcon />
-                <Typography type="body">
-                  Ei osumia!
+                <EmptyStateContainer key={'emptyState'}>
+                  <NotFoundIcon />
+                  <Typography type="body">
+                    Ei osumia!
                   <br />
-                  Kokeile laajentaa hakuehtoja
+                    Kokeile laajentaa hakuehtoja
                 </Typography>
-                <Button
-                  onClick={filters.clearAllFilters}
-                  backgroundColor={this.props.theme.palette.primaryDeep}
-                >
-                  POISTA RAJAUKSET
+                  <Button
+                    onClick={filters.clearAllFilters}
+                    backgroundColor={this.props.theme.palette.primaryDeep}
+                  >
+                    POISTA RAJAUKSET
                 </Button>
-              </EmptyStateContainer>
-            )}
+                </EmptyStateContainer>
+              )}
           </Wrapper>
         );
       }
