@@ -174,7 +174,7 @@ export default connect('store')(
           internalState.privacy
           : internalState.name &&
           isValidNumber(internalState.phoneNumber, 'FI')) &&
-          internalState.privacy && totalTicket > 0; // can't have an empty order
+          internalState.privacy; // can't have an empty order
       return (
         <Wrapper bgColor={themeColor}>
           <TitleBox>
@@ -294,18 +294,16 @@ export default connect('store')(
               </Confidentiality>
             </Form>
             <FlexBoxHorizontal>
-              {isGroupConductorCustomer && (
                 <Button
                   type="dashed"
                   backgroundColor="white"
                   style={{ alignSelf: 'flex-start' }}
-                  disabled={!submittable}
+                  disabled={!submittable || totalCost > 0}
                   icon={isReservationPending && 'loading'}
                   onClick={this.submit('reservation')}
                 >
                   VARAA LIPUT
                 </Button>
-              )}
               <Button
                 style={{ alignSelf: 'flex-end' }}
                 backgroundColor={themeColor}
