@@ -14,7 +14,7 @@
     "mobx-react": "^5.2.3",
     "mobx-state-tree": "^3.0.2",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react-dom": "^16.4.2",
     "react-lazy-load": "^3.0.13",
     "react-loadable": "^5.4.0",
     "react-pose": "^2.1.2",
