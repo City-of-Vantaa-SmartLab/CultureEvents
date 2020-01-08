@@ -1,1 +1,1 @@
-export const areas = ["Tikkurila", "Aviapolis", "Myyrmäki", "Korso", "Hakunila", "Koivukylä"]
+export const areas = ["Tikkurila", "Aviapolis", "Myyrmäki", "Korso", "Hakunila", "Koivukylä", "Kivistö"]
