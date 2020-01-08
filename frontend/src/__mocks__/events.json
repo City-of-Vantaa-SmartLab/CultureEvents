@@ -8,7 +8,11 @@
     "eventTime": "15:00",
     "contactInformation": "Elina Seppanen, 040 111111111",
     "eventType": "Kurssit Ja Työpajat",
-    "ageGroupLimits": ["0-3", "7-12", "13+"],
+    "ageGroupLimits": [
+      "0-3",
+      "7-12",
+      "13+"
+    ],
     "is_wordless": false,
     "is_bilingual": false,
     "area": "Korso",
@@ -34,7 +38,13 @@
     "eventTime": "17:30",
     "contactInformation": "Juho Pentikainen, 0123XXXXXXXXX",
     "eventType": "Näyttelyt",
-    "ageGroupLimits": ["0-3", "0-2", "3-6", "7-12", "13+"],
+    "ageGroupLimits": [
+      "0-3",
+      "0-2",
+      "3-6",
+      "7-12",
+      "13+"
+    ],
     "is_wordless": false,
     "is_bilingual": false,
     "area": "Tikkurila",
@@ -60,7 +70,10 @@
     "eventTime": "14:00",
     "contactInformation": "Peter Bjorn, 050 211 1111",
     "eventType": "Kurssit Ja Työpajat",
-    "ageGroupLimits": ["0-3", "13+"],
+    "ageGroupLimits": [
+      "0-3",
+      "13+"
+    ],
     "area": "Aviapolis",
     "coverImage": "https://img.grouponcdn.com/deal/5v2dvJfFF62iMgn1K6Mv/vL-957x574/v1/c700x420.jpg",
     "themeColor": "#43368D",
@@ -91,7 +104,9 @@
     "eventTime": "14:08",
     "contactInformation": "",
     "eventType": "Esitykset",
-    "ageGroupLimits": ["0-3"],
+    "ageGroupLimits": [
+      "0-3"
+    ],
     "area": "Tikkurila",
     "coverImage": "https://new.goisrael.com/sites/default/files/styles/1397x735_article_full/public/Concerts%20917X483_0.jpg?itok=GH5GHXAm",
     "themeColor": "#43368D",
@@ -122,7 +137,10 @@
     "eventTime": "13:08",
     "contactInformation": "",
     "eventType": "Esitykset",
-    "ageGroupLimits": ["3-6", "0-2"],
+    "ageGroupLimits": [
+      "3-6",
+      "0-2"
+    ],
     "area": "Tikkurila",
     "coverImage": "",
     "themeColor": "#BF2E43",
@@ -146,7 +164,11 @@
     "eventTime": "10:30",
     "contactInformation": "Pakolliset ilmoittautumiset 09 8392 9044, kulttuuritapahtumat@vantaa.fi. Kesto 30min",
     "eventType": "Esitykset",
-    "ageGroupLimits": ["0-3", "3-6", "13+"],
+    "ageGroupLimits": [
+      "0-3",
+      "3-6",
+      "13+"
+    ],
     "area": "Tikkurila",
     "coverImage": "https://vantaa.s3.amazonaws.com/1534401357502%20-%20PIKI_Kuva_Katri%20Kirkkopelto.jpg",
     "themeColor": "#EC9D5C",
@@ -177,7 +199,9 @@
     "eventTime": "14:08",
     "contactInformation": "",
     "eventType": "Esitykset",
-    "ageGroupLimits": ["0-3"],
+    "ageGroupLimits": [
+      "0-3"
+    ],
     "area": "Tikkurila",
     "coverImage": "http://aksa.fi/wp-content/uploads/2015/12/koskela7.jpg",
     "themeColor": "#BF2E43",
@@ -201,7 +225,12 @@
     "eventTime": "23:08",
     "contactInformation": "",
     "eventType": "Kurssit Ja Työpajat",
-    "ageGroupLimits": ["0-3", "0-2", "3-6", "7-12"],
+    "ageGroupLimits": [
+      "0-3",
+      "0-2",
+      "3-6",
+      "7-12"
+    ],
     "area": "Tikkurila",
     "coverImage": "https://78.media.tumblr.com/d17424c4255e363e6c68a87dec086f73/tumblr_p7bx3hWUVA1sxaki2o6_540.gif",
     "themeColor": "#08866B",
@@ -225,7 +254,10 @@
     "eventTime": "10:00",
     "contactInformation": "jaana.niinivirta@vantaa.fi, p. 040 524 1401",
     "eventType": "Kurssit Ja Työpajat",
-    "ageGroupLimits": ["0-3", "0-2"],
+    "ageGroupLimits": [
+      "0-3",
+      "0-2"
+    ],
     "area": "Tikkurila",
     "coverImage": "https://vantaa.s3.amazonaws.com/1534480192280%20-%20Vauva%20ja%20taaperosirkusty%C3%B6paja%20Kuva%20Sirkus%20Magenta.jpg",
     "themeColor": "#EC9D5C",
@@ -249,7 +281,12 @@
     "eventTime": "09:00",
     "contactInformation": " kesto 40 min. Liput 5 € Vantaa-infoista, 7 € ovelta käteisellä Pakolliset varaukset: 09 8392 9044, kulttuuritapahtumat@vantaa.fi",
     "eventType": "Esitykset",
-    "ageGroupLimits": ["0-3", "3-6", "7-12", "13+"],
+    "ageGroupLimits": [
+      "0-3",
+      "3-6",
+      "7-12",
+      "13+"
+    ],
     "area": "Myyrmäki",
     "coverImage": "https://vantaa.s3.amazonaws.com/1534403712216+-+Pikku+papun+orkesteri+B%C3%A4ndikuva_kuva+Aapo+Huhta.jpeg",
     "themeColor": "#43368D",
@@ -273,7 +310,11 @@
     "eventTime": "14:08",
     "contactInformation": "Bark three to smile :)",
     "eventType": "Näyttelyt",
-    "ageGroupLimits": ["0-3", "7-12", "13+"],
+    "ageGroupLimits": [
+      "0-3",
+      "7-12",
+      "13+"
+    ],
     "area": "Myyrmäki",
     "coverImage": "https://www.pretendcity.org/wp-content/uploads/2017/12/Love-your-pet-day-calendar.png",
     "themeColor": "#EC9D5C",
@@ -297,7 +338,9 @@
     "eventTime": "11:08",
     "contactInformation": "Mirva",
     "eventType": "Näyttelyt",
-    "ageGroupLimits": ["6-12"],
+    "ageGroupLimits": [
+      "6-12"
+    ],
     "area": "Tikkurila",
     "coverImage": "https://vantaa.s3.amazonaws.com/1535531069292+-+p%C3%B6ntt%C3%B62.jpg",
     "themeColor": "#BF2E43",
@@ -321,7 +364,9 @@
     "eventTime": "14:08",
     "contactInformation": "",
     "eventType": "Esitykset",
-    "ageGroupLimits": ["0-2"],
+    "ageGroupLimits": [
+      "0-2"
+    ],
     "area": "Tikkurila",
     "coverImage": "",
     "themeColor": "#498DC7",
@@ -352,7 +397,9 @@
     "eventTime": "10:09",
     "contactInformation": "",
     "eventType": "Esitykset",
-    "ageGroupLimits": ["7-12"],
+    "ageGroupLimits": [
+      "7-12"
+    ],
     "area": "Tikkurila",
     "coverImage": "",
     "themeColor": "#498DC7",
@@ -376,7 +423,11 @@
     "eventTime": "10:00",
     "contactInformation": "pessi@vantaa.fi tai 040 524 1402 ",
     "eventType": "Kurssit Ja Työpajat",
-    "ageGroupLimits": ["0-3", "3-6", "7-12"],
+    "ageGroupLimits": [
+      "0-3",
+      "3-6",
+      "7-12"
+    ],
     "area": "Tikkurila",
     "coverImage": "https://vantaa.s3.amazonaws.com/1535468093004%20-%20Sirkuskurssi%20kuva%20Karkki%20Havaste.jpg",
     "themeColor": "#BF2E43",
@@ -400,7 +451,10 @@
     "eventTime": "10:09",
     "contactInformation": "",
     "eventType": "Esitykset",
-    "ageGroupLimits": ["", "7-12"],
+    "ageGroupLimits": [
+      "",
+      "7-12"
+    ],
     "area": "Tikkurila",
     "coverImage": "",
     "themeColor": "#498DC7",
