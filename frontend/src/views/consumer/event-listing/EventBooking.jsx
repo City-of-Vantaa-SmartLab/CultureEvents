@@ -53,7 +53,7 @@ const FormListItemWrapper = styled.div`
     }
   }
 `;
-const CustomerGroupButton = styled(Button) `
+const CustomerGroupButton = styled(Button)`
   &&& {
     padding: 0.5rem;
     width: 100%;
@@ -72,7 +72,7 @@ const FlexBoxHorizontal = styled.div`
     margin-right: 1rem;
   }
 `;
-const TotalAmountCalculated = styled(FlexBoxHorizontal) `
+const TotalAmountCalculated = styled(FlexBoxHorizontal)`
   background-color: rgba(0, 0, 0, 0.1);
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -174,7 +174,7 @@ export default connect('store')(
           internalState.privacy
           : internalState.name &&
           isValidNumber(internalState.phoneNumber, 'FI')) &&
-          internalState.privacy; // can't have an empty order
+        internalState.privacy; // can't have an empty order
       return (
         <Wrapper bgColor={themeColor}>
           <TitleBox>
@@ -284,7 +284,7 @@ export default connect('store')(
                 onChange={e => (internalState.email = e.target.value)}
               />
               <Confidentiality>
-                <input type="checkbox" onChange={ e => (
+                <input type="checkbox" onChange={e => (
                   internalState.privacy = !internalState.privacy
                 )} />
                 <label> Hyväksyn
@@ -294,15 +294,15 @@ export default connect('store')(
               </Confidentiality>
             </Form>
             <FlexBoxHorizontal>
-                <Button
-                  type="dashed"
-                  backgroundColor="white"
-                  style={{ alignSelf: 'flex-start' }}
-                  disabled={!submittable || totalCost > 0}
-                  icon={isReservationPending && 'loading'}
-                  onClick={this.submit('reservation')}
-                >
-                  VARAA LIPUT
+              <Button
+                type="dashed"
+                backgroundColor="white"
+                style={{ alignSelf: 'flex-start' }}
+                disabled={!submittable || (internalState.customerGroup !== 'group' && totalCost > 0)}
+                icon={isReservationPending && 'loading'}
+                onClick={this.submit('reservation')}
+              >
+                VARAA LIPUT
                 </Button>
               <Button
                 style={{ alignSelf: 'flex-end' }}

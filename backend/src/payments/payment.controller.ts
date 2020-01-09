@@ -103,7 +103,7 @@ export class PaymentController {
         return res.redirect(`${APP_REDIRECT_URL}?status=1`);
       }
 
-      const reservation = await this.reservationService.findOneById(payment.reservation_id, );
+      const reservation = await this.reservationService.findOneById(payment.reservation_id);
 
       // Checking if the payment has already been done.
       if (payment.payment_status) {
@@ -214,7 +214,7 @@ export class PaymentController {
               .status(422)
               .json(
                 `Failed to make payment for the request: Could not make payment request with Bambora`,
-            );
+              );
           } else {
             response.status(200).json({ redirect_url: redirectUrl });
           }
