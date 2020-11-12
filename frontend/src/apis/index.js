@@ -82,8 +82,8 @@ const postReservation = orderInfo => {
   });
 };
 
-const getReservations = async () =>
-  parseTo('camel')(await customFetchFn(`/api/reservations`));
+const getReservations = async (authToken) =>
+  parseTo('camel')(await customFetchFn(`/api/reservations`, {}, authToken));
 
 const patchReservation = async (id, data) =>
   customFetchFn(`/api/reservations/${id}`, {

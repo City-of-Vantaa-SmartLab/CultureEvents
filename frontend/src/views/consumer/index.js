@@ -5,14 +5,12 @@ import styled from 'styled-components';
 import { Provider } from 'mobx-react';
 import EventListing from './event-listing';
 import FilterView from './filter-view';
-import { onSnapshot } from 'mobx-state-tree';
 import RedirectModal from './redirection-modal';
 import ReservationStatusModal from './reservation-status-modal';
 import PaymentStatusModal from './paymentstatus-modal';
 import WelcomeModal from './welcome-modal';
 
 const store = RootStore.create();
-onSnapshot(store, console.log);
 
 const Wrapper = styled.div`
   display: flex;

@@ -67,7 +67,6 @@ export const RootModel = types
         if (self.user.token) self.validateToken();
         // fetch event list from remote
         self.fetchEvents();
-        self.fetchReservationsAndOrders();
       }
     },
     // event actions
@@ -174,6 +173,8 @@ export const RootModel = types
 
         self.ui.auth.authInProgress = false;
         self.ui.authError = false;
+        self.fetchReservationsAndOrders();
+
       } catch (error) {
         self.ui.auth.authInProgress = false;
         self.ui.auth.authError = true;
@@ -190,6 +191,8 @@ export const RootModel = types
         yield validateUserToken(self.user.id, self.user.token);
         self.ui.auth.validateTokenFailed = false;
         self.ui.auth.validateTokenInProgress = false;
+        self.fetchReservationsAndOrders();
+
       } catch (error) {
         self.user.token = undefined;
         self.ui.auth.validateTokenFailed = true;
@@ -292,7 +295,7 @@ export const RootModel = types
     fetchReservationsAndOrders: flow(function*() {
       try {
         // @TODO: UI state for fetching reservations
-        const result = yield getReservations();
+        const result = yield getReservations(self.user.token);
         self.reservationsAndOrders = transformToMap(result);
       } catch (error) {
         console.error('Error in fetching orders and reservations', error);
