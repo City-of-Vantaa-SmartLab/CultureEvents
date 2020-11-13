@@ -31,6 +31,7 @@ export class ReservationsController {
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   async findAll(@Res() response): Promise<Reservations[]> {
     try {
       const reservations = await this.reservationsService.findAll();

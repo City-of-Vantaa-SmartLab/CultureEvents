@@ -7,6 +7,5 @@ const rootStore = RootModel.create();
 onSnapshot(rootStore, snapshot =>
   window.localStorage.setItem('store', JSON.stringify(snapshot)),
 );
-onSnapshot(rootStore, console.log);
 
 export default rootStore;
