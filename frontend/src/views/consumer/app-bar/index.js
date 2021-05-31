@@ -85,7 +85,8 @@ const FilterStrings = ({ filters }) => {
             if (key === 'ageGroupLimits') value = value.join(', ');
             if (key === 'eventTypes') value = `${value.length} typpia`;
           } else if (key === 'months') {
-            value = format(new Date(2018, filters[key] - 1, 5), 'MMMM YYYY', {
+            const year = new Date().getFullYear();
+            value = format(new Date(year, filters[key] - 1, 5), 'MMMM YYYY', {
               locale: fiLocale,
             });
           }
