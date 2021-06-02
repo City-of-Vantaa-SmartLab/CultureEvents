@@ -16,8 +16,8 @@ import { ReservationsDto } from '../reservations/reservations.dto';
 import { PriceService } from '../price/price.service';
 import { PaymentsDto } from './payment.dto';
 
-const TOKEN_URL = 'https://payform.bambora.com/pbwapi/auth_payment';
-const BAMBORA_API_URL = 'https://payform.bambora.com/pbwapi/token/';
+const TOKEN_URL = 'https://www.vismapay.com/pbwapi/auth_payment';
+const BAMBORA_API_URL = 'https://www.vismapay.com/pbwapi/token/';
 
 @Injectable()
 export class PaymentService {
