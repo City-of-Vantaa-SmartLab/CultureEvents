@@ -6,7 +6,7 @@ import { withTheme } from 'styled-components';
 import Icon from 'antd/lib/icon';
 
 // redirect modal letting they know they are leaving the app
-// specifically to the case they gets to Bambora
+// specifically to the case they gets to Visma Pay
 export default withTheme(
   connect('store')(
     class RedirectModal extends Component {
@@ -72,7 +72,7 @@ export default withTheme(
                   }
                 </Typography>
                 <Typography type="body">
-                  Sinut uudelleenohjataan Bambora-maksujärjestelmään.{' '}
+                  Sinut uudelleenohjataan Visma Pay -maksujärjestelmään.{' '}
                 </Typography>
                 {this.state.countDown > 0 ? (
                   <Typography type="body">
@@ -82,7 +82,7 @@ export default withTheme(
                         {this.state.countDown}
                       </Typography>
                     }{' '}
-                    sekuntia
+                    sekunnissa
                   </Typography>
                 ) : (
                   <Typography type="body">
