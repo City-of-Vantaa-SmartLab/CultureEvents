@@ -102,3 +102,5 @@ Swagger has been configured to get the api details.
 Navigate to the below url to get the api details.
 
 http://localhost:5000/swagger
+
+The UML for the database is CultureAppUML.vsdx, located in backend folder. Last updated June 10th using Microsoft Visio. Remember to update the UML and last update time whenever the db structure change
