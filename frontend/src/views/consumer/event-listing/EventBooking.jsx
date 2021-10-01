@@ -165,16 +165,17 @@ export default connect('store')(
       const formDisabled = event.totalAvailableTickets < 1;
       const themeColor = formDisabled ? '#9B9B9B' : event.themeColor;
       const { totalCost, totalTicket } = this.getPricingAggrevate();
-      const submittable =
-        (isGroupConductorCustomer
-          ? internalState.school &&
-          internalState.classRoom &&
-          internalState.name &&
-          isValidNumber(internalState.phoneNumber, 'FI') &&
-          internalState.privacy
-          : internalState.name &&
-          isValidNumber(internalState.phoneNumber, 'FI')) &&
-        internalState.privacy; // can't have an empty order
+
+      const isCommonInputValid = internalState.name &&
+        isValidNumber(internalState.phoneNumber, 'FI') &&
+        internalState.privacy;
+
+      const isGroupConductorInputValid = isGroupConductorCustomer
+        ? internalState.school && internalState.classRoom
+        : true;
+
+      const submittable = totalTicket > 0 && isCommonInputValid && isGroupConductorInputValid;
+
       return (
         <Wrapper bgColor={themeColor}>
           <TitleBox>
