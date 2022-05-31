@@ -28,6 +28,9 @@ export default withRouter(
         };
 
         loadEvent = id => {
+          if (!id) {
+            return;
+          }
           fetchOneEvent(id).then(result => this.setState({
             eventToLoad: result,
           }))

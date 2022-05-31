@@ -9,4 +9,5 @@ RUN npm run build
 RUN cp -r ./build ../backend/public
 WORKDIR /backend
 EXPOSE 3000
+#ENV SEED_DB=1
 CMD ["npm", "run", "start:prod"]

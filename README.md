@@ -33,8 +33,16 @@ Elastic Beanstalk domain.
 There are no seeded events in the local database, and these must be created manually in the app's admin view. This in turn requires an admin
 user to be created on module initialisation. Follow these steps:
 
-- set environment variable `SEED_DB=1``
-- inside the file `seed_users.ts`, add an object with properties `username` and `password`.
+- set environment variable `SEED_DB=1` into Dockerfile (`ENV SEED_DB=1`) before the npm run script
+  - note that the variable will be written to ./backend/.env so remove it from there also if no seeding is needed later on
+  - also note that since Docker sometimes works completely randomly, the environment variable doesn't always work, so you may just have to edit seed.service.ts temporarily \o/
+- inside the file `seed_users.ts`, add an object with properties `username` and `password`, like this:
+  export const users = [
+    {
+      username: "localadmin",
+      password: "localadmin"
+    }
+  ]
 - inside the file `seed.service.ts`, uncomment the function call inside the `onModuleInit` method
 
 _DO NOT DEPLOY THIS MODIFICATION TO PRODUCTION. This will clear the admin users in the production database._
@@ -44,6 +52,8 @@ Finally, run
 ```
 . ./run-locally.sh
 ```
+
+You should see a "Seed users:" prompt if environment variable `SEED_DB` was set correctly.
 
 Once the app is running, you can navigate to `localhost:3000/producer`, log in with the credentials you created inside `seed_users.ts` and create new events. The client facing app can be accessed through path `localhost:3000`.
 

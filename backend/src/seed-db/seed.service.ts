@@ -19,7 +19,10 @@ export class SeedService implements OnModuleInit {
 
   async seedUsers() {
     try {
+      console.log("Seed DB: " + SEED_DB);
       if (SEED_DB) {
+        console.log("Seed users:");
+        console.log(users);
         const dbUsers = await this.userService.getUsers();
         await Promise.all(
           dbUsers.map(async user => {
