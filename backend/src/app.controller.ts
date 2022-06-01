@@ -1,10 +1,8 @@
 import { Get, Controller, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 export const ROUTE_PREFIX = 'apis';
-import { ApiUseTags } from '@nestjs/swagger';
 const path = require('path');
 
-@ApiUseTags('app')
 @Controller('app')
 export class AppController {
   constructor(private readonly appService: AppService) {}

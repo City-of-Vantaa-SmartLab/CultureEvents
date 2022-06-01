@@ -87,7 +87,7 @@ export class ReservationService {
       }
     }
     await this.reservationsRepository.update(id, reservationToUpdate);
-    return await this.reservationsRepository.findOne(id, { relations: ['tickets'] });
+    return await this.reservationsRepository.findOne({where: {id}, relations: ['tickets'] });
   }
 
   async findAll(): Promise<Reservations[]> {
@@ -124,7 +124,7 @@ export class ReservationService {
   }
 
   async findOneById(id: number) {
-    return await this.reservationsRepository.findOne(id, {
+    return await this.reservationsRepository.findOne({where: {id}, 
       relations: ['tickets'],
     });
   }

@@ -23,7 +23,7 @@ export class EventsService {
   }
 
   async deleteEvent(id: number) {
-    const event = await this.eventRepository.findOne(id);
+    const event = await this.eventRepository.findOne({where:{id}});
     if (!event) {
       return;
     }
@@ -32,7 +32,7 @@ export class EventsService {
   }
 
   async updateEvent(id: number, event: EventsDto) {
-    const dbEvent = await this.eventRepository.findOne(id);
+    const dbEvent = await this.eventRepository.findOne({where:{id}});
     if (dbEvent) {
       const event_to_update = {
         ...dbEvent,
@@ -45,7 +45,7 @@ export class EventsService {
             await this.priceService.updateOrCreatePrice(price, dbEvent);
           }
       }
-      const updatedEvent = await this.eventRepository.findOne(id, {
+      const updatedEvent = await this.eventRepository.findOne({where:{id},
         relations: ['ticket_catalog'],
       });
       return this.mapSingleEventForAPI(updatedEvent);
@@ -62,7 +62,7 @@ export class EventsService {
   }
 
   async findOneById(id: number) {
-    const event = await this.eventRepository.findOne(id, {
+    const event = await this.eventRepository.findOne({where: {id},
       relations: ['ticket_catalog'],
     });
     return this.mapSingleEventForAPI(event);

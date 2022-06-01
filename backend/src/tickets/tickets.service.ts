@@ -9,7 +9,7 @@ export class TicketService {
   constructor(@InjectRepository(Tickets) private readonly ticketsRepository: Repository<Tickets>) {}
 
   async getTicketDetails(id: number) {
-    const response = await this.ticketsRepository.findOne(id);
+    const response = await this.ticketsRepository.findOne({where:{id}});
     if (response) {
       return response;
     } else {
@@ -26,7 +26,7 @@ export class TicketService {
   }
 
   async update(id: number, ticket: TicketsDto) {
-    const ticketFromDb = await this.ticketsRepository.findOne(id);
+    const ticketFromDb = await this.ticketsRepository.findOne({where:{id}});
     const ticketToUpdate = {
       ...ticketFromDb,
       ...ticket,

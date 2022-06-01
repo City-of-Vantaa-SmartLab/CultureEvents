@@ -13,9 +13,7 @@ import { UserService } from './user.service';
 import { ValidationPipe } from '../validations/validation.pipe';
 import { UserDto } from './user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiUseTags } from '@nestjs/swagger';
 
-@ApiUseTags('user')
 @Controller('/api/user')
 export class UserController {
   constructor(private readonly userService: UserService) { }

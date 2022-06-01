@@ -11,17 +11,11 @@ import { PaymentService } from './payment.service';
 import { ValidationPipe } from '../validations/validation.pipe';
 import { ValidationService } from '../utils/validations/validations.service';
 import { ReservationService } from '../reservations/reservations.service';
-import {
-  ApiUseTags,
-  ApiImplicitQuery,
-  ApiImplicitParam,
-} from '@nestjs/swagger';
 import { ReservationsDto } from '../reservations/reservations.dto';
 
 const APP_REDIRECT_URL =
   process.env.APP_REDIRECT_URL || '/app/payment-complete';
 
-@ApiUseTags('payments')
 @Controller('/api/payments')
 export class PaymentController {
   constructor(
@@ -36,12 +30,6 @@ export class PaymentController {
 
   @Get('/payment-details')
   @UsePipes(new ValidationPipe())
-  @ApiImplicitQuery({
-    name: 'order_number',
-    description: 'order number of the order to be retrieved',
-    required: true,
-    type: String,
-  })
   async get_payment_details(@Req() req, @Res() res) {
     try {
       const orderNumber = req.query.order_number;
@@ -74,8 +62,6 @@ export class PaymentController {
   }
 
   @Get('/payment-return')
-  @ApiImplicitQuery({ name: 'RETURN_CODE', required: true, type: String })
-  @ApiImplicitQuery({ name: 'ORDER_NUMBER', required: true, type: String })
   @UsePipes(new ValidationPipe())
   async payment_return(@Req() req, @Res() res) {
     try {
@@ -135,12 +121,6 @@ export class PaymentController {
   }
 
   @Get('/payment-redirect')
-  @ApiImplicitQuery({
-    name: 'amount',
-    description: 'Amount to be Paid.',
-    required: true,
-    type: String,
-  })
   @UsePipes(new ValidationPipe())
   async payment_redirect(@Req() req, @Res() res) {
     try {
@@ -171,12 +151,6 @@ export class PaymentController {
   }
 
   @Post('make-payment')
-  @ApiImplicitParam({
-    name: 'reservation',
-    required: true,
-    description: 'Reservation Object',
-    type: String,
-  })
   @UsePipes(new ValidationPipe())
   async makePayment(@Res() response, @Body() reservation: ReservationsDto) {
     try {

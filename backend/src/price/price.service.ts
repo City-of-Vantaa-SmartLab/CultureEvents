@@ -15,7 +15,7 @@ export class PriceService {
   ) { }
 
   async getPriceDetails(id: number) {
-    const priceDetails = await this.priceRepository.findOne(id);
+    const priceDetails = await this.priceRepository.findOne({where:{id}});
     if (priceDetails) {
       return priceDetails;
     } else {
@@ -28,7 +28,8 @@ export class PriceService {
   }
 
   async updateOrCreatePrice(price: PriceDto, event: Events) {
-    const dbPrice = await this.priceRepository.findOne(price.id);
+    const id: number = price.id
+    const dbPrice = await this.priceRepository.findOne({where:{id}});
     if (dbPrice) {
       await this.priceRepository.update(price.id, {...price, occupied_seats: dbPrice.occupied_seats});
     } else {
@@ -43,7 +44,7 @@ export class PriceService {
   }
 
   async updateSeats(id: number, seats_booked: number) {
-    const priceDetails = await this.priceRepository.findOne(id);
+    const priceDetails = await this.priceRepository.findOne({where:{id}});
     if (priceDetails) {
       priceDetails.occupied_seats = priceDetails.occupied_seats + seats_booked;
       if (priceDetails.occupied_seats > priceDetails.max_seats) {
@@ -56,7 +57,7 @@ export class PriceService {
   }
 
   async isSeatsAvailable(id: number, seats_booked: number) {
-    const priceDetails = await this.priceRepository.findOne(id);
+    const priceDetails = await this.priceRepository.findOne({where:{id}});
     if (priceDetails) {
       priceDetails.occupied_seats = priceDetails.occupied_seats + seats_booked;
       if (priceDetails.occupied_seats > priceDetails.max_seats) {
@@ -69,7 +70,8 @@ export class PriceService {
   }
 
   async isSeatsUpdatable(ticket: TicketsDto, ticketFromDb: Tickets) {
-    const priceDetails = await this.priceRepository.findOne(ticket.price_id);
+    const id: number = ticket.price_id
+    const priceDetails = await this.priceRepository.findOne({where:{id}});
     if (priceDetails) {
       priceDetails.occupied_seats = priceDetails.occupied_seats + (ticket.no_of_tickets - ticketFromDb.no_of_tickets);
       if (priceDetails.occupied_seats > priceDetails.max_seats) {

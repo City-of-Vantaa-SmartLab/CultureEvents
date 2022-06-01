@@ -13,12 +13,14 @@ $ npm install
 
 ## Running the app
 
+Note: even though installing/compiling works with newer Node.js versions, app will just not launch correctly with anything newer than v12.
+
 ```bash
 # development
 $ npm run start
 
 # watch mode
-$ npm run start:dev
+$ npm run dev
 
 # production mode
 npm run start:prod

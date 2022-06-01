@@ -11,9 +11,7 @@ import { UserDto } from '../user/user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from '../user/user.service';
 import { ValidationPipe } from '../validations/validation.pipe';
-import { ApiUseTags } from '@nestjs/swagger';
 
-@ApiUseTags('auth')
 @Controller('/api/auth')
 export class AuthController {
   constructor(

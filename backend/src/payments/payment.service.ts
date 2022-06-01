@@ -72,7 +72,7 @@ export class PaymentService {
   }
 
   async getOne(id: number) {
-    return await this.paymentRepository.findOne(id);
+    return await this.paymentRepository.findOne({where:{id}});
   }
 
   async delete(id: number) {

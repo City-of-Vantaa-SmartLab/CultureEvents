@@ -16,10 +16,8 @@ import { ValidationPipe } from '../validations/validation.pipe';
 import { Events } from './events.entity';
 import { ValidationService } from '../utils/validations/validations.service';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
 import { ReservationService } from '../reservations/reservations.service';
 
-@ApiUseTags('events')
 @Controller('/api/events')
 export class EventsController {
   constructor(
@@ -130,12 +128,6 @@ export class EventsController {
   }
 
   @Get('/:id/reservations')
-  @ApiImplicitParam({
-    name: 'id',
-    required: true,
-    description: 'Event Id, for which reservations needs to be fetched',
-    type: String,
-  })
   async getEventReservations(@Res() response, @Param('id') id: number) {
     try {
       if (this.validationService.validateId(+id)) {

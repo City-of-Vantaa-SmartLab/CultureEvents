@@ -16,10 +16,8 @@ import { ReservationService } from './reservations.service';
 import { ValidationPipe } from '../validations/validation.pipe';
 import { Reservations } from './reservations.entity';
 import { ValidationService } from '../utils/validations/validations.service';
-import { ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
-@ApiUseTags('reservations')
 @Controller('/api/reservations')
 export class ReservationsController {
   constructor(
@@ -95,13 +93,6 @@ export class ReservationsController {
   }
 
   @Get(':id')
-  @ApiImplicitParam({
-    name: 'id',
-    required: true,
-    description:
-      'Reservation Id, of the reservations which needs to be fetched',
-    type: String,
-  })
   @UsePipes(new ValidationPipe())
   async findOne(@Res() response, @Param('id') id: number) {
     try {
@@ -126,13 +117,6 @@ export class ReservationsController {
   }
 
   @Put(':id')
-  @ApiImplicitParam({
-    name: 'id',
-    required: true,
-    description:
-      'Reservation Id, of the reservations which needs to be updated',
-    type: String,
-  })
   @UsePipes(new ValidationPipe())
   async update(
     @Res() response,
@@ -173,13 +157,6 @@ export class ReservationsController {
   }
 
   @Delete(':id')
-  @ApiImplicitParam({
-    name: 'id',
-    required: true,
-    description:
-      'Reservation Id, of the reservations which needs to be deleted',
-    type: String,
-  })
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
   async delete(@Res() response, @Param('id') id: number) {
