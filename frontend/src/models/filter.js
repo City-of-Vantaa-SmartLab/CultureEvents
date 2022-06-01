@@ -1,6 +1,6 @@
 import { types, getSnapshot, getMembers } from 'mobx-state-tree';
 import { values } from 'mobx';
-import * as consts from 'const.json';
+import consts from 'consts';
 
 const FilterModel = types
   .model('FilterModel', {

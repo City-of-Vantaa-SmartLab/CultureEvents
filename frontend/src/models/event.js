@@ -1,7 +1,7 @@
 import { types } from 'mobx-state-tree';
 import TicketCatalog from './ticketCatalog';
 import { format } from 'date-fns';
-import * as consts from 'const';
+import consts from 'consts';
 
 const Event = types
   .model({

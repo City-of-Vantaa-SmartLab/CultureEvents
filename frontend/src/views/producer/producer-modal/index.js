@@ -25,7 +25,7 @@ export default withTheme(
           }, 5000);
         }
       }
-      componentWillUpdate() {
+      UNSAFE_componentWillUpdate() {
         // only show modal if its 0.5s pass waiting.
         // this is to avoid flashing effects
         if (

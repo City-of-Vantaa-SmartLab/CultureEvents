@@ -1,4 +1,4 @@
-FROM node:8.10
+FROM node:14
 WORKDIR /app
 ADD . /app
-RUN yarn install
+RUN npm install

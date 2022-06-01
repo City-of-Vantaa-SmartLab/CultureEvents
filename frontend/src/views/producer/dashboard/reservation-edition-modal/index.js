@@ -9,7 +9,7 @@ import { connect } from 'utils';
 import { observable } from 'mobx';
 
 class ReservationEditionModal extends React.Component {
-  componentWillUpdate() {
+  UNSAFE_componentWillUpdate() {
     if (
       !this.props.store.selectedReservation ||
       !this.props.store.selectedEvent

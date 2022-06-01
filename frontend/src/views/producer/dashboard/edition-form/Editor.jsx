@@ -19,7 +19,7 @@ import EventModel from 'models/event';
 import TicketCatalog from 'models/ticketCatalog';
 import TicketCatalogInputGroup from './TicketCatalogInputGroup';
 import isEqual from 'lodash.isequal';
-import * as consts from 'const.json';
+import consts from 'consts';
 
 const Form = styled(RawForm)`
   & {
@@ -59,7 +59,7 @@ class Editor extends React.Component {
         };
     this.internalData.creationMode = !props.selectedEvent;
   }
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (props.selectedEvent) {
       transaction(() => {
         this.internalData.eventDraft = { ...props.selectedEvent.toJSON() };

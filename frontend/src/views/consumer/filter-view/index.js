@@ -6,7 +6,7 @@ import TagPillGroup from 'components/tag-pill';
 import Button from 'components/button';
 import { connect } from 'utils';
 import { tween, easing } from 'popmotion';
-import * as consts from 'const.json';
+import consts from 'consts';
 
 const Sliddable = posed.div({
   exit: {

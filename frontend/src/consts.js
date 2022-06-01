@@ -1,4 +1,4 @@
-{
+const consts = {
   "ageGroup": [
     "0-2",
     "3-6",
@@ -19,3 +19,5 @@
     "Esitykset"
   ]
 }
+
+export default consts;

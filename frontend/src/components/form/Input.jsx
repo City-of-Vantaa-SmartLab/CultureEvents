@@ -3,10 +3,12 @@ import styled from 'styled-components';
 import AntInput from 'antd/lib/input';
 import AntTextArea from 'antd/lib/input/TextArea';
 import AntNumericInput from 'antd/lib/input-number';
-import AntSelect, { Option as AntOption } from 'antd/lib/select';
+import AntSelect from 'antd/lib/select';
 import 'antd/lib/input/style/css';
 import 'antd/lib/input-number/style/css';
 import 'antd/lib/select/style/css';
+
+const AntOption = AntSelect.Option;
 
 const TextInput = styled(AntInput)`
   &&& {
