@@ -10,6 +10,6 @@ export const connectionDetails: PostgresConnectionOptions = {
   password: configService.databasePassword,
   database: configService.databaseName,
   dropSchema: configService.dropDatabaseSchema,
-  entities: [`${configService.environment === 'prod' ? 'dist' : 'src'}/**/**.entity{.ts,.js}`],
+  entities: [`${configService.environment === 'production' ? 'dist' : 'src'}/**/**.entity{.ts,.js}`],
   synchronize: true,
 };

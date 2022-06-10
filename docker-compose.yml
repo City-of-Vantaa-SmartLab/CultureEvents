@@ -6,38 +6,54 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    # Note: must be yarn, not npm. Otherwise complains about missing module.
     command: yarn run start
     ports:
       - 3000:3000
     depends_on:
       - backend
+    environment:
+      DANGEROUSLY_DISABLE_HOST_CHECK: 'true'
+      HOST:
+      NODE_ENV: production
 
   backend:
     build: ./backend
     ports:
       - 5000:80
-    command: npm run dev
+    # Use "npm run dev" for local development.
+    command: npm run start:prod
     volumes:
       - ./backend:/backend
       - /backend/node_modules
     depends_on:
       - postgres-dev-db
     environment:
-      PORT: 80
-      PAYMENT_RETURN_URL:
-      PAYMENT_NOTIFY_URL:
-      BAMBORA_SECRET_KEY:
+      APP_REDIRECT_URL:
+      AWS_ACCESS_KEY_ID:
+      AWS_S3_BUCKET_NAME:
+      AWS_SECRET_ACCESS_KEY:
       BAMBORA_API_KEY:
       BAMBORA_PRODUCT_ID:
       BAMBORA_PRODUCT_TITLE:
-      TELIA_USERNAME:
+      BAMBORA_SECRET_KEY:
+      # Use "postgres-dev-db" as DATABASE_HOST for local development.
+      DATABASE_HOST:
+      DATABASE_NAME:
+      DATABASE_PASSWORD:
+      DATABASE_PORT:
+      DATABASE_USERNAME:
+      DROP_DATABASE_SCHEMA: 'false'
+      # Use "local" for local development.
+      NODE_ENV: production
+      PAYMENT_NOTIFY_URL:
+      PAYMENT_RETURN_URL:
+      # Might need to have /api URLs in Beanstalk ELB redirected to 80 (backend), not 3000 (frontend), but probably works inside container environment automatically.
+      PORT: 80
+      SEED_DB: 0
       TELIA_PASSWORD:
       TELIA_USER:
-      AWS_S3_BUCKET_NAME:
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
-      DATABASE_HOST: postgres-dev-db
-      NODE_ENV: local
+      TELIA_USERNAME:
 
   postgres-dev-db:
     image: postgres:10.3

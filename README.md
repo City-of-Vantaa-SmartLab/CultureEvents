@@ -33,7 +33,7 @@ Elastic Beanstalk domain.
 There are no seeded events in the local database, and these must be created manually in the app's admin view. This in turn requires an admin
 user to be created on module initialisation. Follow these steps:
 
-- set environment variable `SEED_DB=1` into Dockerfile (`ENV SEED_DB=1`) before the npm run script
+- set environment variable `SEED_DB=1` into docker-compose.yml (`ENV SEED_DB=1`) before the npm run script
   - note that the variable will be written to ./backend/.env so remove it from there also if no seeding is needed later on
   - also note that since Docker sometimes works completely randomly, the environment variable doesn't always work, so you may just have to edit seed.service.ts temporarily \o/
 - inside the file `seed_users.ts`, add an object with properties `username` and `password`, like this:
@@ -44,6 +44,8 @@ user to be created on module initialisation. Follow these steps:
     }
   ]
 - inside the file `seed.service.ts`, uncomment the function call inside the `onModuleInit` method
+
+Also set `DATABASE_HOST`, `NODE_ENV` and `command` as instructed in the file.
 
 _DO NOT DEPLOY THIS MODIFICATION TO PRODUCTION. This will clear the admin users in the production database._
 
@@ -91,6 +93,8 @@ kulttuuriliput
 
 _Note: only committed changes are going to be deployed._
 
+Please note that environment variables defined in Beanstalk environment configuration must be also defined in docker-compose.yml. Furthermore, values in docker-compose.yml override those set in Beanstalk environment configuration.
+
 ### Deploy a new version to the development environment
 
 - Run `eb use kulttuuriliput-dev` to switch to the development environment
@@ -102,15 +106,3 @@ _Note: only committed changes are going to be deployed._
 - Run `eb use kulttuuriliput-prod` to switch to the production environment
 - Run `eb deploy`
 - Optionally, to see how things are progressing, run `eb events -f`
-
----
-
-## API documentation
-
-Swagger has been configured to get the api details.
-
-Navigate to the below url to get the api details.
-
-http://localhost:5000/swagger
-
-The UML for the database is CultureAppUML.vsdx, located in backend folder. Last updated June 10th using Microsoft Visio. Remember to update the UML and last update time whenever the db structure change
