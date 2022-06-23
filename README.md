@@ -14,8 +14,6 @@ It integrates to Grynos to get the information about current courses available i
 
 ## Running locally
 
-The local development is set up using docker. Docker is a containerization that help shipping application easy, and without the hassle of installing many many things. We highly recommend you install docker.
-
 By default, Docker compose won't install dev dependencies inside the containers, so this needs to be done
 manually first:
 
@@ -83,26 +81,24 @@ Configure the EB CLI:
 2. Select `eu-west-1` as the location (unless something's been changed).
 3. If you haven't set up your AWS credentials yet, provide your personal Access key ID and Secret access key. These can be generated in the AWS IAM console.
    - Be sure to use the credentials for the correct account, since they determine where the app will be deployed!
-4. Select the `kulttuuriliput` as application and `kulttuuriliput-dev` as the default environment. Don't continue with CodeCommit (defaults to Y).
+4. Select the `kulttuuriliput` as application and `kulttuuriliput-vantaa-dev` as the default environment. Don't continue with CodeCommit (defaults to Y).
 5. Ensure the environment is set up by typing `eb list`. You should see that the development environment is selected:
 
 ```
-kulttuuriliput
-* kulttuuriliput-dev
+kulttuuriliput-vantaa-prod
+* kulttuuriliput-vantaa-dev
 ```
 
 _Note: only committed changes are going to be deployed._
 
-Please note that environment variables defined in Beanstalk environment configuration must be also defined in docker-compose.yml. Furthermore, values in docker-compose.yml override those set in Beanstalk environment configuration.
-
 ### Deploy a new version to the development environment
 
-- Run `eb use kulttuuriliput-dev` to switch to the development environment
+- Run `eb use kulttuuriliput-vantaa-dev` to switch to the development environment
 - Run `eb deploy`
 - Optionally, to see how things are progressing, run `eb events -f`
 
 ### Deploy a new version to the production environment
 
-- Run `eb use kulttuuriliput-prod` to switch to the production environment
+- Run `eb use kulttuuriliput-vantaa-prod` to switch to the production environment
 - Run `eb deploy`
 - Optionally, to see how things are progressing, run `eb events -f`
