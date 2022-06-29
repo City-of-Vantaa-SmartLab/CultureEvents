@@ -69,6 +69,7 @@ export class PaymentController {
       const orderNumber = req.query.ORDER_NUMBER;
       console.log('bamboraCode', bamboraReturnCode, 'orderNumber', orderNumber);
       const payment = await this.paymentService.getPaymentByOrderNumber(orderNumber);
+      console.log('Got payment.');
 
       if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
         //delete reservation since payment failed
@@ -90,6 +91,7 @@ export class PaymentController {
       }
 
       const reservation = await this.reservationService.findOneById(payment.reservation_id);
+      console.log('Got reservation.');
 
       // Checking if the payment has already been done.
       if (payment.payment_status) {
