@@ -1,7 +1,8 @@
 import * as crypto from 'crypto';
 
-const payment_return_url = process.env.PAYMENT_RETURN_URL;
-const payemnt_notify_url = process.env.PAYMENT_NOTIFY_URL;
+const payment_return_url = process.env.PAYMENT_RETURN_URL || '/api/payments/payment-return';
+// NOTE/TODO: this endpoint doesn't seem to exist?
+const payemnt_notify_url = process.env.PAYMENT_NOTIFY_URL || '/api/payments/payment-notify';
 
 const secret = process.env.BAMBORA_SECRET_KEY || 'SECRET_KEY';
 const apiKey = process.env.BAMBORA_API_KEY || 'API_KEY';

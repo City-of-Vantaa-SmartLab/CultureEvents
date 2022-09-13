@@ -104,7 +104,7 @@ export default withTheme(
                     />
                   }
                 </Typography>
-                <Typography type="body">Käsittelemme tilaustasi</Typography>
+                <Typography type="body">Käsittelemme tilaustasi. Jos sait jo vahvistustekstiviestin, kaikki on valmista ja voit sulkea ikkunan.</Typography>
               </Content>
             )}
             {orderAndPayment.redirectStatus === 3 && (

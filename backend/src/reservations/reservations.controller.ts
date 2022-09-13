@@ -73,6 +73,7 @@ export class ReservationsController {
     }
   }
 
+  // NB/TODO: is this unused code?
   @Post('/:id/mark-complete')
   @UsePipes(new ValidationPipe())
   async mark_complete(@Res() response, @Param() id: number) {
@@ -116,6 +117,7 @@ export class ReservationsController {
     }
   }
 
+  // This is called when updating reservations via admin view.
   @Put(':id')
   @UsePipes(new ValidationPipe())
   async update(

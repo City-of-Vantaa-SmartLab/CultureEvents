@@ -27,6 +27,7 @@ export class ReservationService {
     private readonly ticketService: TicketService,
   ) { }
 
+  // This is called directly when booking a free ticket.
   async createReservation(reservation: ReservationsDto, sendSms: boolean) {
     reservation.created_date = formatToTimeZone(new Date(), formatString, { timeZone: 'Europe/Helsinki' });
     const response = await this.reservationsRepository.save(reservation);
@@ -67,9 +68,12 @@ export class ReservationService {
     }
   }
 
+  // NOTE: reservation.tickets only exists when this is called via update from reservations.controller.ts.
+  // The update method is called only from admin view using the PUT verb (patchReservation/submitReservationPatch).
   async updateReservation(id: number, reservation: Partial<ReservationsDto>) {
     const reservationFromDb = await this.findOneById(id);
     const reservationToUpdate = {
+      id: id,
       ...reservationFromDb,
       ...reservation,
     };
@@ -83,15 +87,17 @@ export class ReservationService {
           await this.ticketService.update(ticket.id, ticket);
         } else {
           ticket.tickets = reservationFromDb;
-          console.log("Updating seats with ticket from db.");
+          console.log("Updating seats.");
           await this.priceService.updateSeats(ticket.price_id, ticket.no_of_tickets);
           console.log("Creating tickets.");
           await this.ticketService.create(ticket);
         }
       }
+      console.log("Done updating seats and tickets.");
     }
-    console.log("Done updating seats and tickets.");
-    await this.reservationsRepository.update(id, reservationToUpdate);
+
+    console.log("Updating reservation.");
+    await this.reservationsRepository.save(reservationToUpdate);
     console.log("Done updating reservations.");
     return await this.reservationsRepository.findOne({where: {id}, relations: ['tickets'] });
   }
@@ -130,7 +136,7 @@ export class ReservationService {
   }
 
   async findOneById(id: number) {
-    return await this.reservationsRepository.findOne({where: {id}, 
+    return await this.reservationsRepository.findOne({where: {id},
       relations: ['tickets'],
     });
   }

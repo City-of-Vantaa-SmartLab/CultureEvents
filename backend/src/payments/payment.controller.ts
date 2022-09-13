@@ -13,8 +13,9 @@ import { ValidationService } from '../utils/validations/validations.service';
 import { ReservationService } from '../reservations/reservations.service';
 import { ReservationsDto } from '../reservations/reservations.dto';
 
+// NOTE: the route is defined in frontend/paymentstatus-modal
 const APP_REDIRECT_URL =
-  process.env.APP_REDIRECT_URL || '/app/payment-complete';
+  process.env.APP_REDIRECT_URL || '/consumer/payment';
 
 @Controller('/api/payments')
 export class PaymentController {
@@ -61,6 +62,8 @@ export class PaymentController {
     }
   }
 
+  // This is called when returning after a payment URL redirect.
+  // It is crucial to have the correct environment variable to point to this endpoint.
   @Get('/payment-return')
   @UsePipes(new ValidationPipe())
   async payment_return(@Req() req, @Res() res) {
@@ -99,6 +102,7 @@ export class PaymentController {
         return res.redirect(`${APP_REDIRECT_URL}?status=2&event_id=${reservation.event_id}`);
       }
 
+      console.log("Updating reservation and payment, sending SMS.");
       const [, , smsResponse] = await Promise.all([
         await this.reservationService.updateReservation(reservation.id, { confirmed: true, payment_completed: true }),
         await this.paymentService.updatePayment(payment.order_number, { payment_status: true }),
@@ -106,6 +110,7 @@ export class PaymentController {
       ]);
 
       if (smsResponse) {
+        console.log("Updating reservation for successfully sent SMS.");
         await this.reservationService.updateReservation(reservation.id, { sms_sent: true });
         return res.redirect(
           `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}` +

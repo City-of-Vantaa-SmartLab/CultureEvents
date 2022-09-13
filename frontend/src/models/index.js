@@ -226,55 +226,35 @@ export const RootModel = types
     },
     // order related actions
     submitOrder: flow(function*(orderInfo) {
-      // setting UI
+      const payload = {
+        customer_type: orderInfo.customerGroup,
+        event_id: orderInfo.eventId,
+        school_name: orderInfo.school,
+        name: orderInfo.name,
+        class: orderInfo.classRoom,
+        phone: orderInfo.phoneNumber
+          .replace(/^0/, '+358')
+          .replace(/\s/g, ''),
+        email: orderInfo.email,
+        tickets: orderInfo.tickets.map(ticket => ({
+          price_id: ticket.value,
+          no_of_tickets: ticket.amount,
+        })),
+      };
+      // Statuses are: 0: uninitiated, 1: in progress, 2: success, 3: failure
+      self.ui.orderAndPayment.redirectStatus = 1;
       if (orderInfo.type == 'payment') {
-        self.ui.orderAndPayment.redirectStatus = 1;
-
-        const payload = {
-          customer_type: orderInfo.customerGroup,
-          event_id: orderInfo.eventId,
-          school_name: orderInfo.school,
-          name: orderInfo.name,
-          class: orderInfo.classRoom,
-          phone: orderInfo.phoneNumber,
-          email: orderInfo.email,
-          tickets: orderInfo.tickets.map(ticket => ({
-            price_id: ticket.value,
-            no_of_tickets: ticket.amount,
-          })),
-        };
-
         try {
           const result = yield getPaymentRedirectUrl(payload);
-
-          // setting UI state for success
           self.ui.orderAndPayment.redirectStatus = 2;
           self.ui.orderAndPayment.redirectUrl = result.redirect_url;
         } catch (error) {
-          // setting UI error
           self.ui.orderAndPayment.redirectStatus = 3;
           console.error('Operation to fetch redirect URL failed', error);
         }
       }
       if (orderInfo.type == 'reservation') {
-        self.ui.orderAndPayment.reservationStatus = 1;
         try {
-          const payload = {
-            customer_type: orderInfo.customerGroup,
-            event_id: orderInfo.eventId,
-            school_name: orderInfo.school,
-            name: orderInfo.name,
-            class: orderInfo.classRoom,
-            phone: orderInfo.phoneNumber
-              .replace(/^0/, '+358')
-              .replace(/\s/g, ''),
-            email: orderInfo.email,
-            tickets: orderInfo.tickets.map(ticket => ({
-              price_id: ticket.value,
-              no_of_tickets: ticket.amount,
-            })),
-          };
-
           const result = yield postReservation(payload);
           self.ui.orderAndPayment.reservedEvent = result.event_id;
           payload.tickets.forEach(ticket =>
