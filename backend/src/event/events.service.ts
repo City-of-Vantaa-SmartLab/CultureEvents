@@ -39,7 +39,7 @@ export class EventsService {
         ...event,
         age_group_limits: event.age_group_limits.join(','),
       };
-      await this.eventRepository.update(id, event_to_update);
+      await this.eventRepository.save(event_to_update);
       if (event_to_update.ticket_catalog) {
           for (const price of event_to_update.ticket_catalog) {
             await this.priceService.updateOrCreatePrice(price, dbEvent);

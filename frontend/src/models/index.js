@@ -129,8 +129,7 @@ export const RootModel = types
           event.ticketCatalog.forEach(function(ticketType, index) {
             event.ticketCatalog[index] = {
                 ...event.ticketCatalog[index],
-                ...result.ticketCatalog[index],
-                isCreatedOnClient: false,
+                ...result.ticketCatalog[index]
             }
           });
           // Update ticket catalog of event instance in mobx tree also. Otherwise "Observable object cannot be frozen" will occur

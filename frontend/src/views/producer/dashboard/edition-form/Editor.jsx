@@ -85,7 +85,7 @@ class Editor extends React.Component {
   };
   addTicketType = e => {
     this.internalData.eventDraft.ticketCatalog.push({
-      ...TicketCatalog.create({ id: genRandomKey(), isCreatedOnClient: true }),
+      ...TicketCatalog.create({ id: genRandomKey() }),
     });
   };
   removeTicketType = id => e => {

@@ -101,7 +101,8 @@ const TicketCatalogInputGroup = props => {
           <ButtonGroup style={{ flexShrink: 0 }}>
             <RedButton
               onClick={props.removeTicketType(ticketType.id)}
-              disabled={!ticketType.isCreatedOnClient}
+              // NOTE 9/2022: is_created_on_client is missing from backend.
+              //disabled={!ticketType.isCreatedOnClient}
             >
               <Icon type="close" />
             </RedButton>

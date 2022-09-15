@@ -73,7 +73,7 @@ export class ReservationService {
   async updateReservation(id: number, reservation: Partial<ReservationsDto>) {
     const reservationFromDb = await this.findOneById(id);
     const reservationToUpdate = {
-      id: id,
+      id,
       ...reservationFromDb,
       ...reservation,
     };

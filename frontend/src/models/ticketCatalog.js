@@ -9,8 +9,7 @@ const TicketCatalog = types
     occupiedSeats: types.optional(
       types.refinement(types.number, value => !isNaN(Number(value)) && Number(value) >= 0),
       0,
-    ),
-    isCreatedOnClient: types.optional(types.boolean, false),
+    )
   })
   .views(self => ({
     get isAvailable() {
