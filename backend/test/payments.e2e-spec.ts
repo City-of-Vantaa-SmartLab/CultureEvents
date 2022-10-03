@@ -16,7 +16,6 @@ import { newEvent } from './data/events.data';
 import { EventsController } from '../src/event/events.controller';
 import { Payments } from '../src/payments/payment.entity';
 import { PaymentService } from '../src/payments/payment.service';
-import { BamboraService } from '../src/services/bambora.service';
 import { EventsModule } from '../src/event/events.module';
 import { ReservationsModule } from '../src/reservations/reservations.module';
 import { PaymentController } from '../src/payments/payment.controller';
@@ -48,7 +47,6 @@ describe('PaymentsController (e2e)', () => {
                 SMSService,
                 I18Service,
                 PaymentService,
-                BamboraService,
                 Logger]
         }).compile();
 

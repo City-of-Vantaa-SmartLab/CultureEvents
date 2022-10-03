@@ -44,7 +44,7 @@ services:
       DATABASE_PORT:
       DATABASE_USERNAME:
       DROP_DATABASE_SCHEMA: 'false'
-      # Use "production" for local development.
+      # Use "production" for production.
       NODE_ENV: local
       PAYMENT_NOTIFY_URL:
       PAYMENT_RETURN_URL:

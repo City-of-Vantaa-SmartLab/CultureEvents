@@ -25,14 +25,12 @@ export class PaymentController {
     private readonly reservationService: ReservationService,
   ) { }
 
-  BamboraReturnCodes = {
-    SUCCESS: '0',
-  };
-
+  // NOTE: this seems to be unused?
   @Get('/payment-details')
   @UsePipes(new ValidationPipe())
   async get_payment_details(@Req() req, @Res() res) {
     try {
+      console.log((new Date).toLocaleString() + ": payment-details called");
       const orderNumber = req.query.order_number;
       const validationErrors = this.validationService.validateOrderNumber(
         orderNumber,
@@ -68,20 +66,21 @@ export class PaymentController {
   @UsePipes(new ValidationPipe())
   async payment_return(@Req() req, @Res() res) {
     try {
-      const bamboraReturnCode = req.query.RETURN_CODE;
+      console.log((new Date).toLocaleString() + ": payment-return called");
+      const returnCode = req.query.RETURN_CODE;
       const orderNumber = req.query.ORDER_NUMBER;
-      console.log('bamboraCode', bamboraReturnCode, 'orderNumber', orderNumber);
+      console.log('Payment returnCode', returnCode, 'orderNumber', orderNumber);
       const payment = await this.paymentService.getPaymentByOrderNumber(orderNumber);
       console.log('Got payment.');
 
-      if (bamboraReturnCode !== this.BamboraReturnCodes.SUCCESS) {
+      if (returnCode !== '0') {
         //delete reservation since payment failed
         if (payment) {
-          console.log('deleting reservation since payment failed at Bambora', payment.reservation_id);
+          console.log('deleting reservation since payment failed', payment.reservation_id);
           await this.reservationService.deleteReservation(payment.reservation_id);
         }
         console.error(
-          `Payment failed with error code: ${bamboraReturnCode}. Please try again later`,
+          `Payment failed with error code: ${returnCode}. Please try again later`,
         );
         return res.redirect(`${APP_REDIRECT_URL}?status=3`);
       }
@@ -109,17 +108,17 @@ export class PaymentController {
         await this.paymentService.sendSmsToUser(payment.reservation_id)
       ]);
 
+      let return_status = 5;
       if (smsResponse) {
         console.log("Updating reservation for successfully sent SMS.");
         await this.reservationService.updateReservation(reservation.id, { sms_sent: true });
-        return res.redirect(
-          `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}` +
-          `&status=0&event_id=${reservation.event_id}`);
+        return_status = 0;
       }
 
+      console.log("payment-return response");
       return res.redirect(
         `${APP_REDIRECT_URL}?orderNumber=${orderNumber}&amount=${payment.amount}` +
-        `&status=5&event_id=${reservation.event_id}`);
+        `&status=${return_status}&event_id=${reservation.event_id}`);
 
     } catch (err) {
       console.error(`Payment failed with error code: ${err.message}. Please try again later`);
@@ -127,10 +126,12 @@ export class PaymentController {
     }
   }
 
+  // NOTE: this seems to be unused?
   @Get('/payment-redirect')
   @UsePipes(new ValidationPipe())
   async payment_redirect(@Req() req, @Res() res) {
     try {
+      console.log((new Date).toLocaleString() + ": payment-redirect called");
       const id = +req.query.id;
 
       const validationErrors = this.validationService.validateId(id);
@@ -161,6 +162,7 @@ export class PaymentController {
   @UsePipes(new ValidationPipe())
   async makePayment(@Res() response, @Body() reservation: ReservationsDto) {
     try {
+      console.log((new Date).toLocaleString() + ": make-payment called");
       const seatsAvailable = await this.reservationService.checkSeatAvailability(
         reservation,
       );
@@ -197,6 +199,7 @@ export class PaymentController {
                 `Failed to make payment for the request: Could not make payment request with Bambora`,
               );
           } else {
+            console.log("make-payment response");
             response.status(200).json({ redirect_url: redirectUrl });
           }
         }

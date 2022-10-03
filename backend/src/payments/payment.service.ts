@@ -4,18 +4,29 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payments } from './payment.entity';
 import { Repository } from 'typeorm';
-import { BamboraService } from '../services/bambora.service';
 import { ReservationService } from '../reservations/reservations.service';
 import { EventsService } from '../event/events.service';
 import { I18Service } from '../i18/i18.service';
 import { format } from 'date-fns';
 import { EventsDto } from '../event/events.dto';
 import { SMSService } from '../notifications/sms/sms.service';
-const stringInterpolator = require('interpolate');
 import { ReservationsDto } from '../reservations/reservations.dto';
 import { PriceService } from '../price/price.service';
 import { PaymentsDto } from './payment.dto';
+import * as crypto from 'crypto';
 
+const stringInterpolator = require('interpolate');
+const payment_return_url = process.env.PAYMENT_RETURN_URL || '/api/payments/payment-return';
+
+// WIP: move from Vismapay to Paytrail
+// Default values are Paytrail test credentials.
+// const merchant_id = process.env.MERCHANT_ID || '375917';
+// const merchant_key = process.env.MERCHANT_KEY || 'SAIPPUAKAUPPIAS';
+const secret = process.env.BAMBORA_SECRET_KEY || 'SECRET_KEY';
+const apiKey = process.env.BAMBORA_API_KEY || 'API_KEY';
+const bamboraProductID = process.env.BAMBORA_PRODUCT_ID;
+const bamboraProductTitle = process.env.BAMBORA_PRODUCT_TITLE;
+const payemnt_notify_url = process.env.PAYMENT_NOTIFY_URL || '/api/payments/payment-notify';
 const TOKEN_URL = 'https://www.vismapay.com/pbwapi/auth_payment';
 const BAMBORA_API_URL = 'https://www.vismapay.com/pbwapi/token/';
 
@@ -24,7 +35,6 @@ export class PaymentService {
   constructor(
     @InjectRepository(Payments)
     private readonly paymentRepository: Repository<Payments>,
-    private readonly bamboraService: BamboraService,
     private readonly reservationService: ReservationService,
     private readonly eventService: EventsService,
     private readonly i18Service: I18Service,
@@ -34,18 +44,12 @@ export class PaymentService {
 
   async getPaymentRedirectUrl(paymentObj) {
     try {
-
-      const paymentEntity = await this.bamboraService.createPaymentModel(
-        paymentObj,
-      );
-      // Saves the payment request to database
+      const paymentEntity = this.createPaymentEntity(paymentObj);
       console.log('saving payment to database', paymentEntity);
       const paymentResponse = await this.paymentRepository.save(paymentEntity);
       console.log('paymentResponse: ', paymentResponse);
       if (paymentResponse.id) {
-        const paymentRequest = await this.bamboraService.createBamboraPaymentRequest(
-          paymentResponse,
-        );
+        const paymentRequest = this.createPaymentRequest(paymentResponse);
         const response = await axios.post(TOKEN_URL, paymentRequest);
         const redirectUrl = BAMBORA_API_URL + response.data.token;
         return redirectUrl;
@@ -131,4 +135,60 @@ export class PaymentService {
   getDate(date) {
     return format(date, this.i18Service.getContents().payments.dateFormat);
   }
+
+  createPaymentEntity(paymentModel) {
+    const orderNumber = 'vantaa-order-' + Date.now();
+    const message = apiKey + '|' + orderNumber;
+    const authCode = crypto
+      .createHmac('sha256', secret)
+      .update(message)
+      .digest('hex')
+      .toUpperCase();
+
+    paymentModel.auth_code = authCode;
+    paymentModel.order_number = orderNumber;
+    paymentModel.payment_status = false;
+    paymentModel.payment_date = new Date();
+    return paymentModel;
+  }
+
+  createPaymentRequest(paymentModel) {
+    const amount = paymentModel.amount * 100;
+    let preTaxAmount = amount;
+    try {
+      return {
+        version: 'w3.1',
+        api_key: apiKey,
+        order_number: paymentModel.order_number,
+        amount: amount,
+        currency: 'EUR',
+        payment_method: {
+          type: 'e-payment',
+          return_url: payment_return_url,
+          notify_url: payemnt_notify_url,
+          lang: 'fi',
+          selected: ['banks', 'creditcards'],
+        },
+        authcode: paymentModel.auth_code,
+        customer: {
+          firstname: paymentModel.username,
+        },
+        products: [
+          {
+            id: bamboraProductID,
+            title: bamboraProductTitle,
+            count: 1,
+            pretax_price: preTaxAmount,
+            tax: 0,
+            price: amount,
+            type: 1,
+          },
+        ],
+      };
+    } catch (error) {
+      console.error('failed to create Bambora Payment Request', error);
+    }
+
+  }
+
 }

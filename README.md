@@ -32,8 +32,7 @@ There are no seeded events in the local database, and these must be created manu
 user to be created on module initialisation. Follow these steps:
 
 - set environment variable `SEED_DB=1` into docker-compose.yml (`ENV SEED_DB=1`) before the npm run script
-  - note that the variable will be written to ./backend/.env so remove it from there also if no seeding is needed later on
-  - also note that since Docker sometimes works completely randomly, the environment variable doesn't always work, so you may just have to edit seed.service.ts temporarily \o/
+- also note that since Docker sometimes works completely randomly, the environment variable doesn't always work, so you may just have to edit seed.service.ts temporarily \o/
 - inside the file `seed_users.ts`, add an object with properties `username` and `password`, like this:
   export const users = [
     {
