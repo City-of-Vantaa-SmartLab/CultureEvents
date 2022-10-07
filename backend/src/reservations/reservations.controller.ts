@@ -15,17 +15,19 @@ import { ReservationsDto } from './reservations.dto';
 import { ReservationService } from './reservations.service';
 import { ValidationPipe } from '../validations/validation.pipe';
 import { Reservations } from './reservations.entity';
-import { ValidationService } from '../utils/validations/validations.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/api/reservations')
 export class ReservationsController {
   constructor(
     private readonly reservationsService: ReservationService,
-    private readonly validationService: ValidationService,
     private readonly logger: Logger
   ) {
     this.logger = new Logger('ReservationController');
+  }
+
+  checkForInvalidIds(id: any): boolean {
+    return (typeof(+id) !== 'number' || isNaN(id))
   }
 
   @Get()
@@ -97,7 +99,7 @@ export class ReservationsController {
   @UsePipes(new ValidationPipe())
   async findOne(@Res() response, @Param('id') id: number) {
     try {
-      if (this.validationService.validateId(+id)) {
+      if (this.checkForInvalidIds(+id)) {
         return response.status(400).json(`Invalid reservation Id: ${id}`);
       } else {
         const reservation = await this.reservationsService.findOneById(id);
@@ -126,7 +128,7 @@ export class ReservationsController {
     @Body() reservation: Partial<ReservationsDto>,
   ) {
     try {
-      if (this.validationService.validateId(+id)) {
+      if (this.checkForInvalidIds(+id)) {
         return response.status(400).json(`Invalid reservation Id: ${id}`);
       }
 
@@ -163,7 +165,7 @@ export class ReservationsController {
   @UsePipes(new ValidationPipe())
   async delete(@Res() response, @Param('id') id: number) {
     try {
-      if (this.validationService.validateId(+id)) {
+      if (this.checkForInvalidIds(+id)) {
         return response.status(400).json(`Invalid reservation Id: ${id}`);
       }
       const deletedReservation = await this.reservationsService.deleteReservation(id);

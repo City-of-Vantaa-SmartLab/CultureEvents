@@ -167,6 +167,7 @@ export default connect('store')(
       const { totalCost, totalTicket } = this.getPricingAggrevate();
 
       const isCommonInputValid = internalState.name &&
+        internalState.email &&
         isValidNumber(internalState.phoneNumber, 'FI') &&
         internalState.privacy;
 
@@ -279,6 +280,7 @@ export default connect('store')(
               />
               <InputField
                 lightMode
+                mandatory
                 type="text"
                 label="Sähköposti"
                 value={internalState.email}

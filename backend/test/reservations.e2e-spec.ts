@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { connectionDetails } from '../src/connection';
 import { PriceModule } from '../src/price/price.module';
 import { EventsService } from '../src/event/events.service';
-import { ValidationService } from '../src/utils/validations/validations.service';
 import { Events } from '../src/event/events.entity';
 import { Reservations } from '../src/reservations/reservations.entity';
 import { newReservation, updateReservation, nonUpdatableReservation } from './data/reservations.data';
@@ -36,7 +35,6 @@ describe('ReservationsController (e2e)', () => {
                 PriceModule,
             ],
             providers: [ReservationService,
-                ValidationService,
                 SMSService,
                 EventsService,
                 I18Service,

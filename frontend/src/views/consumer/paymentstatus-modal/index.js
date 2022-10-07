@@ -64,13 +64,12 @@ export default withRouter(
           if (statusCode == 0)
             return `Kiitos ostostasi! Lähetämme liput antamaasi puhelinnumeroon tekstiviestillä.
           Jos et saa tekstiviestiä, ota yhteys tapahtuman tuottajaan:`;
-          // @TODO: Wording to handle this case?
           if (statusCode == 1)
-            return `Olemme pahoillamme! Varaus epäonnistui, koska maksua vastaavaa varausta ei löytynyt järjestelmästä`;
+            return `Olemme pahoillamme, maksu epäonnistui. Varausta ei löydy järjestelmästä.`;
           if (statusCode == 2)
-            return `Varaus on jo maksettu, joten uutta maksua ei suoritettu. `;
+            return `Varaus on jo maksettu, joten uutta maksua ei suoritettu.`;
           if (statusCode == 3)
-            return 'Olemme pahoillamme! Maksu epäonnistui maksujärjestelmässä, eikä varaus onnistunut.';
+            return 'Olemme pahoillamme, maksu epäonnistui maksujärjestelmässä.';
           if (statusCode == 4)
             return `Olemme pahoillamme!
           Maksunvälityksessä tapahtui häiriö, eikä
@@ -117,7 +116,7 @@ export default withRouter(
                     </Content>
                     {event && query.status == 0 && (
                       <EventCardWrapper bgColor={event.themeColor}>
-                        <EventCard mini event={this.state.eventToLoad} />
+                        <EventCard mini event={event} />
                       </EventCardWrapper>
                     )}
                   </Modal>

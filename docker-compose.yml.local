@@ -6,49 +6,51 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    # Note: must be yarn, not npm. Otherwise complains about missing module.
-    command: yarn run start
+    # Note: yarn and not npm because of permission problems with npm.
+    # A static build for backend is built before running a dev server.
+    command:
+      - /bin/sh
+      - -c
+      - |
+        rm -rf build public_localdev
+        mkdir build public_localdev
+        yarn run build
+        chmod o=u -R build public_localdev
+        cp -a build/* public_localdev/
+        yarn run start
     ports:
       - 3000:3000
-    depends_on:
-      - backend
     environment:
       DANGEROUSLY_DISABLE_HOST_CHECK: 'true'
-      HOST:
-      NODE_ENV: production
 
   backend:
     build: ./backend
+    # To test payment etc., use http://localhost:5000/ using static frontend build.
     ports:
       - 5000:80
-    # Use "npm run start:prod" for production.
     command: npm run dev
     volumes:
       - ./backend:/backend
       - /backend/node_modules
+      - ./frontend/public_localdev:/public
     depends_on:
       - postgres-dev-db
+      - frontend
     environment:
-      APP_REDIRECT_URL:
+      APP_BASE_URL: http://localhost:5000
       AWS_ACCESS_KEY_ID:
       AWS_S3_BUCKET_NAME:
       AWS_SECRET_ACCESS_KEY:
-      BAMBORA_API_KEY:
-      BAMBORA_PRODUCT_ID:
-      BAMBORA_PRODUCT_TITLE:
-      BAMBORA_SECRET_KEY:
-      # Use empty DATABASE_HOST for production.
       DATABASE_HOST: postgres-dev-db
       DATABASE_NAME:
       DATABASE_PASSWORD:
       DATABASE_PORT:
       DATABASE_USERNAME:
       DROP_DATABASE_SCHEMA: 'false'
-      # Use "production" for production.
+      MERCHANT_ID:
+      MERCHANT_KEY:
       NODE_ENV: local
-      PAYMENT_NOTIFY_URL:
-      PAYMENT_RETURN_URL:
-      # Might need to have /api URLs in Beanstalk ELB redirected to 80 (backend), not 3000 (frontend), but probably works inside container environment automatically.
+      PAYMENT_POST_URL:
       PORT: 80
       SEED_DB: 0
       TELIA_PASSWORD:
@@ -63,8 +65,3 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
-
-  admin:
-    image: adminer
-    ports:
-      - 8080:8080

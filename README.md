@@ -14,23 +14,12 @@ It integrates to Grynos to get the information about current courses available i
 
 ## Running locally
 
-By default, Docker compose won't install dev dependencies inside the containers, so this needs to be done
-manually first:
-
-```
-cd backend && npm install && cd ..
-cd frontend && npm install && cd ..
-```
-
-Next, log in to AWS account `vantaa-pwa` and navigate to Elastic Beanstalk on `eu-west-1` region.
+Log in to AWS account `vantaa-pwa` and navigate to Elastic Beanstalk on `eu-west-1` region.
 Go to Environments > `kulttuuriliput-dev` > Configuration, and click the Edit button of the Software
 category. Populate the environment variables inside `docker-compose.yml` with values from the environment
-configuration. For `PAYMENT_NOTIFY_URL` and `PAYMENT_RETURN_URL`, substitute `localhost:3000` for the
-Elastic Beanstalk domain.
+configuration.
 
-There are no seeded events in the local database, and these must be created manually in the app's admin view. This in turn requires an admin
-user to be created on module initialisation. Follow these steps:
-
+There are no seeded events in the local database, and these must be created manually in the app's admin view. This in turn requires an admin user to be created on module initialisation. Follow these steps:
 - set environment variable `SEED_DB=1` into docker-compose.yml (`ENV SEED_DB=1`) before the npm run script
 - also note that since Docker sometimes works completely randomly, the environment variable doesn't always work, so you may just have to edit seed.service.ts temporarily \o/
 - inside the file `seed_users.ts`, add an object with properties `username` and `password`, like this:
@@ -46,24 +35,19 @@ Also set `DATABASE_HOST`, `NODE_ENV` and `command` as instructed in the file.
 
 _DO NOT DEPLOY THIS MODIFICATION TO PRODUCTION. This will clear the admin users in the production database._
 
-Finally, run
-
-```
-. ./run-locally.sh
-```
+Finally, run `. ./run-locally.sh`
 
 You should see a "Seed users:" prompt if environment variable `SEED_DB` was set correctly.
 
 Once the app is running, you can navigate to `localhost:3000/producer`, log in with the credentials you created inside `seed_users.ts` and create new events. The client facing app can be accessed through path `localhost:3000`.
 
-This local development includes hot reloading on the front-end and the back-end.
+This local development includes hot reloading on the front-end and the back-end. To test API calls (like payment), use `localhost:5000` which serves a static frontend build.
 
 ---
 
 ## Deployment
 
-The application runs in `vantaa-pwa` AWS account's Elastic Beanstalk in Ireland region `eu-west-1`. App
-environments can be updated using EB CLI tools:
+The application runs in `vantaa-pwa` AWS account's Elastic Beanstalk in Ireland region `eu-west-1`. App environments can be updated using EB CLI tools.
 
 Install the tools (for quick setup, follow the README in GitHub):
 
@@ -89,6 +73,8 @@ kulttuuriliput-vantaa-prod
 ```
 
 _Note: only committed changes are going to be deployed._
+
+Remember to set the correct environment variables in AWS (e.g. `APP_BASE_URL`).
 
 ### Deploy a new version to the development environment
 

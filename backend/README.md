@@ -2,7 +2,7 @@
 
 ## Description
 
-PWA app to make reservations for culture events for Vantaa city
+App to make reservations for culture events for Vantaa city.
 
 ## Installation
 

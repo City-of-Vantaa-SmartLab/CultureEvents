@@ -14,7 +14,6 @@ import { EventsDto } from './events.dto';
 import { EventsService } from './events.service';
 import { ValidationPipe } from '../validations/validation.pipe';
 import { Events } from './events.entity';
-import { ValidationService } from '../utils/validations/validations.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ReservationService } from '../reservations/reservations.service';
 
@@ -22,9 +21,13 @@ import { ReservationService } from '../reservations/reservations.service';
 export class EventsController {
   constructor(
     private readonly eventsService: EventsService,
-    private readonly validationService: ValidationService,
     private readonly reservationsService: ReservationService,
   ) { }
+
+  checkForInvalidIds(id: any): boolean {
+    return (typeof(+id) !== 'number' || isNaN(id))
+  }
+
   @Get()
   async findAll(@Res() response): Promise<Events[]> {
     try {
@@ -59,7 +62,7 @@ export class EventsController {
   @Get(':id')
   async findOne(@Res() response, @Param('id') id: number) {
     try {
-      if (this.validationService.validateId(+id)) {
+      if (this.checkForInvalidIds(+id)) {
         return response.status(400).json(`Invalid event Id: ${id}`);
       } else {
         const event = await this.eventsService.findOneById(id);
@@ -85,7 +88,7 @@ export class EventsController {
     @Body() event: EventsDto,
   ) {
     try {
-      if (this.validationService.validateId(+id)) {
+      if (this.checkForInvalidIds(+id)) {
         return response.status(400).json(`Invalid event Id: ${id}`);
       } else {
         const updated = await this.eventsService.updateEvent(id, event);
@@ -109,7 +112,7 @@ export class EventsController {
   @UsePipes(new ValidationPipe())
   async delete(@Res() response, @Param('id') id: number) {
     try {
-      if (this.validationService.validateId(+id)) {
+      if (this.checkForInvalidIds(+id)) {
         return response.status(400).json(`Invalid event Id: ${id}`);
       }
 
@@ -130,7 +133,7 @@ export class EventsController {
   @Get('/:id/reservations')
   async getEventReservations(@Res() response, @Param('id') id: number) {
     try {
-      if (this.validationService.validateId(+id)) {
+      if (this.checkForInvalidIds(+id)) {
         return response.status(400).json(`Invalid event Id: ${id}`);
       } else {
         const reservations = await this.reservationsService.findReservationsForEvent(

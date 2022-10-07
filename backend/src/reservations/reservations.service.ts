@@ -43,7 +43,7 @@ export class ReservationService {
       );
       return response;
     } else {
-      throw new Error('Failed to create reservation!.');
+      throw new Error('Failed to create reservation.');
     }
   }
 
@@ -102,6 +102,8 @@ export class ReservationService {
     return await this.reservationsRepository.findOne({where: {id}, relations: ['tickets'] });
   }
 
+  // NOTE: failed reservations are cleared here when querying a reservation.
+  // If some payments or other related entities are pending etc. they will be deleted by cascade rules.
   async findAll(): Promise<Reservations[]> {
     let failedReservations = await this.reservationsRepository.find({
       where: {
@@ -111,15 +113,13 @@ export class ReservationService {
       relations: ['tickets'],
     });
 
-    //Find failed reservations
     failedReservations = failedReservations.filter(
       reservation => reservation.created_date != null && dateFns.differenceInMinutes(new Date(), reservation.created_date) > 15,
     );
 
-    console.log('Clearing database for failed reservation', new Date());
-    //Delete failed reservations
+    console.log('Clearing database for failed reservations.', new Date());
     failedReservations.forEach(async reservation => {
-      console.log('deleting failed reservation', reservation);
+      console.log('Deleting failed reservation:', reservation);
       await this.deleteReservation(reservation.id);
     });
 
@@ -182,9 +182,8 @@ export class ReservationService {
 
   async getTotalAmount(reservation: ReservationsDto) {
     const event = await this.eventService.findOneById(reservation.event_id);
-    const total = await reservation.tickets.reduce((amount, ticket) => {
-      amount =
-        amount + Number(ticket.no_of_tickets) * Number(this.getTicketPrice(event.ticket_catalog, ticket.price_id));
+    const total = reservation.tickets.reduce((amount, ticket) => {
+      amount += Number(ticket.no_of_tickets) * Number(this.getTicketPrice(event.ticket_catalog, ticket.price_id));
       return amount;
     }, 0);
 

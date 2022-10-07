@@ -68,7 +68,8 @@ const validateUserToken = (userId, authToken) => {
   return customFetchFn(`/api/user/${userId}`, {}, authToken);
 };
 
-const getPaymentRedirectUrl = orderInfo => {
+// Returns a list of payment providers that should be rendered, see: https://docs.paytrail.com/#/?id=create-payment
+const initiatePayment = orderInfo => {
   return customFetchFn('/api/payments/make-payment', {
     method: 'POST',
     body: orderInfo,
@@ -98,7 +99,7 @@ export {
   putEvent,
   deleteEvent,
   login,
-  getPaymentRedirectUrl,
+  initiatePayment,
   validateUserToken,
   postReservation,
   getReservations,

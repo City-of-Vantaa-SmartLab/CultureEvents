@@ -9,14 +9,10 @@ services:
       dockerfile: Dockerfile
     image: kulttuuriliput/latest
     environment:
-      APP_REDIRECT_URL:
+      APP_BASE_URL:
       AWS_ACCESS_KEY_ID:
       AWS_S3_BUCKET_NAME:
       AWS_SECRET_ACCESS_KEY:
-      BAMBORA_API_KEY:
-      BAMBORA_PRODUCT_ID:
-      BAMBORA_PRODUCT_TITLE:
-      BAMBORA_SECRET_KEY:
       DANGEROUSLY_DISABLE_HOST_CHECK: 'true'
       DATABASE_HOST:
       DATABASE_NAME:
@@ -24,10 +20,10 @@ services:
       DATABASE_PORT:
       DATABASE_USERNAME:
       DROP_DATABASE_SCHEMA: 'false'
-      HOST:
+      MERCHANT_ID:
+      MERCHANT_KEY:
       NODE_ENV: production
-      PAYMENT_NOTIFY_URL:
-      PAYMENT_RETURN_URL:
+      PAYMENT_POST_URL:
       PORT: 3000
       SEED_DB: 0
       TELIA_PASSWORD:

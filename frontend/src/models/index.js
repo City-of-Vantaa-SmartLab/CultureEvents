@@ -1,5 +1,3 @@
-// @TODO: Certain method can be delegated to children model
-// @TODO: This model needs test
 import EventModel from './event';
 import User from './user';
 import UI from './ui';
@@ -17,7 +15,7 @@ import {
   putEvent,
   deleteEvent,
   login as loginAPI,
-  getPaymentRedirectUrl,
+  initiatePayment,
   validateUserToken,
   postReservation,
   getReservations,
@@ -244,9 +242,14 @@ export const RootModel = types
       self.ui.orderAndPayment.redirectStatus = 1;
       if (orderInfo.type == 'payment') {
         try {
-          const result = yield getPaymentRedirectUrl(payload);
-          self.ui.orderAndPayment.redirectStatus = 2;
-          self.ui.orderAndPayment.redirectUrl = result.redirect_url;
+          const providersResponse = yield initiatePayment(payload);
+          if (providersResponse.providers) {
+            console.log("Got payment providers, count: " + providersResponse.providers.length);
+            self.ui.orderAndPayment.paymentProviders = JSON.stringify(providersResponse.providers);
+            self.ui.orderAndPayment.redirectStatus = 2;
+          } else {
+            throw new Error("Did not get an array of payment providers.");
+          }
         } catch (error) {
           self.ui.orderAndPayment.redirectStatus = 3;
           console.error('Operation to fetch redirect URL failed', error);

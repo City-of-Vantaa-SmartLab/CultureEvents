@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ValidationService } from '../utils/validations/validations.service';
 import { I18Service } from '../i18/i18.service';
 import { Payments } from './payment.entity';
 import { PaymentController } from './payment.controller';
@@ -20,7 +19,6 @@ import { PriceModule } from '../price/price.module';
   controllers: [PaymentController],
   providers: [
     PaymentService,
-    ValidationService,
     SMSService,
     I18Service,
   ],

@@ -3,7 +3,6 @@ import { ReservationsController } from './reservations.controller';
 import { ReservationService } from './reservations.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Reservations } from './reservations.entity';
-import { ValidationService } from '../utils/validations/validations.service';
 import { SMSService } from '../notifications/sms/sms.service';
 import { EventsService } from '../event/events.service';
 import { Events } from '../event/events.entity';
@@ -20,7 +19,6 @@ import { PriceModule } from '../price/price.module';
   controllers: [ReservationsController],
   providers: [
     ReservationService,
-    ValidationService,
     SMSService,
     EventsService,
     I18Service,

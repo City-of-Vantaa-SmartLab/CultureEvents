@@ -27,7 +27,7 @@ export default class LogoBox extends React.Component {
   render() {
     return (
       <Wrapper>
-        <Logo noText={false} />
+        <Logo notext='false' />
         <div>
           <LogoText type="title" color="#FEF283">
             VANTAA KULTTUURIA

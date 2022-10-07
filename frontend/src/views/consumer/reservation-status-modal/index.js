@@ -21,7 +21,7 @@ const EventCardWrapper = styled.div`
 
 export default withTheme(
   connect('store')(
-    class RedirectModal extends Component {
+    class PaymentProvidersModal extends Component {
       componentDidUpdate() {
         if (this.props.store.ui.orderAndPayment.reservationStatus === 2)
           this.props.store.deselectEvent();

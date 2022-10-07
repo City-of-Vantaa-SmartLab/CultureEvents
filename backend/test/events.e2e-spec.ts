@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { connectionDetails } from '../src/connection';
 import { ReservationsModule } from '../src/reservations/reservations.module';
 import { EventsService } from '../src/event/events.service';
-import { ValidationService } from '../src/utils/validations/validations.service';
 import { EventsController } from '../src/event/events.controller';
 import { Events } from '../src/event/events.entity';
 import { Reservations } from '../src/reservations/reservations.entity';
@@ -29,7 +28,7 @@ describe('EventsController (e2e)', () => {
                 ReservationsModule,
                 PriceModule,
             ],
-            providers: [EventsService, ValidationService, Logger],
+            providers: [EventsService, Logger],
         }).compile();
 
         app = moduleFixture.createNestApplication();

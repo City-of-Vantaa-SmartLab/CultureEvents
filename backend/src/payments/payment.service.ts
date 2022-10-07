@@ -16,19 +16,16 @@ import { PaymentsDto } from './payment.dto';
 import * as crypto from 'crypto';
 
 const stringInterpolator = require('interpolate');
-const payment_return_url = process.env.PAYMENT_RETURN_URL || '/api/payments/payment-return';
 
-// WIP: move from Vismapay to Paytrail
+const removeLastSlash = (url: string) => {
+  return (url[url.length - 1] === '/') ? url.substring(0, url.length - 1) : url
+}
+
 // Default values are Paytrail test credentials.
-// const merchant_id = process.env.MERCHANT_ID || '375917';
-// const merchant_key = process.env.MERCHANT_KEY || 'SAIPPUAKAUPPIAS';
-const secret = process.env.BAMBORA_SECRET_KEY || 'SECRET_KEY';
-const apiKey = process.env.BAMBORA_API_KEY || 'API_KEY';
-const bamboraProductID = process.env.BAMBORA_PRODUCT_ID;
-const bamboraProductTitle = process.env.BAMBORA_PRODUCT_TITLE;
-const payemnt_notify_url = process.env.PAYMENT_NOTIFY_URL || '/api/payments/payment-notify';
-const TOKEN_URL = 'https://www.vismapay.com/pbwapi/auth_payment';
-const BAMBORA_API_URL = 'https://www.vismapay.com/pbwapi/token/';
+const MERCHANT_ID = process.env.MERCHANT_ID || '375917';
+const MERCHANT_KEY = process.env.MERCHANT_KEY || 'SAIPPUAKAUPPIAS';
+const PAYMENT_RETURN_URL = removeLastSlash(process.env.APP_BASE_URL) + '/api/payments/payment-return';
+const PAYMENT_POST_URL = process.env.PAYMENT_POST_URL || 'https://services.paytrail.com/payments';
 
 @Injectable()
 export class PaymentService {
@@ -42,23 +39,13 @@ export class PaymentService {
     private readonly priceService: PriceService,
   ) { }
 
-  async getPaymentRedirectUrl(paymentObj) {
+  async getPaymentProviders(paymentObj: {amount: number, reservation_id: number, email: string}) {
     try {
-      const paymentEntity = this.createPaymentEntity(paymentObj);
-      console.log('saving payment to database', paymentEntity);
-      const paymentResponse = await this.paymentRepository.save(paymentEntity);
-      console.log('paymentResponse: ', paymentResponse);
-      if (paymentResponse.id) {
-        const paymentRequest = this.createPaymentRequest(paymentResponse);
-        const response = await axios.post(TOKEN_URL, paymentRequest);
-        const redirectUrl = BAMBORA_API_URL + response.data.token;
-        return redirectUrl;
-      } else {
-        console.log('failed to save payment', paymentResponse);
-        return null;
-      }
+      const paymentPostConfig = await this.getAxiosConfig(paymentObj);
+      const response = await axios(paymentPostConfig);
+      return response.data.providers;
     } catch (error) {
-      console.error(`Failed to get redirect url from bambora: ${error.message}`);
+      console.error(`Failed to get payment methods: ${error.message}`);
       return null;
     }
   }
@@ -136,59 +123,66 @@ export class PaymentService {
     return format(date, this.i18Service.getContents().payments.dateFormat);
   }
 
-  createPaymentEntity(paymentModel) {
-    const orderNumber = 'vantaa-order-' + Date.now();
-    const message = apiKey + '|' + orderNumber;
-    const authCode = crypto
-      .createHmac('sha256', secret)
-      .update(message)
-      .digest('hex')
-      .toUpperCase();
+  calculateCheckoutParamsHmac(params, body): string {
+    const hmacPayload = Object.keys(params)
+      .sort()
+      .filter(h => h.substring(0, "checkout-".length) === "checkout-")
+      .map((key) => [key, params[key]].join(':'))
+      .concat(body ? JSON.stringify(body) : '')
+      .join('\n');
 
-    paymentModel.auth_code = authCode;
-    paymentModel.order_number = orderNumber;
-    paymentModel.payment_status = false;
-    paymentModel.payment_date = new Date();
-    return paymentModel;
-  }
+    return crypto.createHmac('sha256', MERCHANT_KEY).update(hmacPayload).digest('hex');
+  };
 
-  createPaymentRequest(paymentModel) {
-    const amount = paymentModel.amount * 100;
-    let preTaxAmount = amount;
-    try {
-      return {
-        version: 'w3.1',
-        api_key: apiKey,
-        order_number: paymentModel.order_number,
-        amount: amount,
-        currency: 'EUR',
-        payment_method: {
-          type: 'e-payment',
-          return_url: payment_return_url,
-          notify_url: payemnt_notify_url,
-          lang: 'fi',
-          selected: ['banks', 'creditcards'],
-        },
-        authcode: paymentModel.auth_code,
-        customer: {
-          firstname: paymentModel.username,
-        },
-        products: [
-          {
-            id: bamboraProductID,
-            title: bamboraProductTitle,
-            count: 1,
-            pretax_price: preTaxAmount,
-            tax: 0,
-            price: amount,
-            type: 1,
-          },
-        ],
-      };
-    } catch (error) {
-      console.error('failed to create Bambora Payment Request', error);
+  async getAxiosConfig(paymentObj: {amount: number, reservation_id: number, email: string}) {
+    const timestamp = new Date();
+    const orderNumber = 'vantaa-order-' + timestamp.valueOf();
+    const headers = {
+      'checkout-account': MERCHANT_ID,
+      'checkout-algorithm': 'sha256',
+      'checkout-method': 'POST',
+      'checkout-nonce': orderNumber,
+      'checkout-timestamp': timestamp.toISOString(),
+    };
+
+    const body = {
+      'stamp': orderNumber,
+      'reference': paymentObj.reservation_id.toString(),
+      'amount': paymentObj.amount,
+      'currency': 'EUR',
+      'language': 'FI',
+      'customer': {
+        'email': paymentObj.email
+      },
+      'redirectUrls': {
+        'success': PAYMENT_RETURN_URL,
+        'cancel': PAYMENT_RETURN_URL
+      }
     }
 
+    const signature = this.calculateCheckoutParamsHmac(headers, body);
+    const paymentEntity = new Payments();
+    paymentEntity.reservation_id = paymentObj.reservation_id;
+    paymentEntity.order_number = orderNumber;
+    paymentEntity.auth_code = signature;
+    paymentEntity.username = paymentObj.email;
+    paymentEntity.payment_status = false;
+    paymentEntity.payment_date = timestamp.toISOString();
+    paymentEntity.amount = paymentObj.amount;
+
+    const paymentResponse = await this.paymentRepository.save(paymentEntity);
+    if (paymentResponse.id) {
+      console.log('Payment saved to database: ', paymentResponse);
+      const config = {
+        url: PAYMENT_POST_URL,
+        method: 'post',
+        headers: {...headers, signature},
+        data: body
+      };
+      return config;
+    } else {
+      throw new Error('Failed to save payment with order number: ' + paymentResponse.order_number);
+    }
   }
 
 }

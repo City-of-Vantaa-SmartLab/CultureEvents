@@ -5,7 +5,6 @@ import 'jest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { connectionDetails } from '../src/connection';
 import { PriceModule } from '../src/price/price.module';
-import { ValidationService } from '../src/utils/validations/validations.service';
 import { Events } from '../src/event/events.entity';
 import { Reservations } from '../src/reservations/reservations.entity';
 import { newReservation } from './data/reservations.data';
@@ -43,7 +42,6 @@ describe('PaymentsController (e2e)', () => {
                 PriceModule,
             ],
             providers: [
-                ValidationService,
                 SMSService,
                 I18Service,
                 PaymentService,
@@ -96,12 +94,12 @@ describe('PaymentsController (e2e)', () => {
             .expect([]);
     });
 
-    //Getting successful payment-return
+    // Getting successful payment-return.
     it('/GET /payment-return', async () => {
         const payment = await paymentService.getOne(1);
         const response = await request(app.getHttpServer())
             .get(`/api/payments/payment-return?` +
-                `RETURN_CODE=0&ORDER_NUMBER=${payment.order_number}`);
+                `checkout-status=ok&checkout-stamp=${payment.order_number}`);
         expect(response.status).toBe(302);
         expect(response.header['location'])
             .toBe(`/app/payment-complete?` +
@@ -109,12 +107,12 @@ describe('PaymentsController (e2e)', () => {
         expect(response.body).toEqual({});
     });
 
-    // Checking payment-return is not done twice
+    // Checking payment-return is not done twice.
     it('/GET /payment-return', async () => {
         const payment = await paymentService.getOne(1);
         const response = await request(app.getHttpServer())
             .get(`/api/payments/payment-return?` +
-                `RETURN_CODE=0&ORDER_NUMBER=${payment.order_number}`);
+                `checkout-status=ok&checkout-stamp=${payment.order_number}`);
         expect(response.status).toBe(302);
         expect(response.header['location'])
             .toBe(`/app/payment-complete?status=2&event_id=1`);

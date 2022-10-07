@@ -1,0 +1,9 @@
+.provider-button>img {
+  width: 100px;
+  height: auto;
+}
+
+form {
+  float: left;
+  margin: 10px;
+}

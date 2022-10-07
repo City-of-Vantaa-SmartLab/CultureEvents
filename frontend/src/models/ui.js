@@ -44,12 +44,11 @@ const UI = types.model({
       .model({
         // for payment
         redirectStatus: types.optional(types.refinement('Redirect code', types.number, v => v >= 0 && v <= 3), 0),
-        redirectUrl: '',
+        // a JSON of providers from Paytrail payments service
+        paymentProviders: types.optional(types.string, ''),
         // for reservation
         reservationStatus: types.optional(
-          types.refinement('Reservation Code', types.number, value => value >= 0 && value <= 3),
-          0,
-        ),
+          types.refinement('Reservation Code', types.number, value => value >= 0 && value <= 3), 0),
         reservedEvent: types.maybe(types.reference(EventModel)),
         listingShown: types.optional(types.boolean, false),
         editionModelShown: types.optional(types.boolean, false),
@@ -59,7 +58,7 @@ const UI = types.model({
       .actions(self => {
         const clearOrderPendingFlag = () => {
           self.redirectStatus = 0;
-          self.redirectUrl = '';
+          self.paymentProviders = '';
         };
         const clearReservationFlag = () => {
           self.reservationStatus = 0;

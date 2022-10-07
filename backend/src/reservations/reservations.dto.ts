@@ -43,7 +43,6 @@ export class ReservationsDto {
 
   @IsString()
   @MaxLength(100)
-  @IsOptional()
   readonly email: string;
 
   @IsArray()

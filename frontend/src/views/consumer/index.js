@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Provider } from 'mobx-react';
 import EventListing from './event-listing';
 import FilterView from './filter-view';
-import RedirectModal from './redirection-modal';
+import PaymentProvidersModal from './payment-providers-modal';
 import ReservationStatusModal from './reservation-status-modal';
 import PaymentStatusModal from './paymentstatus-modal';
 import WelcomeModal from './welcome-modal';
@@ -30,7 +30,7 @@ export default class ConsumerUI extends React.Component {
           <Appbar />
           <EventListing />
           <FilterView />
-          <RedirectModal />
+          <PaymentProvidersModal />
           <PaymentStatusModal />
           <ReservationStatusModal />
         </Wrapper>
