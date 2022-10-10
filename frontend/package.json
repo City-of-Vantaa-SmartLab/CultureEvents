@@ -22,7 +22,7 @@
     "react-pose": "^2.3.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^5.0.1",
     "styled-components": "^5.3.5",
     "to-camel-case": "^1.0.0",
     "to-snake-case": "^1.0.0",
