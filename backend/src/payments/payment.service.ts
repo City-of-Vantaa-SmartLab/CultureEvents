@@ -148,7 +148,7 @@ export class PaymentService {
     const body = {
       'stamp': orderNumber,
       'reference': paymentObj.reservation_id.toString(),
-      'amount': paymentObj.amount,
+      'amount': 100 * paymentObj.amount,
       'currency': 'EUR',
       'language': 'FI',
       'customer': {
@@ -181,7 +181,7 @@ export class PaymentService {
       };
       return config;
     } else {
-      throw new Error('Failed to save payment with order number: ' + paymentResponse.order_number);
+      throw new Error('Failed to save payment with order number: ' + orderNumber);
     }
   }
 
