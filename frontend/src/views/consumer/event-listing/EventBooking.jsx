@@ -291,7 +291,7 @@ export default connect('store')(
                   internalState.privacy = !internalState.privacy
                 )} />
                 <label> Hyväksyn
-                  <a href="https://www.vantaa.fi/kulttuuriliput_kayttoehdot" target="_blank"> käyttöehdot ja henkilötietojeni käsittelyn </a>
+                  <a href="https://www.vantaa.fi/fi/kaupunki-ja-paatoksenteko/selosteet-oikeudet-ja-tietosuoja/henkilotietojen-kasittely/henkilotietojen-kasittely-lasten-ja-nuorten-kulttuuritoiminnassa" target="_blank"> käyttöehdot ja henkilötietojeni käsittelyn </a>
                   tietosuojakäytännön mukaisesti.
                 </label>
               </Confidentiality>
