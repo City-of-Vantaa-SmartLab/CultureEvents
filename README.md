@@ -1,5 +1,7 @@
 # Vantaa Culture Reservations
 
+CultureEvents was a project that ran on https://kulttuuriliput.vantaa.fi serving tickets for various culture events. It was shut down on June 2023.
+
 ## Architecture
 
 This project is simple client-server application built with
@@ -8,20 +10,11 @@ This project is simple client-server application built with
 - Backend: TypeScript & Nestjs
 - Database: PostgreSQL
 
-It integrates to Grynos to get the information about current courses available in Vantaa.
-
----
-
 ## Running locally
-
-Log in to AWS account `vantaa-pwa` and navigate to Elastic Beanstalk on `eu-west-1` region.
-Go to Environments > `kulttuuriliput-dev` > Configuration, and click the Edit button of the Software
-category. Populate the environment variables inside `docker-compose.yml` with values from the environment
-configuration.
 
 There are no seeded events in the local database, and these must be created manually in the app's admin view. This in turn requires an admin user to be created on module initialisation. Follow these steps:
 - set environment variable `SEED_DB=1` into docker-compose.yml (`ENV SEED_DB=1`) before the npm run script
-- also note that since Docker sometimes works completely randomly, the environment variable doesn't always work, so you may just have to edit seed.service.ts temporarily \o/
+- also note that since Docker sometimes works completely randomly, the environment variable doesn't always work, so you may just have to edit seed.service.ts temporarily
 - inside the file `seed_users.ts`, add an object with properties `username` and `password`, like this:
   export const users = [
     {
@@ -43,11 +36,9 @@ Once the app is running, you can navigate to `localhost:3000/producer`, log in w
 
 This local development includes hot reloading on the front-end and the back-end. To test API calls (like payment), use `localhost:5000` which serves a static frontend build.
 
----
-
 ## Deployment
 
-The application runs in `vantaa-pwa` AWS account's Elastic Beanstalk in Ireland region `eu-west-1`. App environments can be updated using EB CLI tools.
+The application runs in Elastic Beanstalk in Ireland region `eu-west-1`. App environments can be updated using EB CLI tools.
 
 Install the tools (for quick setup, follow the README in GitHub):
 
